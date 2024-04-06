@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  mainSpring:
+    container_name: mainSpring
+    build: ./BE/deep
+    ports:
+      - "8082:8088"
+    volumes:
+      - /spring:/image
+    restart: on-failure
+  mainReact:
+    container_name: mainReact
+    build: ./FE/deep
+    ports:
+      - "3002:3000"
+    volumes:
+      - /react:/image
+    restart: on-failure
