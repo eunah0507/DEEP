@@ -16,7 +16,7 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberNo;
 
-    @Column(name = "member_id", length = 100, nullable = false)
+    @Column(name = "member_id", length = 100, unique = true)
     private String memberID;
 
     @Column(name = "member_name", length = 100, nullable = false)
@@ -78,6 +78,10 @@ public class Member {
     @Column(name = "member_delete_time")
     private LocalDateTime memberDeleteTime;
 
-
+    // 일반 & 소셜로그인시 Refresh Token DB 저장
+    public void changeToken(String memberToken) {
+        this.memberToken = memberToken;
+        this.memberLastLogin = LocalDateTime.now();
+    }
 
 }
