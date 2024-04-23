@@ -1,17 +1,20 @@
 package com.basic.deep.member.service;
 
-import com.basic.deep.member.dto.MemberIdCheckRequestDTO;
-import com.basic.deep.member.dto.MemberSignUpRequestDTO;
-import com.basic.deep.member.dto.MemberSignUpResponseDTO;
+import com.basic.deep.member.dto.*;
 import com.basic.deep.member.entity.Member;
 import com.basic.deep.member.repository.MemberRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
+// Transactional을 쓴 이유 : insert, update를 쓸 때에는 보안상의 이유로 넣는다.
+// 애노테이션을 쓰는 방법이 있고(전역으로 사용), 함수명에만 쓰는 경우도 있다.(지역으로 사용)
+@Transactional
 public class MemberServiceImpl implements MemberService{
 
     @Autowired
@@ -99,5 +102,46 @@ public class MemberServiceImpl implements MemberService{
         }else{
             return false;
         }
+    }
+
+    // 일반 로그인
+    @Override
+    public Long memberLogin(MemberLoginRequestDTO memberLoginRequestDTO) {
+        Optional<Long> login = memberRepository.selectMemberIDandPW(memberLoginRequestDTO.getMemberID(), memberLoginRequestDTO.getMemberPass());
+
+        if (!login.isEmpty()){
+            return login.get();
+        }else{
+            return null;
+        }
+    }
+
+    // 일반 로그인 시 refreshToken 저장
+    @Override
+    public void memberNormalLoginRefreshToken(Long memberNo, String memberToken) {
+        Member member = memberRepository.getReferenceById(memberNo);
+        member.changeToken(memberToken);
+    }
+
+    // ID 찾기
+    @Override
+    public List<MemberIdFindResponseDTO> idFind(MemberIdFindRequestDTO memberIdFindRequestDTO) {
+        List<Member> idfind = memberRepository.selectMemberByNameAndPhone(memberIdFindRequestDTO.getMemberName(), memberIdFindRequestDTO.getMemberPhone());
+
+        List<MemberIdFindResponseDTO> findIdList = idfind.stream().map(this::listIdFind).toList();
+
+        return findIdList;
+    }
+
+    // List 처리하기 때문에 위에서 Stream을 썼고, 아래 코드로 추가로 처리한다.
+    public MemberIdFindResponseDTO listIdFind(Member member){
+        MemberIdFindResponseDTO memberIdFindResponseDTO = new MemberIdFindResponseDTO();
+
+        memberIdFindResponseDTO.setMemberID(member.getMemberID());
+        memberIdFindResponseDTO.setMemberNickName(member.getMemberNickname());
+        memberIdFindResponseDTO.setMemberRandom(member.getMemberRandom());
+        memberIdFindResponseDTO.setMemberDate(member.getMemberDate());
+
+        return memberIdFindResponseDTO;
     }
 }

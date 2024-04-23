@@ -1,7 +1,9 @@
 package com.basic.deep.member.repository;
 
+import com.basic.deep.member.entity.Member;
 import com.basic.deep.member.entity.SocialType;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface MemberRepositoryCustom {
@@ -14,4 +16,10 @@ public interface MemberRepositoryCustom {
 
     // 회원가입 시 ID 중복 검사
     Optional<String> selectMemberID(String memberID);
+
+    // 일반 로그인
+    Optional<Long> selectMemberIDandPW(String memberID, String memberPass);
+
+    // ID 찾기
+    List<Member> selectMemberByNameAndPhone(String memberName, String memberPhone);
 }

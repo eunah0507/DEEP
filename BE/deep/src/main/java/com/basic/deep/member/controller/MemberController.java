@@ -1,5 +1,7 @@
 package com.basic.deep.member.controller;
 
+import com.basic.deep.auth.jwt.JsonWebToken;
+import com.basic.deep.auth.util.JwtTokenUtils;
 import com.basic.deep.member.dto.*;
 import com.basic.deep.member.service.MemberService;
 import com.basic.deep.config.AuthConfig;
@@ -11,12 +13,20 @@ import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
+
+import static com.basic.deep.auth.util.JwtTokenUtils.REFRESH_PERIOD;
 
 @Slf4j
 @RestController
@@ -79,4 +89,49 @@ public class MemberController {
 
         return new ResponseEntity<>(isIdCheck, HttpStatus.OK);
     }
+
+    // 일반 로그인
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody MemberLoginRequestDTO memberLoginRequestDTO) {
+        Map<String, String> responsebody = new HashMap<>();
+        responsebody.put("message", "Success");
+        Long memberNo = memberService.memberLogin(memberLoginRequestDTO);
+
+        if (memberNo == null) {
+            return new ResponseEntity<>("ID와 PW를 다시 확인해주세요", HttpStatus.BAD_REQUEST);
+        } else {
+            JsonWebToken jsonWebToken = JwtTokenUtils.allocateToken(memberNo, "ROLE_USER");
+            MultiValueMap<String, String> headers = new HttpHeaders();
+            // 엑세스 토큰을 넣어준다. 헤더에 들어간다. DB에는 저장되지 않는다.
+            headers.add("Authorization", jsonWebToken.getAccessToken());
+
+            // 리프레시 토큰을 넣어준다. 해당 member_Token에 들어간다.
+            memberService.memberNormalLoginRefreshToken(memberNo, jsonWebToken.getRefreshToken());
+            ResponseCookie cookie = ResponseCookie.from("Refresh", jsonWebToken.getRefreshToken())
+                    //sameSite == None 으로 하는 순간, 다른 서버(?) 곳 에서도 접속이 가능하다.
+                    .sameSite("None")
+                    .secure(true)
+                    .path("/")
+                    .maxAge(REFRESH_PERIOD)
+                    .build();
+            headers.add("Set-Cookie", cookie.toString());
+            return new ResponseEntity<>(responsebody, headers, HttpStatus.OK);
+        }
+    }
+
+    // ID 찾기
+    @PostMapping("/idfind")
+    public ResponseEntity<?> idfind(@RequestBody MemberIdFindRequestDTO memberIdFindRequestDTO) {
+        List<MemberIdFindResponseDTO> memberIdFindResponseDTO = memberService.idFind(memberIdFindRequestDTO);
+
+        if (memberIdFindResponseDTO.isEmpty()) {
+            return new ResponseEntity<>("해당 ID가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(memberIdFindResponseDTO, HttpStatus.OK);
+        }
+    }
+
+    // PW 찾기
+
+
 }
