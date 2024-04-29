@@ -34,6 +34,41 @@ const buttonStyle = css`
                 background: #ddd;
             }
         `};
+
+    ${(props) =>
+        props.largeWidth &&
+        css`
+            width: 610px;
+            height: 50px;
+        `}
+
+    ${(props) =>
+        props.mediumWidth &&
+        css`
+            width: 400px;
+            height: 50px;
+        `}
+
+    ${(props) =>
+        props.smallWidth &&
+        css`
+            width: 295px;
+            height: 50px;
+        `}
+
+    ${(props) =>
+        props.xSmallWidth &&
+        css`
+            width: 85px;
+            height: 50px;
+        `}
+
+
+    ${(props) =>
+        props.largeFont &&
+        css`
+            font-size: 1.8rem;
+        `}
 `;
 
 const StyledButton = styled.button`

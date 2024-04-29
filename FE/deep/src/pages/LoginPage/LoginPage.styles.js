@@ -1,11 +1,16 @@
 import styled from "styled-components";
+import Button from "../../components/Button/Button";
 import { palette } from "../../styles/palette";
 
+export const LoginWrapper = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: auto 0;
+`;
+
 export const LoginContainer = styled.div`
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     width: 400px;
 
     /* logo */
@@ -20,7 +25,7 @@ export const LoginContainer = styled.div`
     }
 
     /* login */
-    .login {
+    .login_form {
         margin-bottom: 20px;
     }
 
@@ -42,12 +47,12 @@ export const LoginContainer = styled.div`
     }
 
     .signUp > a {
-        text-decoration: underline;
         color: ${palette.blue[6]};
         font-weight: 600;
+        text-decoration: underline;
     }
 
-    .orLine {
+    .horizon {
         float: left;
         display: flex;
         justify-content: space-between;
@@ -56,16 +61,59 @@ export const LoginContainer = styled.div`
         margin: 30px 0 15px;
     }
 
-    .orLine .line {
+    .horizon .line {
         display: inline-block;
         width: 175px;
         height: 1px;
         background: #ddd;
     }
 
-    .orLine .or {
+    .horizon .or {
         display: inline-block;
         font-size: 1.4rem;
         color: #aaa;
+    }
+`;
+
+export const KakaoLoginBtn = styled(Button)`
+    margin-bottom: 15px;
+    background: #fae100;
+    color: #000;
+    font-weight: 500;
+
+    &:hover {
+        background: #fae100;
+    }
+
+    img {
+        height: 16px;
+        margin-right: 10px;
+    }
+`;
+
+export const NaverLoginBtn = styled(Button)`
+    margin-bottom: 15px;
+    background: #03c75a;
+
+    &:hover {
+        background: #03c75a;
+    }
+
+    img {
+        height: 16px;
+        margin-right: 10px;
+    }
+`;
+
+export const GoogleLoginBtn = styled(Button)`
+    font-weight: 500;
+
+    &:hover {
+        background: #fff;
+    }
+
+    img {
+        height: 16px;
+        margin-right: 10px;
     }
 `;

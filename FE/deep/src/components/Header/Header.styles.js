@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Button from "../Button/Button";
 
 export const HeaderContainer = styled.div`
     display: flex;
@@ -24,4 +25,15 @@ export const HeaderContainer = styled.div`
     img {
         width: 100px;
     }
+`;
+
+export const LoginBtn = styled(Button)`
+    width: 75px;
+    height: 44px;
+    margin-right: 10px;
+`;
+
+export const SignUpBtn = styled(Button)`
+    width: 80px;
+    height: 44px;
 `;
