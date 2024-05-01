@@ -44,6 +44,14 @@ public interface MemberService {
     MemberModifyAddressResponseDTO memberModifyAddress(MemberModifyAddressRequestDTO memberModifyAddressRequestDTO, Long memberNo);
 
     // 개인 프로필 편집 - 휴대폰 번호 변경
-    MemberModifyPhoneResponseDTO memberModifyPhone(MemberModifyPhoneRequestDTO memberModifyPhoneRequestDTO , Long memberNo);
+    MemberModifyPhoneResponseDTO memberModifyPhone(MemberModifyPhoneRequestDTO memberModifyPhoneRequestDTO, Long memberNo);
+
+    // 회원 탈퇴
+    MemberDeleteResponseDTO memberDelete(Long memberNo);
+
+    // Refresh Token과 ID가 같은지 확인하기
+    Long isRefreshTokenAndIdOk(SendTokenRequestDTO sendTokenRequestDTO);
+
+
 
 }

@@ -12,7 +12,7 @@ public class AddFriends {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long followingPkNo;
+    private Long addFriendPkNo;
 
     // 내 memberNo
     @ManyToOne(fetch = FetchType.LAZY)
@@ -21,6 +21,6 @@ public class AddFriends {
 
     // 내가 추가한 사람(타인)의 memberNo
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "following_no")
-    private Member followingNo;
+    @JoinColumn(name = "add_friends_no")
+    private Member addFriendNo;
 }

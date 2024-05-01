@@ -8,11 +8,11 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class Fan {
+public class MyFollower {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long followerPkNo;
+    private Long myFollowerPkNo;
 
     // 내 memberNo
     @ManyToOne(fetch = FetchType.LAZY)
@@ -21,8 +21,8 @@ public class Fan {
 
     // 나를 추가한 타인의 memberNo
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "follower_no")
-    private Member followerNo;
+    @JoinColumn(name = "my_follower_no")
+    private Member myFollowerNo;
 
 
 }

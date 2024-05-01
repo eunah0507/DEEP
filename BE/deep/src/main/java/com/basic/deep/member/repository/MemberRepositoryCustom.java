@@ -30,4 +30,13 @@ public interface MemberRepositoryCustom {
     // memberInfo 조회
     Optional<Member> selectMemberInfo(Long memberNo);
 
+    // 회원 탈퇴
+    void deleteMember(Long memberNo);
+
+    // Refresh Token과 ID가 같은지 확인
+    Optional<Long> memberRefreshTokenAndID(String memberID, String memberToken);
+
+    // memberNickName과 memberRandom으로 나머지 member 정보 뽑아오기
+    Optional<Member> selectMemberNickAndRandom(String memberNickName, String memberRandom);
+
 }

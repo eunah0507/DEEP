@@ -89,5 +89,36 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         );
     }
 
+    // 회원 탈퇴
+    @Override
+    public void deleteMember(Long memberNo) {
+        queryFactory.delete(member)
+                .where(member.memberNo.eq(memberNo))
+                .execute();
+
+    }
+
+    // Refresh Token과 ID가 같은지 확인
+    @Override
+    public Optional<Long> memberRefreshTokenAndID(String memberID, String memberToken) {
+        return Optional.ofNullable(
+                queryFactory.select(member.memberNo)
+                        .from(member)
+                        .where(member.memberID.eq(memberID).and(member.memberToken.eq(memberToken)))
+                        .fetchFirst()
+        );
+    }
+
+    // 닉네임과 랜덤번호로 나머지 정보 다 뽑아오기
+    @Override
+    public Optional<Member> selectMemberNickAndRandom(String memberNickName, String memberRandom) {
+        return Optional.ofNullable(
+                queryFactory.select(member)
+                        .from(member)
+                        .where(member.memberNickname.eq(memberNickName).and(member.memberRandom.eq(memberRandom)))
+                        .fetchFirst()
+        );
+    }
+
 
 }

@@ -262,6 +262,28 @@ public class MemberServiceImpl implements MemberService {
        return memberModifyPhoneResponseDTO;
     }
 
+    // 회원 탈퇴
+    @Override
+    public MemberDeleteResponseDTO memberDelete(Long memberNo) {
+        memberRepository.deleteMember(memberNo);
+
+        MemberDeleteResponseDTO memberDeleteResponseDTO = new MemberDeleteResponseDTO();
+        memberDeleteResponseDTO.setMessage("Success");
+
+        return memberDeleteResponseDTO;
+    }
+
+    // Refresh Token과 ID가 같은지 확인하기
+    // 아무것도 없다면? null로 받겠다 > id와 token 둘 중 하나라도 다르면 null 처리한다.
+    @Override
+    public Long isRefreshTokenAndIdOk(SendTokenRequestDTO sendTokenRequestDTO) {
+        Long isOk = memberRepository.memberRefreshTokenAndID(
+                sendTokenRequestDTO.getMemberID()
+                , sendTokenRequestDTO.getMemberToken()).orElse(null);
+
+        return isOk;
+    }
+
 
     // ID 찾기 - List 처리하기 때문에 위에서 Stream을 썼고, 아래 코드로 추가로 처리한다.
     public MemberIdFindResponseDTO listIdFind(Member member) {

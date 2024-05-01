@@ -3,8 +3,10 @@ package com.basic.deep.member.controller;
 import com.basic.deep.auth.jwt.JsonWebToken;
 import com.basic.deep.auth.util.JwtTokenUtils;
 import com.basic.deep.member.dto.*;
+import com.basic.deep.member.service.AddFriendsService;
 import com.basic.deep.member.service.MemberService;
 import com.basic.deep.config.AuthConfig;
+import com.basic.deep.member.service.MyFollowerService;
 import com.basic.deep.member.util.EmailUtil;
 import io.micrometer.common.util.StringUtils;
 import jakarta.mail.Authenticator;
@@ -23,10 +25,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +51,12 @@ public class MemberController {
 
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private AddFriendsService addFriendsService;
+
+    @Autowired
+    private MyFollowerService myFollowerService;
 
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     // 여기서부터 휴대폰 인증 Controller
@@ -228,26 +234,26 @@ public class MemberController {
 
     // 개인정보 프로필 수정 - 비밀번호 변경
     @PutMapping("/modify-pass")
-    public ResponseEntity<?> modifyPass(@RequestBody MemberModifyPassRequestDTO memberModifyPassRequestDTO){
+    public ResponseEntity<?> modifyPass(@RequestBody MemberModifyPassRequestDTO memberModifyPassRequestDTO) {
         Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
 
         String pass = memberModifyPassRequestDTO.getMemberPass();
-        if (StringUtils.isBlank(pass)){
+        if (StringUtils.isBlank(pass)) {
             return new ResponseEntity<>("비밀번호를 빈 값으로 두면 안됩니다.", HttpStatus.BAD_REQUEST);
         }
 
         MemberModifyPassResponseDTO memberModifyPassResponseDTO = memberService.memberModifyPass(memberModifyPassRequestDTO, memberNo);
 
-        if (memberModifyPassResponseDTO == null){
+        if (memberModifyPassResponseDTO == null) {
             return new ResponseEntity<>("사용할 수 없는 비밀번호입니다.", HttpStatus.BAD_REQUEST);
-        }else{
+        } else {
             return new ResponseEntity<>(memberModifyPassResponseDTO, HttpStatus.OK);
         }
     }
 
     // 개인정보 프로필 수정 - 메일 변경
     @PutMapping("/modify-mail")
-    public ResponseEntity<?> modifyMail(@RequestBody MemberModifyMailRequestDTO memberModifyMailRequestDTO){
+    public ResponseEntity<?> modifyMail(@RequestBody MemberModifyMailRequestDTO memberModifyMailRequestDTO) {
         Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
 
         MemberModifyMailResponseDTO memberModifyMailResponseDTO = memberService.memberModifyMail(memberModifyMailRequestDTO, memberNo);
@@ -257,7 +263,7 @@ public class MemberController {
 
     // 개인정보 프로필 수정 - 주소 변경
     @PutMapping("/modify-address")
-    public ResponseEntity<?> modifyAddress(@RequestBody MemberModifyAddressRequestDTO memberModifyAddressRequestDTO){
+    public ResponseEntity<?> modifyAddress(@RequestBody MemberModifyAddressRequestDTO memberModifyAddressRequestDTO) {
         Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
 
         MemberModifyAddressResponseDTO memberModifyAddressResponseDTO = memberService.memberModifyAddress(memberModifyAddressRequestDTO, memberNo);
@@ -267,7 +273,7 @@ public class MemberController {
 
     // 개인정보 프로필 수정 - 휴대폰 번호 변경
     @PutMapping("/modify-phone")
-    public ResponseEntity<?> modifyPhone(@RequestBody MemberModifyPhoneRequestDTO memberModifyPhoneRequestDTO){
+    public ResponseEntity<?> modifyPhone(@RequestBody MemberModifyPhoneRequestDTO memberModifyPhoneRequestDTO) {
         Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
 
         MemberModifyPhoneResponseDTO memberModifyPhoneResponseDTO = memberService.memberModifyPhone(memberModifyPhoneRequestDTO, memberNo);
@@ -276,5 +282,68 @@ public class MemberController {
 
     }
 
+    // 회원 탈퇴
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> delete() {
+        Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+
+        MemberDeleteResponseDTO memberDeleteResponseDTO = memberService.memberDelete(memberNo);
+        return new ResponseEntity<>(memberDeleteResponseDTO, HttpStatus.OK);
+
+    }
+
+    // Access Token 값 만료 되었을 경우 Refresh Token 전달 후 새로운 Access Token 생성
+    @PostMapping("/accesstoken")
+    public ResponseEntity<?> accessToken(@RequestBody SendTokenRequestDTO sendTokenRequestDTO) {
+        Long newAccessToken = memberService.isRefreshTokenAndIdOk(sendTokenRequestDTO);
+
+        if (newAccessToken == null) {
+            return new ResponseEntity<>("잘못된 처리입니다. 다시 로그인 해주세요.", HttpStatus.BAD_REQUEST);
+        } else {
+            JsonWebToken jsonWebToken = JwtTokenUtils.allocateToken(newAccessToken, "ROLE_USER");
+            MultiValueMap<String, String> headers = new HttpHeaders();
+            headers.add("Authorization", jsonWebToken.getAccessToken());
+
+            SendTokenResponseDTO sendTokenResponseDTO = new SendTokenResponseDTO();
+            sendTokenResponseDTO.setMessage("Success");
+
+            return new ResponseEntity<>(sendTokenResponseDTO, headers, HttpStatus.OK);
+        }
+    }
+
+
+    // 친구 추가(팔로잉)
+    @PostMapping("/following")
+    public ResponseEntity<?> following(@RequestBody FollowingRequestDTO followingRequestDTO){
+        Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+
+        FollowingResponseDTO followingResponseDTO = myFollowerService.followingOtherUsers(followingRequestDTO, memberNo);
+        FollowingResponseDTO followingResponseDDTTOO = addFriendsService.followingOtherUsers(followingRequestDTO, memberNo);
+
+        if (followingResponseDDTTOO == null || followingResponseDTO == null){
+            return new ResponseEntity<>("잘못된 접근입니다. 친구 추가가 되지 않았습니다.", HttpStatus.BAD_REQUEST);
+        }else{
+            return new ResponseEntity<>(followingResponseDDTTOO, HttpStatus.OK);
+        }
+    }
+
+    // 친구 삭제(언팔로우)
+    @DeleteMapping("/unfollowing")
+    public ResponseEntity<?> unfollowing(@RequestBody UnFollowingRequestDTO unFollowingRequestDTO){
+        Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+
+        UnFollowingResponseDTO unFollowingResponseDTO = myFollowerService.unfollowingOtherUsers(unFollowingRequestDTO, memberNo);
+        UnFollowingResponseDTO unFollowingResponseDDTTOO = addFriendsService.unFollowingOtherUsers(unFollowingRequestDTO, memberNo);
+
+        if (unFollowingResponseDDTTOO == null || unFollowingResponseDTO == null){
+            return new ResponseEntity<>("잘못된 접근입니다. 친구 삭제가 되지 않았습니다.", HttpStatus.BAD_REQUEST);
+        }else{
+            return new ResponseEntity<>(unFollowingResponseDTO, HttpStatus.OK);
+        }
+    }
+
+    // 프로필 - 팔로워 목록 보기
+//    @GetMapping("/my-follower")
+//    public ResponseEntity<?> myFollowerList(@RequestBody)
 
 }
