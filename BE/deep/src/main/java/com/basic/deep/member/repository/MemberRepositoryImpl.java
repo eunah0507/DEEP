@@ -2,6 +2,7 @@ package com.basic.deep.member.repository;
 
 import com.basic.deep.member.entity.Member;
 import com.basic.deep.member.entity.SocialType;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -48,11 +49,11 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
     // 일반 로그인
     @Override
-    public Optional<Long> selectMemberIDandPW(String memberID, String memberPass) {
+    public Optional<Member> selectMemberIDandPW(String memberID) {
         return Optional.ofNullable(
-                queryFactory.select(member.memberNo)
+                queryFactory.select(member)
                         .from(member)
-                        .where(member.memberID.eq(memberID).and(member.memberPass.eq(memberPass)))
+                        .where(member.memberID.eq(memberID))
                         .fetchFirst()
         );
     }
@@ -65,5 +66,28 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 .where(member.memberName.eq(memberName).and(member.memberPhone.eq(memberPhone)))
                 .fetch();
     }
+
+    // PW 찾기
+    @Override
+    public Optional<Member> selectMemberMail(String memberID, String memberName, String memberPhone) {
+        return Optional.ofNullable(
+                queryFactory.select(member)
+                        .from(member)
+                        .where(member.memberID.eq(memberID).and(member.memberName.eq(memberName).and(member.memberPhone.eq(memberPhone))))
+                        .fetchFirst()
+        );
+    }
+
+    // memberInfo 조회
+    @Override
+    public Optional<Member> selectMemberInfo(Long memberNo) {
+        return Optional.ofNullable(
+                queryFactory.select(member)
+                        .from(member)
+                        .where(member.memberNo.eq(memberNo))
+                        .fetchFirst()
+        );
+    }
+
 
 }

@@ -2,6 +2,7 @@ package com.basic.deep.member.repository;
 
 import com.basic.deep.member.entity.Member;
 import com.basic.deep.member.entity.SocialType;
+import com.querydsl.core.Tuple;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,8 +19,15 @@ public interface MemberRepositoryCustom {
     Optional<String> selectMemberID(String memberID);
 
     // 일반 로그인
-    Optional<Long> selectMemberIDandPW(String memberID, String memberPass);
+    Optional<Member> selectMemberIDandPW(String memberID);
 
     // ID 찾기
     List<Member> selectMemberByNameAndPhone(String memberName, String memberPhone);
+
+    // PW 찾기
+    Optional<Member> selectMemberMail(String memberID, String memberName, String memberPhone);
+
+    // memberInfo 조회
+    Optional<Member> selectMemberInfo(Long memberNo);
+
 }

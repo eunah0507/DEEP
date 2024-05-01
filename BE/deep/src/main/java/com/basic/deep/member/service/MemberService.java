@@ -24,4 +24,26 @@ public interface MemberService {
 
     // ID 찾기
     List<MemberIdFindResponseDTO> idFind(MemberIdFindRequestDTO memberIdFindRequestDTO);
+
+    // PW 찾기
+    String memberPwFind(MemberPwFindRequsetDTO memberPwFindRequsetDTO, String memberPass);
+
+    // info 조회
+    MemberInfoResponseDTO memberInfo(Long memberNo);
+
+    // 커뮤니티 내 프로필 수정
+    MemberModifyResponseDTO memberModify(MemberModifyRequestDTO memberModifyRequestDTO, Long memberNo);
+
+    // 개인 프로필 편집 - 비밀번호 변경
+    MemberModifyPassResponseDTO memberModifyPass(MemberModifyPassRequestDTO memberModifyPassRequestDTO, Long memberNo);
+
+    // 개인 프로필 편집 - 메일 변경
+    MemberModifyMailResponseDTO memberModifyMail(MemberModifyMailRequestDTO memberModifyMailRequestDTO, Long memberNo);
+
+    // 개인 프로필 편집 - 주소 변경
+    MemberModifyAddressResponseDTO memberModifyAddress(MemberModifyAddressRequestDTO memberModifyAddressRequestDTO, Long memberNo);
+
+    // 개인 프로필 편집 - 휴대폰 번호 변경
+    MemberModifyPhoneResponseDTO memberModifyPhone(MemberModifyPhoneRequestDTO memberModifyPhoneRequestDTO , Long memberNo);
+
 }

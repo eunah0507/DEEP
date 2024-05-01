@@ -5,6 +5,11 @@ import com.basic.deep.auth.util.JwtTokenUtils;
 import com.basic.deep.member.dto.*;
 import com.basic.deep.member.service.MemberService;
 import com.basic.deep.config.AuthConfig;
+import com.basic.deep.member.util.EmailUtil;
+import io.micrometer.common.util.StringUtils;
+import jakarta.mail.Authenticator;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
@@ -17,6 +22,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
@@ -24,6 +31,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static com.basic.deep.auth.util.JwtTokenUtils.REFRESH_PERIOD;
@@ -132,6 +140,141 @@ public class MemberController {
     }
 
     // PW 찾기
+    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @PostMapping("/pwfind")
+    public ResponseEntity<?> pwfind(@RequestBody MemberPwFindRequsetDTO memberPwFindRequsetDTO) {
+        String temporaryPW = getTempPassword();
+        String toEmail = memberService.memberPwFind(memberPwFindRequsetDTO, temporaryPW);
+
+        if (toEmail == null) {
+            return new ResponseEntity<>("해당 유저의 메일이 존재하지 않습니다. 다시 확인해 주십시오", HttpStatus.BAD_REQUEST);
+        } else {
+            // 임시비밀번호 발급 메일 전송
+            final String fromEmail = authConfig.getEmailId(); // requires valid gmail id
+            final String password = authConfig.getEmailPw(); // correct password for gmail id
+
+            System.out.println("TLSEmail Start");
+            Properties props = new Properties();
+            props.put("mail.smtp.host", "smtp.gmail.com"); // SMTP Host
+            props.put("mail.smtp.port", "587"); // TLS Port
+            props.put("mail.smtp.auth", "true"); // enable authentication
+            props.put("mail.smtp.starttls.enable", "true"); // enable STARTTLS
+            props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+
+            // create Authenticator object to pass in Session.getInstance argument
+            Authenticator auth = new Authenticator() {
+                // override the getPasswordAuthentication method
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(fromEmail, password);
+                }
+            };
+            Session session = Session.getInstance(props, auth);
+
+            EmailUtil.sendEmail(session, toEmail,
+                    "개발자 커뮤니티 [DEEP] 임시 비밀번호 안내 입니다.",
+                    "개발자 커뮤니티 [DEEP] 임시 비밀번호 발급 안내입니다.\n\n" +
+                            "회원님의 [DEEP] 임시 비밀번호가 발급되었습니다.\n" +
+                            "아래의 임시 비밀번호로 로그인 하신 후 비밀번호를 재설정하시기 바랍니다.\n" +
+                            "비밀번호 재설정은 설정 > 비밀번호 변경에서 가능합니다.\n" +
+                            "\n" +
+                            "임시 비밀번호는 복사 + 붙여넣기 대신 직접 입력하여 주시기 바랍니다.\n\n\n" +
+                            temporaryPW);
+
+            MemberPwFindResponseDTO memberPwFindResponseDTO = new MemberPwFindResponseDTO();
+            memberPwFindResponseDTO.setMemberMail(toEmail);
+            return new ResponseEntity<>(memberPwFindResponseDTO, HttpStatus.OK);
+
+        }
+    }
+
+    // 랜덤함수로 임시비밀번호 구문 만들기
+    public String getTempPassword() {
+        char[] charSet = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
+                'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+
+        String str = "";
+
+        // 문자 배열 길이의 값을 랜덤으로 10개를 뽑아 구문을 작성함
+        int idx = 0;
+        for (int i = 0; i < 10; i++) {
+            idx = (int) (charSet.length * Math.random());
+            str += charSet[idx];
+        }
+        return str;
+    }
+    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    // memberInfo 조회
+    @GetMapping("/info")
+    public ResponseEntity<?> info() {
+        Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        MemberInfoResponseDTO memberInfoResponseDTO = memberService.memberInfo(memberNo);
+
+        if (memberInfoResponseDTO == null) {
+            return new ResponseEntity<>("잘못된 접근입니다. 다시 시도하세요", HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(memberInfoResponseDTO, HttpStatus.OK);
+        }
+    }
+
+    // 커뮤니티 프로필 수정
+    @PutMapping("/modify")
+    public ResponseEntity<?> modify(@RequestBody MemberModifyRequestDTO memberModifyRequestDTO) {
+        Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        MemberModifyResponseDTO memberModifyResponseDTO = memberService.memberModify(memberModifyRequestDTO, memberNo);
+
+        return new ResponseEntity<>(memberModifyResponseDTO, HttpStatus.OK);
+    }
+
+    // 개인정보 프로필 수정 - 비밀번호 변경
+    @PutMapping("/modify-pass")
+    public ResponseEntity<?> modifyPass(@RequestBody MemberModifyPassRequestDTO memberModifyPassRequestDTO){
+        Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+
+        String pass = memberModifyPassRequestDTO.getMemberPass();
+        if (StringUtils.isBlank(pass)){
+            return new ResponseEntity<>("비밀번호를 빈 값으로 두면 안됩니다.", HttpStatus.BAD_REQUEST);
+        }
+
+        MemberModifyPassResponseDTO memberModifyPassResponseDTO = memberService.memberModifyPass(memberModifyPassRequestDTO, memberNo);
+
+        if (memberModifyPassResponseDTO == null){
+            return new ResponseEntity<>("사용할 수 없는 비밀번호입니다.", HttpStatus.BAD_REQUEST);
+        }else{
+            return new ResponseEntity<>(memberModifyPassResponseDTO, HttpStatus.OK);
+        }
+    }
+
+    // 개인정보 프로필 수정 - 메일 변경
+    @PutMapping("/modify-mail")
+    public ResponseEntity<?> modifyMail(@RequestBody MemberModifyMailRequestDTO memberModifyMailRequestDTO){
+        Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+
+        MemberModifyMailResponseDTO memberModifyMailResponseDTO = memberService.memberModifyMail(memberModifyMailRequestDTO, memberNo);
+
+        return new ResponseEntity<>(memberModifyMailResponseDTO, HttpStatus.OK);
+    }
+
+    // 개인정보 프로필 수정 - 주소 변경
+    @PutMapping("/modify-address")
+    public ResponseEntity<?> modifyAddress(@RequestBody MemberModifyAddressRequestDTO memberModifyAddressRequestDTO){
+        Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+
+        MemberModifyAddressResponseDTO memberModifyAddressResponseDTO = memberService.memberModifyAddress(memberModifyAddressRequestDTO, memberNo);
+
+        return new ResponseEntity<>(memberModifyAddressResponseDTO, HttpStatus.OK);
+    }
+
+    // 개인정보 프로필 수정 - 휴대폰 번호 변경
+    @PutMapping("/modify-phone")
+    public ResponseEntity<?> modifyPhone(@RequestBody MemberModifyPhoneRequestDTO memberModifyPhoneRequestDTO){
+        Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+
+        MemberModifyPhoneResponseDTO memberModifyPhoneResponseDTO = memberService.memberModifyPhone(memberModifyPhoneRequestDTO, memberNo);
+
+        return new ResponseEntity<>(memberModifyPhoneResponseDTO, HttpStatus.OK);
+
+    }
 
 
 }
