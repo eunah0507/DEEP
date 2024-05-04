@@ -1,9 +1,8 @@
 package com.basic.deep.member.service;
 
-import com.basic.deep.member.dto.FollowingRequestDTO;
-import com.basic.deep.member.dto.FollowingResponseDTO;
-import com.basic.deep.member.dto.UnFollowingRequestDTO;
-import com.basic.deep.member.dto.UnFollowingResponseDTO;
+import com.basic.deep.member.dto.*;
+
+import java.util.List;
 
 public interface AddFriendsService {
     // 친구 추가(following)
@@ -11,4 +10,7 @@ public interface AddFriendsService {
 
     // 친구 삭제(unfollowing)
     UnFollowingResponseDTO unFollowingOtherUsers(UnFollowingRequestDTO unFollowingRequestDTO, Long memberNo);
+
+    // 프로필 - 나 > 타인 -> 팔로잉 목록 보기
+    List<AddFriendsListResponseDTO> addFriendsList(AddFriendsListRequestDTO addFriendsListRequestDTO);
 }

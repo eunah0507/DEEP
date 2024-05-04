@@ -1,9 +1,6 @@
 package com.basic.deep.member.service;
 
-import com.basic.deep.member.dto.FollowingRequestDTO;
-import com.basic.deep.member.dto.FollowingResponseDTO;
-import com.basic.deep.member.dto.UnFollowingRequestDTO;
-import com.basic.deep.member.dto.UnFollowingResponseDTO;
+import com.basic.deep.member.dto.*;
 import com.basic.deep.member.entity.AddFriends;
 import com.basic.deep.member.entity.Member;
 import com.basic.deep.member.repository.AddFriendsRepository;
@@ -11,6 +8,8 @@ import com.basic.deep.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service
@@ -61,5 +60,23 @@ public class AddFriendsServiceImpl implements AddFriendsService{
         unFollowingResponseDTO.setMessage("Success");
 
         return unFollowingResponseDTO;
+    }
+
+    // 프로필 - 나 > 타인 -> 팔로잉 목록 보기
+    @Override
+    public List<AddFriendsListResponseDTO> addFriendsList(AddFriendsListRequestDTO addFriendsListRequestDTO) {
+        Member selectMemberNo = memberRepository.selectMemberNickAndRandom(
+                addFriendsListRequestDTO.getMemberNickName(),
+                addFriendsListRequestDTO.getMemberRandom()
+        ).orElse(null);
+
+        if (selectMemberNo == null){
+            return null;
+        }else{
+            // 리스트로 받아서 return 한다. inline 변경하면 변수만들어서 return한게 한 줄로 축약되지만
+            // 이해가 되기 쉽게 이렇게 풀어서 썼다.
+            List<AddFriendsListResponseDTO> addFriendsList = addFriendsRepository.selectAddFriendsList(selectMemberNo);
+            return addFriendsList;
+        }
     }
 }

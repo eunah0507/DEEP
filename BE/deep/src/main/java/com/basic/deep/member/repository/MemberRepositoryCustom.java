@@ -1,5 +1,6 @@
 package com.basic.deep.member.repository;
 
+import com.basic.deep.member.dto.MemberSearchResponseDTO;
 import com.basic.deep.member.entity.Member;
 import com.basic.deep.member.entity.SocialType;
 import com.querydsl.core.Tuple;
@@ -38,5 +39,8 @@ public interface MemberRepositoryCustom {
 
     // memberNickName과 memberRandom으로 나머지 member 정보 뽑아오기
     Optional<Member> selectMemberNickAndRandom(String memberNickName, String memberRandom);
+
+    // 멤버 검색
+    List<MemberSearchResponseDTO> selectMemberByNickNameAndRandom(String nickname, String random);
 
 }

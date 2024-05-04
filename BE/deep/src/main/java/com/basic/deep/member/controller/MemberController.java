@@ -7,6 +7,7 @@ import com.basic.deep.member.service.AddFriendsService;
 import com.basic.deep.member.service.MemberService;
 import com.basic.deep.config.AuthConfig;
 import com.basic.deep.member.service.MyFollowerService;
+import com.basic.deep.member.service.S3UploadService;
 import com.basic.deep.member.util.EmailUtil;
 import io.micrometer.common.util.StringUtils;
 import jakarta.mail.Authenticator;
@@ -225,7 +226,7 @@ public class MemberController {
 
     // 커뮤니티 프로필 수정
     @PutMapping("/modify")
-    public ResponseEntity<?> modify(@RequestBody MemberModifyRequestDTO memberModifyRequestDTO) {
+    public ResponseEntity<?> modify(@ModelAttribute MemberModifyRequestDTO memberModifyRequestDTO) {
         Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         MemberModifyResponseDTO memberModifyResponseDTO = memberService.memberModify(memberModifyRequestDTO, memberNo);
 
@@ -314,36 +315,64 @@ public class MemberController {
 
     // 친구 추가(팔로잉)
     @PostMapping("/following")
-    public ResponseEntity<?> following(@RequestBody FollowingRequestDTO followingRequestDTO){
+    public ResponseEntity<?> following(@RequestBody FollowingRequestDTO followingRequestDTO) {
         Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
 
         FollowingResponseDTO followingResponseDTO = myFollowerService.followingOtherUsers(followingRequestDTO, memberNo);
         FollowingResponseDTO followingResponseDDTTOO = addFriendsService.followingOtherUsers(followingRequestDTO, memberNo);
 
-        if (followingResponseDDTTOO == null || followingResponseDTO == null){
+        if (followingResponseDDTTOO == null || followingResponseDTO == null) {
             return new ResponseEntity<>("잘못된 접근입니다. 친구 추가가 되지 않았습니다.", HttpStatus.BAD_REQUEST);
-        }else{
+        } else {
             return new ResponseEntity<>(followingResponseDDTTOO, HttpStatus.OK);
         }
     }
 
     // 친구 삭제(언팔로우)
     @DeleteMapping("/unfollowing")
-    public ResponseEntity<?> unfollowing(@RequestBody UnFollowingRequestDTO unFollowingRequestDTO){
+    public ResponseEntity<?> unfollowing(@RequestBody UnFollowingRequestDTO unFollowingRequestDTO) {
         Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
 
         UnFollowingResponseDTO unFollowingResponseDTO = myFollowerService.unfollowingOtherUsers(unFollowingRequestDTO, memberNo);
         UnFollowingResponseDTO unFollowingResponseDDTTOO = addFriendsService.unFollowingOtherUsers(unFollowingRequestDTO, memberNo);
 
-        if (unFollowingResponseDDTTOO == null || unFollowingResponseDTO == null){
+        if (unFollowingResponseDDTTOO == null || unFollowingResponseDTO == null) {
             return new ResponseEntity<>("잘못된 접근입니다. 친구 삭제가 되지 않았습니다.", HttpStatus.BAD_REQUEST);
-        }else{
+        } else {
             return new ResponseEntity<>(unFollowingResponseDTO, HttpStatus.OK);
         }
     }
 
-    // 프로필 - 팔로워 목록 보기
-//    @GetMapping("/my-follower")
-//    public ResponseEntity<?> myFollowerList(@RequestBody)
+    // 프로필 - 팔로워 목록 보기 (타인 > 나)
+    @PostMapping("/my-follower")
+    public ResponseEntity<?> myFollowerList(@RequestBody MyFollowerListRequestDTO myFollowerListRequestDTO) {
+
+        List<MyFollowerListResponseDTO> myFollowerListResponseDTO = myFollowerService.myFollowerList(myFollowerListRequestDTO);
+
+        if (myFollowerListResponseDTO == null){
+            return new ResponseEntity<>("조회하려는 유저가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+        }else{
+            return new ResponseEntity<>(myFollowerListResponseDTO, HttpStatus.OK);
+        }
+    }
+
+    // 프로필 - 팔로잉 목록 보기 (나 > 타인)
+    @PostMapping("/add-friends")
+    public ResponseEntity<?> addFriendsList(@RequestBody AddFriendsListRequestDTO addFriendsListRequestDTO){
+
+        List<AddFriendsListResponseDTO> addFriendsListResponseDTO = addFriendsService.addFriendsList(addFriendsListRequestDTO);
+
+        if (addFriendsListRequestDTO == null){
+            return new ResponseEntity<>("조회하려는 유저가 존재하지 않습니다. 다시 확인해주세요", HttpStatus.BAD_REQUEST);
+        }else{
+            return new ResponseEntity<>(addFriendsListResponseDTO, HttpStatus.OK);
+        }
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<?> searchMember(@RequestBody MemberSearchRequestDTO memberSearchRequestDTO){
+        List<MemberSearchResponseDTO> memberSearchResponseDTOS = memberService.searchMember(memberSearchRequestDTO);
+        return new ResponseEntity<>(memberSearchResponseDTOS,HttpStatus.OK);
+    }
 
 }

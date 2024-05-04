@@ -1,8 +1,10 @@
 package com.basic.deep.member.repository;
 
+import com.basic.deep.member.dto.MemberSearchResponseDTO;
 import com.basic.deep.member.entity.Member;
 import com.basic.deep.member.entity.SocialType;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -118,6 +120,17 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                         .where(member.memberNickname.eq(memberNickName).and(member.memberRandom.eq(memberRandom)))
                         .fetchFirst()
         );
+    }
+
+    @Override
+    public List<MemberSearchResponseDTO> selectMemberByNickNameAndRandom(String nickname, String random) {
+        return queryFactory.select(
+                Projections.constructor(MemberSearchResponseDTO.class,
+                        member.memberNickname,member.memberRandom,member.memberFile,member.memberIntroduce)
+        )
+                .from(member)
+                .where(member.memberNickname.in(nickname).or(member.memberRandom.in(random)))
+                .fetch();
     }
 
 

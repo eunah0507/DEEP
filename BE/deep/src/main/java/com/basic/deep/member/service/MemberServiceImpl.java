@@ -23,6 +23,10 @@ public class MemberServiceImpl implements MemberService {
     @Autowired
     private MemberRepository memberRepository;
 
+    // 이미지 등록시 사용하는 S3
+    @Autowired
+    private S3UploadService s3UploadService;
+
     // 닉네임 부여
     String[] nick1 = new String[]{"빨간", "멋쟁이", "노란", "오렌지", "훈훈한", "커다란", "멋진", "진정한", "힘든", "피곤한",
             "졸린", "멍한", "즐거운", "재밌는", "신나는", "잠든", "꿈꾸는", "깨어난", "출근하는", "밥먹는",
@@ -37,7 +41,7 @@ public class MemberServiceImpl implements MemberService {
             "버릇없는", "금쪽이", "편리한", "달콤한", "큰", "작은", "좋은", "나쁜", "가난한", "개미", "세력", "대담한",
             "건방진", "곧은", "철저한", "성가신", "격분한", "심각한", "언짢은", "복잡한", "화려한", "돌보는", "사장",
             "CEO", "사려깊은", "싱싱한", "상한", "드르렁", "드르르렁", "어쩌구", "저쩌구", "솰라솰라", "랄랄랄", "설마",
-            "퇴근한", "출근한", "야근한", "노비", "노예", "언턴", "정규직", "새까만", "오류난", "어?", "어라?",
+            "퇴근한", "출근한", "야근한", "노비", "노예", "인턴", "정규직", "새까만", "오류난", "어?", "어라?",
             "집가고픈", "눕고싶은", "자고싶은", "놀고싶은", "외면하는", "무시하는", "텅빈", "공허한", "쫓겨난"};
     String[] nick2 = new String[]{"자동차", "오렌지", "개발자", "사람", "나무", "들꽃", "라일락", "에어컨", "커튼", "오아시스", "이불",
             "마루", "강아지", "고양이", "주전자", "찻잔", "JAVA", "SQL", "PHYTHON", "AWS", "의자", "테이블",
@@ -74,11 +78,12 @@ public class MemberServiceImpl implements MemberService {
                         .memberMail(memberSignUpRequestDTO.getMemberMail())
                         .memberPass(
                                 BCrypt.hashpw(memberSignUpRequestDTO.getMemberPass(), BCrypt.gensalt()))
+                        .memberPassHistory(
+                                BCrypt.hashpw(memberSignUpRequestDTO.getMemberPass(), BCrypt.gensalt()))
                         .memberPhone(memberSignUpRequestDTO.getMemberPhone())
                         .memberAddress(memberSignUpRequestDTO.getMemberAddress())
                         .memberAddressDetail(memberSignUpRequestDTO.getMemberAddressDetail())
                         .memberZip(memberSignUpRequestDTO.getMemberZip())
-                        .memberPassHistory("")
                         .memberNickname(nick1[(int) (Math.random() * nick1.length)] + nick2[(int) (Math.random() * nick2.length)])
                         .memberRandom("#" + authNo)
                         .memberDate(LocalDateTime.now())
@@ -190,16 +195,22 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberModifyResponseDTO memberModify(MemberModifyRequestDTO memberModifyRequestDTO, Long memberNo) {
         Member member = memberRepository.getReferenceById(memberNo);
+        String memberFile = null;
+
+        if (memberModifyRequestDTO.getMemberFile() != null){
+            memberFile = s3UploadService.upload(memberModifyRequestDTO.getMemberFile(), "deepProfile");
+        }
 
         member.chageModify(memberModifyRequestDTO.getMemberNickName(),
                 memberModifyRequestDTO.getMemberIntroduce(),
-                memberModifyRequestDTO.getMemberFile());
+                memberFile);
 
         MemberModifyResponseDTO memberModifyResponseDTO = new MemberModifyResponseDTO();
         memberModifyResponseDTO.setMessage("Success");
 
         return memberModifyResponseDTO;
-    }
+
+        }
 
     // 개인 프로필 편집 - 비밀번호 변경
     @Override
@@ -207,8 +218,8 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.getReferenceById(memberNo);
         String isPassOk = member.getMemberPassHistory();
 
-        log.info("이전 비밀번호는 {}", isPassOk);
-        log.info("바꿀 비밀번호는 {}", member);
+        log.info("before password is {}", isPassOk);
+        log.info("change password is {}", member);
 
         // 비밀번호 같으면 false
         if (BCrypt.checkpw(memberModifyPassRequestDTO.getMemberPass(), isPassOk)) {
@@ -254,12 +265,12 @@ public class MemberServiceImpl implements MemberService {
     public MemberModifyPhoneResponseDTO memberModifyPhone(MemberModifyPhoneRequestDTO memberModifyPhone, Long memberNo) {
         Member member = memberRepository.getReferenceById(memberNo);
 
-       member.memberUpdatePhone(memberModifyPhone.getMemberPhone());
+        member.memberUpdatePhone(memberModifyPhone.getMemberPhone());
 
-       MemberModifyPhoneResponseDTO memberModifyPhoneResponseDTO = new MemberModifyPhoneResponseDTO();
-       memberModifyPhoneResponseDTO.setMessage("Success");
+        MemberModifyPhoneResponseDTO memberModifyPhoneResponseDTO = new MemberModifyPhoneResponseDTO();
+        memberModifyPhoneResponseDTO.setMessage("Success");
 
-       return memberModifyPhoneResponseDTO;
+        return memberModifyPhoneResponseDTO;
     }
 
     // 회원 탈퇴
@@ -282,6 +293,14 @@ public class MemberServiceImpl implements MemberService {
                 , sendTokenRequestDTO.getMemberToken()).orElse(null);
 
         return isOk;
+    }
+
+    @Override
+    public List<MemberSearchResponseDTO> searchMember(MemberSearchRequestDTO memberSearchRequestDTO) {
+        return memberRepository.selectMemberByNickNameAndRandom(
+                memberSearchRequestDTO.getMemberNickName(),
+                memberSearchRequestDTO.getMemberRandom()
+        );
     }
 
 
