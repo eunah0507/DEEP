@@ -55,6 +55,10 @@ dependencies {
 	// 회원가입 - 휴대폰 인증
 	implementation 'net.nurigo:sdk:4.3.0'
 
+	//S3에 이미지 넣는 것
+	implementation platform('software.amazon.awssdk:bom:2.15.0')
+	implementation 'software.amazon.awssdk:s3'
+	implementation group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '2.3.2'
 }
 
 tasks.named('test') {
