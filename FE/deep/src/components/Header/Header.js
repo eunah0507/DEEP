@@ -5,7 +5,7 @@ import headerLogo from "../../assets/images/deep-logo-header.svg";
 function Header() {
     return (
         <HeaderContainer>
-            <div className="wrap">
+            <header className="wrap">
                 <Link to="/">
                     <img src={headerLogo} alt="deep-logo" />
                 </Link>
@@ -13,9 +13,9 @@ function Header() {
                     <LoginBtn inverted to="/login">
                         로그인
                     </LoginBtn>
-                    <SignUpBtn to="/signup">회원가입</SignUpBtn>
+                    <SignUpBtn to="/signup/terms-agree">회원가입</SignUpBtn>
                 </div>
-            </div>
+            </header>
         </HeaderContainer>
     );
 }

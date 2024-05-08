@@ -29,6 +29,10 @@ export const LoginContainer = styled.div`
         margin-bottom: 20px;
     }
 
+    .login_form input {
+        margin-bottom: 20px;
+    }
+
     /* member */
     .member {
         font-size: 1.4rem;
