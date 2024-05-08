@@ -30,10 +30,13 @@ export const HeaderContainer = styled.div`
 export const LoginBtn = styled(Button)`
     width: 75px;
     height: 44px;
+    line-height: 44px;
     margin-right: 10px;
+    font-weight: 700;
 `;
 
 export const SignUpBtn = styled(Button)`
     width: 80px;
     height: 44px;
+    line-height: 44px;
 `;
