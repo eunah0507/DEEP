@@ -6,6 +6,8 @@ const buttonStyle = css`
     display: inline-flex;
     justify-content: center;
     align-items: center;
+    height: 50px;
+    line-height: 50px;
     border: none;
     border-radius: 5px;
     background: ${palette.blue[6]};
@@ -20,6 +22,11 @@ const buttonStyle = css`
         background: ${palette.blue[8]};
     }
 
+    &:disabled {
+        background: #ccc;
+        cursor: default;
+    }
+
     ${(props) =>
         props.inverted &&
         css`
@@ -27,6 +34,7 @@ const buttonStyle = css`
             border-radius: 5px;
             background: #fff;
             color: #000;
+            font-weight: 500;
             outline: none;
             cursor: pointer;
 
@@ -39,28 +47,24 @@ const buttonStyle = css`
         props.largeWidth &&
         css`
             width: 610px;
-            height: 50px;
         `}
 
     ${(props) =>
         props.mediumWidth &&
         css`
             width: 400px;
-            height: 50px;
         `}
 
     ${(props) =>
         props.smallWidth &&
         css`
             width: 295px;
-            height: 50px;
         `}
 
     ${(props) =>
         props.xSmallWidth &&
         css`
             width: 85px;
-            height: 50px;
         `}
 
 
