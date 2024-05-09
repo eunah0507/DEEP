@@ -2,6 +2,7 @@ package com.basic.deep.member.service;
 
 import com.basic.deep.member.dto.*;
 import com.basic.deep.member.entity.Member;
+import com.basic.deep.member.entity.SocialType;
 import com.basic.deep.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -86,6 +87,7 @@ public class MemberServiceImpl implements MemberService {
                         .memberZip(memberSignUpRequestDTO.getMemberZip())
                         .memberNickname(nick1[(int) (Math.random() * nick1.length)] + nick2[(int) (Math.random() * nick2.length)])
                         .memberRandom("#" + authNo)
+                        .memberSocialType(SocialType.NORMAL)
                         .memberDate(LocalDateTime.now())
                         .build()
         );
