@@ -39,4 +39,12 @@ public class Board {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")
     private Member member_no;
+
+    // 게시글 수정
+    public void modifyBoard(String title, Category category, String cotent){
+        this.boardTitle = title;
+        this.boardCategory = category;
+        this.boardContent = cotent;
+        this.boardModifyDate = LocalDateTime.now();
+    }
 }

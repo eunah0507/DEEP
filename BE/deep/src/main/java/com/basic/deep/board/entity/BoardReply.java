@@ -19,6 +19,9 @@ public class BoardReply {
     @Column(name = "reply_nickname", length = 100, nullable = false)
     private String replyNickName;
 
+    @Column(name = "reply_random", length = 100, nullable = false)
+    private String replyRandom;
+
     @Column(name = "reply_content", length = 800, nullable = false)
     private String replyContent;
 
@@ -36,4 +39,9 @@ public class BoardReply {
     @JoinColumn(name = "parent_no")
     private BoardReply parentNo;
 
+    // 댓글 수정
+    public void modifyReply(String content){
+        this.replyContent = content;
+        this.replyModifyDate = LocalDateTime.now();
+    }
 }
