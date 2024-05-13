@@ -5,14 +5,17 @@ import { getCookie } from "../../apis/cookie";
 import { useCookies } from "react-cookie";
 
 function HomePage() {
-    // const [accessToken, setAccessToken] = useState("");
-    // const [refreshToken, setRefreshToken] = useState("");
-    // const [cookies, setCookie] = useCookies([]);
+    const [accessToken, setAccessToken] = useState("");
+    const [refreshToken, setRefreshToken] = useState("");
+    const [cookies, setCookie] = useCookies([]);
 
     useEffect(() => {
-        // setRefreshToken(`${getCookie("Refresh")}`);
-        // console.log(refreshToken);
-        // console.log(cookies);
+        setAccessToken(`${getCookie("Authorization")}`);
+        setRefreshToken(`${getCookie("Refresh")}`);
+
+        console.log(accessToken);
+        console.log(refreshToken);
+        console.log(cookies);
         // console.log(`${getCookie("Auth")}`);
         // console.log(`${getCookie("Refresh")}`);
     }, []);
