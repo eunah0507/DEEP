@@ -52,6 +52,7 @@ public interface MemberService {
     // Refresh Token과 ID가 같은지 확인하기
     Long isRefreshTokenAndIdOk(SendTokenRequestDTO sendTokenRequestDTO);
 
+    // 유저 검색
     List<MemberSearchResponseDTO> searchMember(MemberSearchRequestDTO memberSearchRequestDTO);
 
 }

@@ -150,6 +150,18 @@ public class MemberServiceImpl implements MemberService {
         return findIdList;
     }
 
+    // ID 찾기 - List 처리하기 때문에 위에서 Stream을 썼고, 아래 코드로 추가로 처리한다.
+    public MemberIdFindResponseDTO listIdFind(Member member) {
+        MemberIdFindResponseDTO memberIdFindResponseDTO = new MemberIdFindResponseDTO();
+
+        memberIdFindResponseDTO.setMemberID(member.getMemberID());
+        memberIdFindResponseDTO.setMemberNickName(member.getMemberNickname());
+        memberIdFindResponseDTO.setMemberRandom(member.getMemberRandom());
+        memberIdFindResponseDTO.setMemberDate(member.getMemberDate());
+
+        return memberIdFindResponseDTO;
+    }
+
     // PW 찾기
     @Override
     public String memberPwFind(MemberPwFindRequsetDTO memberPwFindRequsetDTO, String memberPass) {
@@ -297,6 +309,7 @@ public class MemberServiceImpl implements MemberService {
         return isOk;
     }
 
+    // 멤버(유저) 검색
     @Override
     public List<MemberSearchResponseDTO> searchMember(MemberSearchRequestDTO memberSearchRequestDTO) {
         return memberRepository.selectMemberByNickNameAndRandom(
@@ -305,18 +318,6 @@ public class MemberServiceImpl implements MemberService {
         );
     }
 
-
-    // ID 찾기 - List 처리하기 때문에 위에서 Stream을 썼고, 아래 코드로 추가로 처리한다.
-    public MemberIdFindResponseDTO listIdFind(Member member) {
-        MemberIdFindResponseDTO memberIdFindResponseDTO = new MemberIdFindResponseDTO();
-
-        memberIdFindResponseDTO.setMemberID(member.getMemberID());
-        memberIdFindResponseDTO.setMemberNickName(member.getMemberNickname());
-        memberIdFindResponseDTO.setMemberRandom(member.getMemberRandom());
-        memberIdFindResponseDTO.setMemberDate(member.getMemberDate());
-
-        return memberIdFindResponseDTO;
-    }
 
 
 }

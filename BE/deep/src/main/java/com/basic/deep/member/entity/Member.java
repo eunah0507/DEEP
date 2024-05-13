@@ -113,6 +113,7 @@ public class Member {
 
     // 개인 프로필 편집 - 비밀번호 변경
     public void memberUpdatePW(String changePW) {
+
         this.memberPass = BCrypt.hashpw(changePW, BCrypt.gensalt());
     }
 
