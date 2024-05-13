@@ -126,7 +126,7 @@ public class MemberController {
             // 원래 AccssToken을 Authorization이라는 이름으로 줬으므로 그냥 그대로 준다.
             ResponseCookie accessToken = ResponseCookie.from("Authorization", jsonWebToken.getAccessToken())
                     .sameSite("None")
-                    .secure(true)
+                    .secure(false)
                     .path("/")
                     .maxAge(ACCESS_PERIOD)
                     .build();
