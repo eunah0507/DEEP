@@ -127,7 +127,7 @@ public class MemberController {
             ResponseCookie accessToken = ResponseCookie.from("Authorization", jsonWebToken.getAccessToken())
                     .sameSite("None")
                     .httpOnly(false)
-                    .secure(false)
+                    .secure(true)
                     .path("/")
                     .maxAge(ACCESS_PERIOD)
                     .build();
@@ -139,7 +139,7 @@ public class MemberController {
                     //sameSite == None 으로 하는 순간, 다른 서버(?) 곳 에서도 접속이 가능하다.
                     .sameSite("None")
                     .httpOnly(false)
-                    .secure(false)
+                    .secure(true)
                     .path("/")
                     .maxAge(REFRESH_PERIOD)
                     .build();
