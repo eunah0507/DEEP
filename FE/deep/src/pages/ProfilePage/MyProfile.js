@@ -18,7 +18,7 @@ function MyProfile() {
         axiosInstance
             .get("/deep/member/info", {
                 headers: {
-                    Authorization: cookies.Authorization,
+                    Authorization: `${cookies.Authorization}`,
                 },
             })
             .then((response) => {
@@ -39,7 +39,7 @@ function MyProfile() {
                 },
                 {
                     headers: {
-                        Authorization: cookies.Authorization,
+                        Authorization: `${cookies.Authorization}`,
                     },
                 }
             )
@@ -59,7 +59,7 @@ function MyProfile() {
                 },
                 {
                     headers: {
-                        Authorization: cookies.Authorization,
+                        Authorization: `${cookies.Authorization}`,
                     },
                 }
             )
