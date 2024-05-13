@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
     LoginContainer,
     KakaoLoginBtn,
@@ -14,6 +14,7 @@ import naverLogo from "../../assets/images/deep-naver-logo.svg";
 import googleLogo from "../../assets/images/deep-google-logo.svg";
 import { useState } from "react";
 import axiosInstance from "../../apis/axiosInstance";
+import { getCookie, setCookie } from "../../apis/cookie";
 
 function LoginPage() {
     const [id, setId] = useState("");
@@ -21,6 +22,8 @@ function LoginPage() {
 
     const [isId, setIsId] = useState(false);
     const [isPw, setIsPw] = useState(false);
+
+    const navigate = useNavigate();
 
     const handleCheckId = (e) => {
         setId(e.target.value);
@@ -46,23 +49,40 @@ function LoginPage() {
         }
     };
 
-    const login = (e) => {
-        e.preventDefault();
-
+    const login = () => {
         const loginInfo = {
             memberID: id,
             memberPass: pw,
         };
 
-        axiosInstance
-            .post("/deep/member/login", loginInfo)
-            .then((response) => {
-                console.log(response);
-            })
-            .catch((error) => {
-                console.log(error);
-                alert("아이디 또는 비밀번호를 다시 확인해 주세요.");
-            });
+        if (id === "") {
+            alert("아이디를 입력해 주세요.");
+        } else if (pw === "") {
+            alert("비밀번호를 입력해 주세요.");
+        } else {
+            axiosInstance
+                .post("/deep/member/login", loginInfo)
+                .then((response) => {
+                    // setCookie("Access", `${getCookie("Authorization")}`);
+                    // setCookie("Auth", true);
+                    navigate("/home");
+                })
+                .catch((error) => {
+                    console.log(error);
+                    alert("아이디 또는 비밀번호를 다시 확인해 주세요.");
+                });
+        }
+    };
+
+    const handleLoginEnter = (e) => {
+        if (e.key === "Enter") {
+            login();
+        }
+    };
+
+    const socialLogin = (params) => {
+        const authURL = `https://dev.deeep.site/deep/member/login/${params}`;
+        window.location.href = authURL;
     };
 
     return (
@@ -89,6 +109,7 @@ function LoginPage() {
                         maxLength="16"
                         placeholder="비밀번호"
                         onChange={handleCheckPw}
+                        onKeyPress={handleLoginEnter}
                     />
                     <Button mediumWidth onClick={login}>
                         로그인
@@ -108,15 +129,19 @@ function LoginPage() {
                     <span className="or">또는</span>
                     <span className="line"></span>
                 </div>
-                <KakaoLoginBtn mediumWidth>
+                <KakaoLoginBtn mediumWidth onClick={() => socialLogin("kakao")}>
                     <img src={kakaoLogo} alt="kakao-logo" />
                     <span>카카오로 로그인하기</span>
                 </KakaoLoginBtn>
-                <NaverLoginBtn mediumWidth>
+                <NaverLoginBtn mediumWidth onClick={() => socialLogin("naver")}>
                     <img src={naverLogo} alt="naver-logo" />
                     <span>네이버로 로그인하기</span>
                 </NaverLoginBtn>
-                <GoogleLoginBtn mediumWidth inverted>
+                <GoogleLoginBtn
+                    mediumWidth
+                    inverted
+                    onClick={() => socialLogin("google")}
+                >
                     <img src={googleLogo} alt="google-logo" />
                     <span>구글로 로그인하기</span>
                 </GoogleLoginBtn>

@@ -13,6 +13,10 @@ import SignUpStep1 from "../pages/SignUpPage/Step/SignUpStep1";
 import SignUpStep2 from "../pages/SignUpPage/Step/SignUpStep2";
 import SignUpSuccess from "../pages/SignUpPage/Step/SignUpSuccess";
 import HomePage from "../pages/HomePage/HomePage";
+import SettingPage from "../pages/SettingPage/SettingPage";
+import ProfilePage from "../pages/ProfilePage/ProfilePage";
+import MyProfile from "../pages/ProfilePage/MyProfile";
+import CommunityPage from "../pages/BoardPage/Community/CommunityPage";
 
 function AppRoutes() {
     return (
@@ -34,6 +38,11 @@ function AppRoutes() {
                     <Route path="reset" element={<FindPwSuccess />} />
                 </Route>
                 <Route path="/home" element={<HomePage />} />
+                <Route path="/setting" element={<SettingPage />} />
+                <Route path="/profile" element={<ProfilePage />}>
+                    <Route index element={<MyProfile />} />
+                </Route>
+                <Route path="/community" element={<CommunityPage />} />
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </Router>
