@@ -3,8 +3,8 @@ import userProfile from "../../assets/images/deep-profile-blue.png";
 import Button from "../../components/Button/Button";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../apis/axiosInstance";
-import { getCookie } from "../../apis/cookie";
 import Likes from "./Likes";
+import { useCookies } from "react-cookie";
 
 function MyProfile() {
     const [nickName, setNickName] = useState("");
@@ -12,12 +12,13 @@ function MyProfile() {
     const [introduce, setIntroduce] = useState("");
     const [follower, setFollower] = useState("");
     const [following, setFollowing] = useState("");
+    const [cookies, setCookie] = useCookies([]);
 
     useEffect(() => {
         axiosInstance
             .get("/deep/member/info", {
                 headers: {
-                    Authorization: `${getCookie("Authorization")}`,
+                    Authorization: cookies.Authorization,
                 },
             })
             .then((response) => {
@@ -38,7 +39,7 @@ function MyProfile() {
                 },
                 {
                     headers: {
-                        Authorization: `${getCookie("Authorization")}`,
+                        Authorization: cookies.Authorization,
                     },
                 }
             )
@@ -58,7 +59,7 @@ function MyProfile() {
                 },
                 {
                     headers: {
-                        Authorization: `${getCookie("Authorization")}`,
+                        Authorization: cookies.Authorization,
                     },
                 }
             )
