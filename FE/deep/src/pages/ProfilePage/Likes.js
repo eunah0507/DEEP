@@ -1,13 +1,16 @@
 import { useEffect } from "react";
 import axiosInstance from "../../apis/axiosInstance";
 import { getCookie } from "../../apis/cookie";
+import { useCookies } from "react-cookie";
 
 function Likes() {
+    const [cookies, setCookie] = useCookies([]);
+
     useEffect(() => {
         axiosInstance
             .get("/deep/member/profile/like", {
                 headers: {
-                    Authorization: `${getCookie("Authorization")}`,
+                    Authorization: `${cookies.Authorization}`,
                 },
             })
             .then((response) => {
