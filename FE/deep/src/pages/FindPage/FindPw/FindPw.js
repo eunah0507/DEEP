@@ -127,7 +127,10 @@ function FindPw(props) {
             .catch((error) => {
                 console.log(error);
                 alert("입력하신 정보를 찾을 수 없습니다.\n다시 확인해 주세요.");
+                setDisabled(false);
             });
+
+        setDisabled(true);
     };
 
     return (
