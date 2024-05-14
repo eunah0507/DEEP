@@ -14,6 +14,7 @@ import jakarta.mail.Authenticator;
 import jakarta.mail.PasswordAuthentication;
 import jakarta.mail.Session;
 import jakarta.validation.Valid;
+import lombok.experimental.PackagePrivate;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
@@ -29,6 +30,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.HTML;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -129,7 +131,7 @@ public class MemberController {
                     .httpOnly(false)
                     .secure(true)
                     .path("/")
-                    .maxAge(ACCESS_PERIOD/1000)
+                    .maxAge(ACCESS_PERIOD / 1000)
                     .build();
             headers.add("Set-Cookie", accessToken.toString());
 
@@ -141,7 +143,7 @@ public class MemberController {
                     .httpOnly(false)
                     .secure(true)
                     .path("/")
-                    .maxAge(REFRESH_PERIOD/1000)
+                    .maxAge(REFRESH_PERIOD / 1000)
                     .build();
             headers.add("Set-Cookie", cookie.toString());
             return new ResponseEntity<>(responsebody, headers, HttpStatus.OK);
@@ -363,31 +365,65 @@ public class MemberController {
 
         List<MyFollowerListResponseDTO> myFollowerListResponseDTO = myFollowerService.myFollowerList(myFollowerListRequestDTO);
 
-        if (myFollowerListResponseDTO == null){
+        if (myFollowerListResponseDTO == null) {
             return new ResponseEntity<>("조회하려는 유저가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
-        }else{
+        } else {
             return new ResponseEntity<>(myFollowerListResponseDTO, HttpStatus.OK);
         }
     }
 
     // 프로필 - 팔로잉 목록 보기 (나 > 타인)
     @PostMapping("/add-friends")
-    public ResponseEntity<?> addFriendsList(@RequestBody AddFriendsListRequestDTO addFriendsListRequestDTO){
+    public ResponseEntity<?> addFriendsList(@RequestBody AddFriendsListRequestDTO addFriendsListRequestDTO) {
 
         List<AddFriendsListResponseDTO> addFriendsListResponseDTO = addFriendsService.addFriendsList(addFriendsListRequestDTO);
 
-        if (addFriendsListRequestDTO == null){
+        if (addFriendsListRequestDTO == null) {
             return new ResponseEntity<>("조회하려는 유저가 존재하지 않습니다. 다시 확인해주세요", HttpStatus.BAD_REQUEST);
-        }else{
+        } else {
             return new ResponseEntity<>(addFriendsListResponseDTO, HttpStatus.OK);
         }
     }
 
     // 유저 검색
     @PostMapping("/search")
-    public ResponseEntity<?> searchMember(@RequestBody MemberSearchRequestDTO memberSearchRequestDTO){
+    public ResponseEntity<?> searchMember(@RequestBody MemberSearchRequestDTO memberSearchRequestDTO) {
         List<MemberSearchResponseDTO> memberSearchResponseDTOS = memberService.searchMember(memberSearchRequestDTO);
-        return new ResponseEntity<>(memberSearchResponseDTOS,HttpStatus.OK);
+        return new ResponseEntity<>(memberSearchResponseDTOS, HttpStatus.OK);
     }
 
+    // 다른 유저의 프로필 보기
+    @PostMapping("/others")
+    public ResponseEntity<?> othersProfile(@RequestBody MemberOthersProfileRequestDTO memberOthersProfileRequestDTO) {
+        MemberOthersProfileResponseDTO memberOthersProfileResponseDTO = memberService.othersProfile(memberOthersProfileRequestDTO);
+
+        if (memberOthersProfileResponseDTO == null) {
+            return new ResponseEntity<>("해당 유저가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(memberOthersProfileResponseDTO, HttpStatus.OK);
+        }
+    }
+
+    // [커뮤니티 프로필] 마이 페이지 - 내가 쓴 글 확인
+    @GetMapping("/profile-post")
+    public ResponseEntity<?> profilePost(){
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // [커뮤니티 프로필] 마이 페이지 - 내가 쓴 댓글 확인
+    @GetMapping("/profile-reply")
+    public ResponseEntity<?> profileReply(){
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+
+    // [커뮤니티 프로필] 마이 페이지 - 내가 누른 좋아요 확인
+    @GetMapping("/profile-like")
+    private ResponseEntity<?> profileLike(){
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

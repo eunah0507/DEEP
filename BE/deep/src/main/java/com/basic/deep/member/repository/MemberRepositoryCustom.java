@@ -1,5 +1,8 @@
 package com.basic.deep.member.repository;
 
+import com.basic.deep.member.dto.MemberProfieLikeResponseDTO;
+import com.basic.deep.member.dto.MemberProfilePostResponseDTO;
+import com.basic.deep.member.dto.MemberProfileReplyResponseDTO;
 import com.basic.deep.member.dto.MemberSearchResponseDTO;
 import com.basic.deep.member.entity.Member;
 import com.basic.deep.member.entity.SocialType;
@@ -42,5 +45,17 @@ public interface MemberRepositoryCustom {
 
     // 멤버 검색
     List<MemberSearchResponseDTO> selectMemberByNickNameAndRandom(String nickname, String random);
+
+    // 다른 유저의 프로필 보기
+    Optional<Member> selectOtherMemberNickNameAndRandom(String memberNickName, String memberRandom);
+
+    // [커뮤니티 프로필] 마이 페이지 - 내가 쓴 글 확인
+    List<MemberProfilePostResponseDTO> selectMemberPost(Long memberNo);
+
+    // [커뮤니티 프로필] 마이 페이지 - 내가 쓴 댓글 확인
+    List<MemberProfileReplyResponseDTO> selectMemberReply(Long memberNo);
+
+    // [커뮤니티 프로필] 마이 페이지 - 내가 누른 좋아요 확인
+    List<MemberProfieLikeResponseDTO> selectMemberLike(Long memberNo);
 
 }

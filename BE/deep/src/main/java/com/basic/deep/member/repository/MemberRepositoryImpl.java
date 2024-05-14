@@ -1,5 +1,8 @@
 package com.basic.deep.member.repository;
 
+import com.basic.deep.member.dto.MemberProfieLikeResponseDTO;
+import com.basic.deep.member.dto.MemberProfilePostResponseDTO;
+import com.basic.deep.member.dto.MemberProfileReplyResponseDTO;
 import com.basic.deep.member.dto.MemberSearchResponseDTO;
 import com.basic.deep.member.entity.Member;
 import com.basic.deep.member.entity.SocialType;
@@ -12,6 +15,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.basic.deep.member.entity.QMember.member;
+import static com.basic.deep.board.entity.QBoard.board;
+import static com.basic.deep.board.entity.QBoardReply.boardReply;
+import static com.basic.deep.board.entity.QBoardLike.boardLike;
 
 public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
@@ -133,5 +139,43 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 .fetch();
     }
 
+    // 다른 유저의 프로필 보기
+    @Override
+    public Optional<Member> selectOtherMemberNickNameAndRandom(String memberNickName, String memberRandom) {
+        return Optional.ofNullable(
+                queryFactory.select(member)
+                        .from(member)
+                        .where(member.memberNickname.eq(memberNickName).and(member.memberRandom.eq(memberRandom)))
+                        .fetchFirst()
+        );
+    }
+
+    // [커뮤니티 프로필] 마이 페이지 - 내가 쓴 글 확인
+    @Override
+    public List<MemberProfilePostResponseDTO> selectMemberPost(Long memberNo) {
+        return null;
+//        return queryFactory.select(
+//                Projections.constructor(MemberProfilePostResponseDTO.class,
+//                        board.boardNo, board.boardTitle,
+//                        board.boardDate, board.boardReadCount)
+//                )
+//                .from(board)
+//                .where(member.memberNo.eq(memberNo))
+//                .fetch()
+
+//        );
+    }
+
+    // [커뮤니티 프로필] 마이 페이지 - 내가 쓴 댓글 확인
+    @Override
+    public List<MemberProfileReplyResponseDTO> selectMemberReply(Long memberNo) {
+        return null;
+    }
+
+    // [커뮤니티 프로필] 마이 페이지 - 내가 누른 좋아요 확인
+    @Override
+    public List<MemberProfieLikeResponseDTO> selectMemberLike(Long memberNo) {
+        return null;
+    }
 
 }

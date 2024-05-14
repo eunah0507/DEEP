@@ -211,7 +211,7 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.getReferenceById(memberNo);
         String memberFile = null;
 
-        if (memberModifyRequestDTO.getMemberFile() != null){
+        if (memberModifyRequestDTO.getMemberFile() != null) {
             memberFile = s3UploadService.upload(memberModifyRequestDTO.getMemberFile(), "deepProfile");
         }
 
@@ -224,7 +224,7 @@ public class MemberServiceImpl implements MemberService {
 
         return memberModifyResponseDTO;
 
-        }
+    }
 
     // 개인 프로필 편집 - 비밀번호 변경
     @Override
@@ -318,6 +318,43 @@ public class MemberServiceImpl implements MemberService {
         );
     }
 
+    // 다른 유저의 프로필 보기
+    @Override
+    public MemberOthersProfileResponseDTO othersProfile(MemberOthersProfileRequestDTO memberOthersProfileRequestDTO) {
+        Optional<Member> member = memberRepository.selectOtherMemberNickNameAndRandom(
+                memberOthersProfileRequestDTO.getMemberNickName(),
+                memberOthersProfileRequestDTO.getMemberRandom());
+
+        if (member.isEmpty()) {
+            return null;
+        } else {
+            MemberOthersProfileResponseDTO memberOthersProfileResponseDTO = new MemberOthersProfileResponseDTO();
+            memberOthersProfileResponseDTO.setMemberNickName(member.get().getMemberNickname());
+            memberOthersProfileResponseDTO.setMemberRandom(member.get().getMemberRandom());
+            memberOthersProfileResponseDTO.setMemberFile(member.get().getMemberFile());
+            memberOthersProfileResponseDTO.setMemberIntroduce(member.get().getMemberIntroduce());
+            return memberOthersProfileResponseDTO;
+        }
+    }
+
+    // [커뮤니티 프로필] 마이 페이지 - 내가 쓴 글 확인
+    @Override
+    public MemberProfilePostResponseDTO myPost(Long memberNo) {
+        return null;
+    }
+
+
+    // [커뮤니티 프로필] 마이 페이지 - 내가 쓴 댓글 확인
+    @Override
+    public MemberProfileReplyResponseDTO myReply(Long memberNo) {
+        return null;
+    }
+
+    // [커뮤니티 프로필] 마이 페이지 - 내가 누른 좋아요 확인
+    @Override
+    public MemberProfieLikeResponseDTO myLike(Long memberNo) {
+        return null;
+    }
 
 
 }
