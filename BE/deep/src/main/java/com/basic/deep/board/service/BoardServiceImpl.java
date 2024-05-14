@@ -3,10 +3,9 @@ package com.basic.deep.board.service;
 import com.basic.deep.board.dto.*;
 import com.basic.deep.board.entity.Board;
 import com.basic.deep.board.entity.BoardImg;
+import com.basic.deep.board.entity.BoardLike;
 import com.basic.deep.board.entity.BoardTag;
-import com.basic.deep.board.repository.BoardRepository;
-import com.basic.deep.board.repository.ImgRepository;
-import com.basic.deep.board.repository.TagRepository;
+import com.basic.deep.board.repository.*;
 import com.basic.deep.member.entity.Member;
 import com.basic.deep.member.repository.MemberRepository;
 import com.basic.deep.member.service.S3UploadService;
@@ -16,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -35,6 +36,12 @@ public class BoardServiceImpl implements BoardService {
 
     @Autowired
     private S3UploadService s3UploadService;
+
+    @Autowired
+    private BoardLikeRepository boardLikeRepository;
+
+    @Autowired
+    private ReplyRepository replyRepository;
 
     // 게시글 작성
     @Override
@@ -88,7 +95,7 @@ public class BoardServiceImpl implements BoardService {
         // 게시판 글쓴이랑 member랑 비교해서 다른 사람이면 잘못된 접근이므로 null을 return한다.
         // 더 좋은 코드로 replace 가능하지만 내가 해석 못하니까 그냥 이대로 둔다 ^^
         // 더 좋은 코드 = !Objects.equals(board.getMember_no().getMemberNo(), memberNo)
-        if (board.getMember_no().getMemberNo() != memberNo){
+        if (board.getMember_no().getMemberNo() != memberNo) {
             return null;
         }
 
@@ -140,7 +147,7 @@ public class BoardServiceImpl implements BoardService {
         // 게시판 글쓴이랑 member랑 비교해서 다른 사람이면 잘못된 접근이므로 null을 return한다.
         // 더 좋은 코드로 replace 가능하지만 내가 해석 못하니까 그냥 이대로 둔다 ^^
         // 더 좋은 코드 = !Objects.equals(board.getMember_no().getMemberNo(), memberNo)
-        if (board.getMember_no().getMemberNo() != memberNo){
+        if (board.getMember_no().getMemberNo() != memberNo) {
             return null;
         }
 
@@ -155,9 +162,56 @@ public class BoardServiceImpl implements BoardService {
         return boardDeleteResponseDTO;
     }
 
+    // 게시글 검색
+    @Override
+    public List<BoardSearchResponseDTO> searchBoard(BoardSearchRequestDTO boardSearchRequestDTO, Long memberNo) {
+
+        return null;
+    }
+
+
     // 게시글 1개 상세 조회
-//    @Override
-//    public BoardDetailResponseDTO boardDetail(BoardDetailRequestDTO boardDetailRequestDTO) {
-//        return null;
-//    }
+    @Override
+    public BoardDetailResponseDTO boardDetail(BoardDetailRequestDTO boardDetailRequestDTO, Long memberNo) {
+        Board board = boardRepository.getReferenceById(boardDetailRequestDTO.getBoardNo());
+        Member member = board.getMember_no();
+        List<String> boardImg = imgRepository.selectBoardDetailImg(board);
+        Optional<BoardLike> boardLike = boardLikeRepository.selectBoardLike(board.getBoardNo(), memberNo);
+        Long boardLikeCount = boardLikeRepository.selectBoardDetailLikeCount(board.getBoardNo());
+        Long replyCount = replyRepository.selectReplyCount(board.getBoardNo());
+        List<String> boardTag = tagRepository.selectBoardDetailTag(board);
+
+        // 게시글 조회수 증가
+        board.plusView();
+
+        BoardDetailResponseDTO boardDetailResponseDTO = new BoardDetailResponseDTO();
+        boardDetailResponseDTO.setTitle(board.getBoardTitle());
+        boardDetailResponseDTO.setContent(board.getBoardContent());
+        boardDetailResponseDTO.setMemberNickName(member.getMemberNickname());
+        boardDetailResponseDTO.setMemberRandom(member.getMemberRandom());
+        boardDetailResponseDTO.setMemberFile(member.getMemberFile());
+        boardDetailResponseDTO.setBoardCreatedTime(board.getBoardDate());
+        boardDetailResponseDTO.setView(board.getBoardReadCount());
+        boardDetailResponseDTO.setImg(boardImg);
+        boardDetailResponseDTO.setLike(boardLikeCount);
+        boardDetailResponseDTO.setReply(replyCount);
+        boardDetailResponseDTO.setTag(boardTag);
+
+
+        if (boardLike.isEmpty()) {
+            boardDetailResponseDTO.setMeLike(false);
+        } else {
+            boardDetailResponseDTO.setMeLike(true);
+        }
+
+        return boardDetailResponseDTO;
+    }
+
+    // 1개 게시판 목록 전체 조회
+    @Override
+    public BoardCategoryListResponseDTO boardCategoryDetail(BoardCategoryRequestDTO boardCategoryRequestDTO) {
+
+
+        return null;
+    }
 }
