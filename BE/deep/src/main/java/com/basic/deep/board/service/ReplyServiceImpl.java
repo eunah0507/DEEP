@@ -12,10 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Transactional
-public class ReplyServiceImpl implements ReplyService{
+public class ReplyServiceImpl implements ReplyService {
 
     @Autowired
     private BoardRepository boardRepository;
@@ -34,7 +35,7 @@ public class ReplyServiceImpl implements ReplyService{
         Board board = boardRepository.getReferenceById(replyWriteRequestDTO.getBoardNo());
         BoardReply replyWrite;
 
-        if (replyWriteRequestDTO.getParentNo() == null || replyWriteRequestDTO.getParentNo() == 0){
+        if (replyWriteRequestDTO.getParentNo() == null || replyWriteRequestDTO.getParentNo() == 0) {
             replyWrite = replyRepository.save(
                     BoardReply.builder()
                             .boardNo(board)
@@ -44,7 +45,7 @@ public class ReplyServiceImpl implements ReplyService{
                             .replyDate(LocalDateTime.now())
                             .build()
             );
-        }else{
+        } else {
             BoardReply boardReply = replyRepository.getReferenceById(replyWriteRequestDTO.getParentNo());
 
             replyWrite = replyRepository.save(
@@ -78,7 +79,7 @@ public class ReplyServiceImpl implements ReplyService{
         // 댓글 작성한 사람의 닉네임과 memberNo로 뽑아온 memberNickname 또는
         // 댓글 작성한 사람의 랜덤태그와 memberNo로 뽑아온 memberRandom을 비교해서 다르면 null을 return한다.
         // 더 좋은 코드로 replace 가능하지만, 내가 못알아보니까 이대로 둔다.
-        if(!boardReply.getReplyNickName().equals(member.getMemberNickname()) || !boardReply.getReplyRandom().equals(member.getMemberRandom())){
+        if (!boardReply.getReplyNickName().equals(member.getMemberNickname()) || !boardReply.getReplyRandom().equals(member.getMemberRandom())) {
             return null;
         }
 
@@ -101,7 +102,7 @@ public class ReplyServiceImpl implements ReplyService{
         BoardReply boardReply = replyRepository.getReferenceById(replyDeleteRequestDTO.getReplyNo());
         Member member = memberRepository.getReferenceById(memberNo);
 
-        if (!boardReply.getReplyNickName().equals(member.getMemberNickname()) || !boardReply.getReplyRandom().equals(member.getMemberRandom())){
+        if (!boardReply.getReplyNickName().equals(member.getMemberNickname()) || !boardReply.getReplyRandom().equals(member.getMemberRandom())) {
             return null;
         }
 
@@ -110,5 +111,13 @@ public class ReplyServiceImpl implements ReplyService{
         replyDeleteResponseDTO.setMessage("Success");
 
         return replyDeleteResponseDTO;
+    }
+
+    // 게시글 1개 상세 조회 > 댓글 전체 조회
+    @Override
+    public List<ReplyDetailResponseDTO> replyDatail(ReplyDetailRequestDTO replyDetailRequestDTO) {
+        // List라서 return으로 시작한다.
+        // replyRepository에서 boardRepository를 받아온다.
+        return replyRepository.selectReplyDetail(boardRepository.getReferenceById(replyDetailRequestDTO.getBoardNo()));
     }
 }

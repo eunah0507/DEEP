@@ -2,10 +2,7 @@ package com.basic.deep.board.controller;
 
 
 import com.basic.deep.board.dto.*;
-import com.basic.deep.board.service.BoardService;
-import com.basic.deep.board.service.ImgService;
-import com.basic.deep.board.service.ReplyService;
-import com.basic.deep.board.service.TagService;
+import com.basic.deep.board.service.*;
 import com.basic.deep.member.service.MemberService;
 import com.basic.deep.member.service.S3UploadService;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -40,6 +39,9 @@ public class BoardController {
 
     @Autowired
     private ReplyService replyService;
+
+    @Autowired
+    private BoardLikeService boardLikeService;
 
     // 게시글 작성
     @PostMapping("/write")
@@ -115,16 +117,68 @@ public class BoardController {
 
 
     // 게시글 1개 상세 조회
-//    @PostMapping("/detail")
-//    public ResponseEntity<?> detail(@RequestBody){
-//
-//    }
+    @PostMapping("/detail")
+    public ResponseEntity<?> detail(@RequestBody BoardDetailRequestDTO boardDetailRequestDTO){
+        Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        BoardDetailResponseDTO boardDetailResponseDTO = boardService.boardDetail(boardDetailRequestDTO, memberNo);
+
+        return new ResponseEntity<>(boardDetailResponseDTO, HttpStatus.OK);
+    }
 
     // 게시글 1개에 좋아요 누르기
-//    @PostMapping("/like")
-//    public ResponseEntity<?> like(@RequestBody )
+    @PostMapping("/like")
+    public ResponseEntity<?> like(@RequestBody BoardLikeRequestDTO boardLikeRequestDTO){
+        Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        BoardLikeResponseDTO boardLikeResponseDTO = boardLikeService.boardLike(boardLikeRequestDTO, memberNo);
 
-//    // 게시글 검색
-//    @PostMapping("/search")
-//    public ResponseEntity<?> search(@RequestBody)
+        return new ResponseEntity<>(boardLikeResponseDTO, HttpStatus.OK);
+    }
+
+    // 게시글 검색
+    @PostMapping("/search")
+    public ResponseEntity<?> search(@RequestBody BoardSearchRequestDTO boardSearchRequestDTO){
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // 게시글 1개 상세 조회 - 댓글 조회
+    @GetMapping("/reply-list")
+    public ResponseEntity<?> replyList(@ModelAttribute ReplyDetailRequestDTO replyDetailRequestDTO){
+        List<ReplyDetailResponseDTO> replyDetailResponseDTO = replyService.replyDatail(replyDetailRequestDTO);
+
+        return new ResponseEntity<>(replyDetailResponseDTO, HttpStatus.OK);
+    }
+
+    // 태그 조회
+    @PostMapping("/search-tag")
+    public ResponseEntity<?> searchTag(@RequestBody BoardSearchTagRequestDTO boardSearchTagRequestDTO){
+        if(boardSearchTagRequestDTO.getPage() <= 1 ){
+            boardSearchTagRequestDTO.setPage(0L);
+        }else{
+            boardSearchTagRequestDTO.setPage( boardSearchTagRequestDTO.getPage() -1 );
+        }
+        List<BoardSearchTagResponseDTO> boardSearchTagResponseDTO = tagService.tagDetail(boardSearchTagRequestDTO);
+        return new ResponseEntity<>(boardSearchTagResponseDTO,HttpStatus.OK);
+    }
+
+    // 게시글 목록 조회 (게시판 하나 조회)
+    @GetMapping("/category")
+    public ResponseEntity<?> categoryList(@RequestBody BoardCategoryListRequestDTO boardCategoryListRequestDTO){
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // 게시글 목록 조회 (메인 페이지용)
+    @GetMapping("/main-index")
+    public ResponseEntity<?> mainIndex(){
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // 인기글 목록 조회
+    @GetMapping("/best")
+    public ResponseEntity<?> best(@RequestBody BoardBestRequestDTO boardBestRequestDTO){
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

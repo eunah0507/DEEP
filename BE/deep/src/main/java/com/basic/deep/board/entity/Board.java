@@ -47,4 +47,9 @@ public class Board {
         this.boardContent = cotent;
         this.boardModifyDate = LocalDateTime.now();
     }
+
+    // 게시글 1개 상세 조회 시 view(조회수) 증가
+    public void plusView(){
+        this.boardReadCount++;
+    }
 }

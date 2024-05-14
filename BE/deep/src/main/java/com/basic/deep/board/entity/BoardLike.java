@@ -20,6 +20,6 @@ public class BoardLike {
     private Member memberNo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reply_no")
-    private BoardReply replyNo;
+    @JoinColumn(name = "board_no")
+    private Board boardNo;
 }

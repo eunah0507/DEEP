@@ -3,6 +3,9 @@ package com.basic.deep.board.repository;
 import com.basic.deep.board.entity.Board;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+
 import static com.basic.deep.board.entity.QBoardImg.boardImg;
 
 public class ImgRepositoryImpl implements ImgRepositoryCustom{
@@ -16,5 +19,14 @@ public class ImgRepositoryImpl implements ImgRepositoryCustom{
         queryFactory.delete(boardImg)
                 .where(boardImg.boardNo.eq(boardNo))
                 .execute();
+    }
+
+    // 게시글 1개 상세 조회 - 이미지 조회
+    @Override
+    public List<String> selectBoardDetailImg(Board boardNo) {
+        return queryFactory.select(boardImg.imgFile)
+                .from(boardImg)
+                .where(boardImg.boardNo.eq(boardNo))
+                .fetch();
     }
 }
