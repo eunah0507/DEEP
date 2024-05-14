@@ -2,11 +2,15 @@ import { useEffect, useState } from "react";
 import Header from "../../components/Header/Header";
 import { HomeContainer, HomeWrapper } from "./HomePage.styles";
 import { useCookies } from "react-cookie";
+import { getCookie } from "../../apis/cookie";
 
 function HomePage() {
     const [cookies, setCookie] = useCookies([]);
 
-    useEffect(() => {}, []);
+    useEffect(() => {
+        console.log(cookies);
+        console.log(`${getCookie("Access")}`);
+    }, []);
 
     return (
         <>
