@@ -10,7 +10,7 @@ function Likes() {
         axiosInstance
             .get("/deep/member/profile/like", {
                 headers: {
-                    Authorization: `${cookies.Authorization}`,
+                    Authorization: `${cookies.Access}`,
                 },
             })
             .then((response) => {
