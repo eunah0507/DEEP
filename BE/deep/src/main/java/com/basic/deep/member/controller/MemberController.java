@@ -124,9 +124,8 @@ public class MemberController {
 
             // AccessToken도 쿠키로 준다.
             // 원래 AccssToken을 Authorization이라는 이름으로 줬으므로 그냥 그대로 준다.
-            ResponseCookie accessToken = ResponseCookie.from("Access", jsonWebToken.getAccessToken())
+            ResponseCookie accessToken = ResponseCookie.from("Authorization", jsonWebToken.getAccessToken())
                     .sameSite("None")
-                    .domain("localhost")
                     .httpOnly(false)
                     .secure(true)
                     .path("/")
@@ -139,7 +138,6 @@ public class MemberController {
             ResponseCookie cookie = ResponseCookie.from("Refresh", jsonWebToken.getRefreshToken())
                     //sameSite == None 으로 하는 순간, 다른 서버(?) 곳 에서도 접속이 가능하다.
                     .sameSite("None")
-                    .domain("localhost")
                     .httpOnly(false)
                     .secure(true)
                     .path("/")
