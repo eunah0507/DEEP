@@ -15,6 +15,11 @@ function MyProfile() {
     const [cookies, setCookie] = useCookies([]);
 
     useEffect(() => {
+        console.log(`${cookies.Access}`);
+        console.log(typeof `${cookies.Access}`);
+        console.log(cookies.Access);
+        console.log(typeof cookies.Access);
+
         axiosInstance
             .get("/deep/member/info", {
                 headers: {
