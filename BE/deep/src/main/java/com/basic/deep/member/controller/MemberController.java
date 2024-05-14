@@ -130,7 +130,7 @@ public class MemberController {
                     .httpOnly(false)
                     .secure(true)
                     .path("/")
-                    .maxAge(ACCESS_PERIOD)
+                    .maxAge(ACCESS_PERIOD/1000)
                     .build();
             headers.add("Set-Cookie", accessToken.toString());
 
@@ -143,7 +143,7 @@ public class MemberController {
                     .httpOnly(false)
                     .secure(true)
                     .path("/")
-                    .maxAge(REFRESH_PERIOD)
+                    .maxAge(REFRESH_PERIOD/1000)
                     .build();
             headers.add("Set-Cookie", cookie.toString());
             return new ResponseEntity<>(responsebody, headers, HttpStatus.OK);
