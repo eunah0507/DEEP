@@ -124,7 +124,7 @@ public class MemberController {
 
             // AccessToken도 쿠키로 준다.
             // 원래 AccssToken을 Authorization이라는 이름으로 줬으므로 그냥 그대로 준다.
-            ResponseCookie accessToken = ResponseCookie.from("Authorization", jsonWebToken.getAccessToken())
+            ResponseCookie accessToken = ResponseCookie.from("Access", jsonWebToken.getAccessToken())
                     .sameSite("None")
                     .domain("localhost")
                     .httpOnly(false)
