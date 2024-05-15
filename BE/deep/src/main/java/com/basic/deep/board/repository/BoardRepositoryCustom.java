@@ -26,7 +26,7 @@ public interface BoardRepositoryCustom {
 //    List<BoardMainIndexResponseDTO> findAllBoardMain(Board boardNo);
 
     // 인기글 게시판 목록 조회
-    List<BoardBestResponseDTO> findAllBoardLike(Board boardNo);
+    List<BoardBestResponseDTO> findAllBoardLike(Long page);
 
 
 

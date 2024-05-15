@@ -6,8 +6,7 @@ public enum Category {
     notice,
     skill,
     community,
-    qna,
-    discussion,
-    project
+    qna
+
 
 }

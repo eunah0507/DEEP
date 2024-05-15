@@ -222,6 +222,10 @@ public class BoardServiceImpl implements BoardService {
         List<BoardCategoryListResponseDTO> notice = boardRepository.findAllBoardCategory(Category.notice, 0L);
         List<BoardMainIndexResponseDTO> mainNotice = new java.util.ArrayList<>(notice.stream().map(o -> boardMainIndex(o, Category.notice)).limit(1).toList());
 
+        // BoardBest는 아래에 따로 채워서 o -> 이거 안함
+        List<BoardBestResponseDTO> boardBest = boardRepository.findAllBoardLike(0L);
+        List<BoardMainIndexResponseDTO> mainBest = boardBest.stream().map(this::boardMainBest).limit(5).toList();
+
         List<BoardCategoryListResponseDTO> skill = boardRepository.findAllBoardCategory(Category.skill, 0L);
         List<BoardMainIndexResponseDTO> mainSkill = skill.stream().map(o -> boardMainIndex(o, Category.skill)).limit(5).toList();
 
@@ -231,15 +235,33 @@ public class BoardServiceImpl implements BoardService {
         List<BoardCategoryListResponseDTO> community = boardRepository.findAllBoardCategory(Category.community, 0L);
         List<BoardMainIndexResponseDTO> mainCommunity = community.stream().map(o -> boardMainIndex(o, Category.community)).limit(5).toList();
 
-        List<BoardCategoryListResponseDTO> discussion = boardRepository.findAllBoardCategory(Category.discussion, 0L);
-        List<BoardMainIndexResponseDTO> mainDiscussion = discussion.stream().map(o -> boardMainIndex(o, Category.discussion)).limit(5).toList();
-
+        mainNotice.addAll(mainBest);
         mainNotice.addAll(mainSkill);
         mainNotice.addAll(mainQnA);
         mainNotice.addAll(mainCommunity);
-        mainNotice.addAll(mainDiscussion);
 
         return mainNotice;
+    }
+
+    // 메인 페이지 > 인기글 전용
+    // boardMainIndexResponseDTO.setBest(true);
+    // 이건 다른 게시판에서 넘어오는 글들과 인기 게시판 글을 구분하기 위한 DTO
+    // 컬럼으로 존재 X, 오로지 메인 페이지에서 구분하기 위해 만든 것.
+    public BoardMainIndexResponseDTO boardMainBest(BoardBestResponseDTO boardBestResponseDTO){
+        BoardMainIndexResponseDTO boardMainIndexResponseDTO = new BoardMainIndexResponseDTO();
+
+        boardMainIndexResponseDTO.setBoardNo(boardBestResponseDTO.getBoardNo());
+        boardMainIndexResponseDTO.setCategory(boardBestResponseDTO.getCategory());
+        boardMainIndexResponseDTO.setIsBest(true);
+        boardMainIndexResponseDTO.setBoardTitle(boardBestResponseDTO.getBoardTitle());
+        boardMainIndexResponseDTO.setMemberNickName(boardBestResponseDTO.getMemberNickName());
+        boardMainIndexResponseDTO.setMemberRandom(boardBestResponseDTO.getMemberRandom());
+        boardMainIndexResponseDTO.setMemberFile(boardBestResponseDTO.getMemberFile());
+        boardMainIndexResponseDTO.setBoardCreatedTime(boardBestResponseDTO.getBoardCreatedTime());
+        boardMainIndexResponseDTO.setReply(replyRepository.selectReplyCount(boardBestResponseDTO.getBoardNo()));
+        boardMainIndexResponseDTO.setLike(boardBestResponseDTO.getLike());
+
+        return boardMainIndexResponseDTO;
     }
 
     // 로그인 후 메인페이지 전체 조회 이어서
@@ -248,6 +270,7 @@ public class BoardServiceImpl implements BoardService {
         Member member = memberRepository.selectMemberNickAndRandom(boardCategoryListResponseDTO.getMemberNickName(), boardCategoryListResponseDTO.getMemberRandom()).orElse(null);
 
         boardMainIndexResponseDTO.setBoardNo(boardCategoryListResponseDTO.getBoardNo());
+        boardMainIndexResponseDTO.setIsBest(false);
         boardMainIndexResponseDTO.setCategory(category);
         boardMainIndexResponseDTO.setBoardTitle(boardCategoryListResponseDTO.getBoardTitle());
         boardMainIndexResponseDTO.setMemberNickName(boardCategoryListResponseDTO.getMemberNickName());
@@ -287,6 +310,16 @@ public class BoardServiceImpl implements BoardService {
     // 인기글 게시판 목록 조회
     @Override
     public List<BoardBestResponseDTO> boardBest(BoardBestRequestDTO boardBestRequestDTO) {
-        return null;
+        List<BoardBestResponseDTO> boardBest = boardRepository.findAllBoardLike(boardBestRequestDTO.getPage());
+        boardBest = boardBest.stream().map(this::boardBestPlus).toList();
+
+        return boardBest;
+    }
+
+    // 인기글 게시판 이어서
+    public BoardBestResponseDTO boardBestPlus(BoardBestResponseDTO boardBestResponseDTO){
+        boardBestResponseDTO.setReply(replyRepository.selectReplyCount(boardBestResponseDTO.getBoardNo()));
+
+        return boardBestResponseDTO;
     }
 }

@@ -45,6 +45,7 @@ public class ReplyRepositoryImpl implements ReplyRepositoryCustom{
                 .join(member)
                 .on(boardReply.boardNo.member_no.eq(member))
                 .where(boardReply.boardNo.boardNo.eq(boardNo.getBoardNo()))
+                .orderBy(boardReply.ReplyNo.desc())
                 .fetch();
     }
 }

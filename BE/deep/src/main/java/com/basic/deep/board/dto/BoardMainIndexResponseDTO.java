@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 public class BoardMainIndexResponseDTO {
     private Long boardNo;
     private Category category;
+    private Boolean isBest;
     private String boardTitle;
     private String memberNickName;
     private String memberRandom;

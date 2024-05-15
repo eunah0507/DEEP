@@ -16,6 +16,7 @@ import java.util.Optional;
 
 import static com.basic.deep.board.entity.QBoard.board;
 import static com.basic.deep.member.entity.QMember.member;
+import static com.basic.deep.board.entity.QBoardLike.boardLike;
 
 public class BoardRepositoryImpl implements BoardRepositoryCustom{
 
@@ -62,8 +63,22 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom{
 
     // 인기글 게시판 목록 조회
     @Override
-    public List<BoardBestResponseDTO> findAllBoardLike(Board boardNo) {
-        return null;
+    public List<BoardBestResponseDTO> findAllBoardLike(Long page) {
+
+        return queryFactory.select(Projections.constructor(BoardBestResponseDTO.class,
+                        board.boardNo, board.boardCategory,
+                        board.boardTitle, board.member_no.memberNickname,
+                        board.member_no.memberRandom, board.member_no.memberFile,
+                        board.boardDate, boardLike.likeNo.count()))
+                .from(board)
+                .join(boardLike)
+                .on(board.eq(boardLike.boardNo))
+                .groupBy(board.boardNo)
+                .having(boardLike.likeNo.count().goe(5))
+                .orderBy(board.boardNo.desc())
+                .limit(10)
+                .offset(page*10)
+                .fetch();
     }
 
     // 게시글 검색
@@ -76,6 +91,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom{
                         ))
                 .from(board)
                 .where(board.boardTitle.like("%" + keyword + "%").or(board.boardContent.like("%" + keyword + "%")))
+                .orderBy(board.boardNo.desc())
                 .fetch();
     }
 

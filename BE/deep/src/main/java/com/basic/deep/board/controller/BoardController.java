@@ -6,6 +6,7 @@ import com.basic.deep.board.service.*;
 import com.basic.deep.member.service.MemberService;
 import com.basic.deep.member.service.S3UploadService;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.constraints.ModCheck;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -185,8 +186,16 @@ public class BoardController {
 
     // 인기글 목록 조회
     @GetMapping("/best")
-    public ResponseEntity<?> best(@RequestBody BoardBestRequestDTO boardBestRequestDTO){
+    public ResponseEntity<?> best(@ModelAttribute BoardBestRequestDTO boardBestRequestDTO){
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        if (boardBestRequestDTO.getPage() <= 1){
+            boardBestRequestDTO.setPage(0L);
+        }else{
+            boardBestRequestDTO.setPage(boardBestRequestDTO.getPage() -1);
+        }
+
+        List<BoardBestResponseDTO> boardBestResponseDTO = boardService.boardBest(boardBestRequestDTO);
+
+        return new ResponseEntity<>(boardBestResponseDTO, HttpStatus.OK);
     }
 }
