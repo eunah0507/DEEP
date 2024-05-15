@@ -59,12 +59,12 @@ public interface MemberService {
     MemberOthersProfileResponseDTO othersProfile(MemberOthersProfileRequestDTO memberOthersProfileRequestDTO);
 
     // [커뮤니티 프로필] 마이 페이지 - 내가 쓴 글 확인
-    MemberProfilePostResponseDTO myPost(Long memberNo);
+    List<MemberProfilePostResponseDTO> myPost(Long memberNo);
 
     // [커뮤니티 프로필] 마이 페이지 - 내가 쓴 댓글 확인
-    MemberProfileReplyResponseDTO myReply(Long memberNo);
+    List<MemberProfileReplyResponseDTO> myReply(Long memberNo);
 
     // [커뮤니티 프로필] 마이 페이지 - 내가 누른 좋아요 확인
-    MemberProfieLikeResponseDTO myLike(Long memberNo);
+    List<MemberProfieLikeResponseDTO> myLike(Long memberNo);
 
 }

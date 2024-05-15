@@ -53,7 +53,7 @@ public interface MemberRepositoryCustom {
     List<MemberProfilePostResponseDTO> selectMemberPost(Long memberNo);
 
     // [커뮤니티 프로필] 마이 페이지 - 내가 쓴 댓글 확인
-    List<MemberProfileReplyResponseDTO> selectMemberReply(Long memberNo);
+    List<MemberProfileReplyResponseDTO> selectMemberReply(String memberNickName, String memberRandom);
 
     // [커뮤니티 프로필] 마이 페이지 - 내가 누른 좋아요 확인
     List<MemberProfieLikeResponseDTO> selectMemberLike(Long memberNo);

@@ -1,5 +1,11 @@
 package com.basic.deep.member.service;
 
+import com.basic.deep.board.repository.BoardLikeRepository;
+import com.basic.deep.board.repository.BoardRepository;
+import com.basic.deep.board.repository.ReplyRepository;
+import com.basic.deep.board.service.BoardLikeService;
+import com.basic.deep.board.service.BoardService;
+import com.basic.deep.board.service.ReplyService;
 import com.basic.deep.member.dto.*;
 import com.basic.deep.member.entity.Member;
 import com.basic.deep.member.entity.SocialType;
@@ -27,6 +33,15 @@ public class MemberServiceImpl implements MemberService {
     // 이미지 등록시 사용하는 S3
     @Autowired
     private S3UploadService s3UploadService;
+
+    @Autowired
+    private ReplyRepository replyRepository;
+
+    @Autowired
+    private BoardLikeRepository boardLikeRepository;
+
+    @Autowired
+    private BoardRepository boardRepository;
 
     // 닉네임 부여
     String[] nick1 = new String[]{"빨간", "멋쟁이", "노란", "오렌지", "훈훈한", "커다란", "멋진", "진정한", "힘든", "피곤한",
@@ -339,22 +354,44 @@ public class MemberServiceImpl implements MemberService {
 
     // [커뮤니티 프로필] 마이 페이지 - 내가 쓴 글 확인
     @Override
-    public MemberProfilePostResponseDTO myPost(Long memberNo) {
-        return null;
+    public List<MemberProfilePostResponseDTO> myPost(Long memberNo) {
+        List<MemberProfilePostResponseDTO> memberProfilePost = memberRepository.selectMemberPost(memberNo);
+        memberProfilePost = memberProfilePost.stream().map(this::profilePost).toList();
+
+        return memberProfilePost;
     }
 
+    // [커뮤니티 프로필] 마이 페이지 - 내가 쓴 글 확인 이어서
+    public MemberProfilePostResponseDTO profilePost(MemberProfilePostResponseDTO memberProfilePostResponseDTO){
+        memberProfilePostResponseDTO.setLike(boardLikeRepository.selectBoardDetailLikeCount(memberProfilePostResponseDTO.getBoardNo()));
+        memberProfilePostResponseDTO.setReply(replyRepository.selectReplyCount(memberProfilePostResponseDTO.getBoardNo()));
+
+        return memberProfilePostResponseDTO;
+    }
 
     // [커뮤니티 프로필] 마이 페이지 - 내가 쓴 댓글 확인
     @Override
-    public MemberProfileReplyResponseDTO myReply(Long memberNo) {
-        return null;
+    public List<MemberProfileReplyResponseDTO> myReply(Long memberNo) {
+        Member member = memberRepository.getReferenceById(memberNo);
+        List<MemberProfileReplyResponseDTO> memberProfileReplyResponseDTO = memberRepository.selectMemberReply(member.getMemberNickname(), member.getMemberRandom());
+
+        return memberProfileReplyResponseDTO;
     }
 
     // [커뮤니티 프로필] 마이 페이지 - 내가 누른 좋아요 확인
     @Override
-    public MemberProfieLikeResponseDTO myLike(Long memberNo) {
-        return null;
+    public List<MemberProfieLikeResponseDTO> myLike(Long memberNo) {
+        List<MemberProfieLikeResponseDTO> memberProfileLike = memberRepository.selectMemberLike(memberNo);
+        memberProfileLike = memberProfileLike.stream().map(this::profileLike).toList();
+
+        return memberProfileLike;
     }
 
+    // [커뮤니티 프로필] 마이 페이지 - 내가 누른 좋아요 확인 이어서
+    public MemberProfieLikeResponseDTO profileLike(MemberProfieLikeResponseDTO memberProfieLikeResponseDTO){
+        memberProfieLikeResponseDTO.setLike(boardLikeRepository.selectBoardDetailLikeCount(memberProfieLikeResponseDTO.getBoardNo()));
+        memberProfieLikeResponseDTO.setReply(replyRepository.selectReplyCount(memberProfieLikeResponseDTO.getBoardNo()));
 
+        return memberProfieLikeResponseDTO;
+    }
 }

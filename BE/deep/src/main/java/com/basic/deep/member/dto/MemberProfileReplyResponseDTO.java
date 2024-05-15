@@ -10,4 +10,11 @@ public class MemberProfileReplyResponseDTO {
     private String boardTitle;
     private String replyContent;
     private LocalDateTime boardCreatedTime;
+
+    public MemberProfileReplyResponseDTO(Long boardNo, String boardTitle, String replyContent, LocalDateTime boardCreatedTime) {
+        this.boardNo = boardNo;
+        this.boardTitle = boardTitle;
+        this.replyContent = replyContent;
+        this.boardCreatedTime = boardCreatedTime;
+    }
 }

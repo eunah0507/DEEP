@@ -153,29 +153,43 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     // [커뮤니티 프로필] 마이 페이지 - 내가 쓴 글 확인
     @Override
     public List<MemberProfilePostResponseDTO> selectMemberPost(Long memberNo) {
-        return null;
-//        return queryFactory.select(
-//                Projections.constructor(MemberProfilePostResponseDTO.class,
-//                        board.boardNo, board.boardTitle,
-//                        board.boardDate, board.boardReadCount)
-//                )
-//                .from(board)
-//                .where(member.memberNo.eq(memberNo))
-//                .fetch()
-
-//        );
+        return queryFactory.select(
+                Projections.constructor(MemberProfilePostResponseDTO.class,
+                        board.boardNo, board.boardTitle,
+                        board.boardDate, board.boardReadCount)
+                )
+                .from(member)
+                .join(board)
+                .on(member.memberNo.eq(board.member_no.memberNo))
+                .where(member.memberNo.eq(memberNo))
+                .fetch();
     }
 
     // [커뮤니티 프로필] 마이 페이지 - 내가 쓴 댓글 확인
     @Override
-    public List<MemberProfileReplyResponseDTO> selectMemberReply(Long memberNo) {
-        return null;
+    public List<MemberProfileReplyResponseDTO> selectMemberReply(String memberNickName, String memberRandom) {
+        return queryFactory.select(Projections.constructor(MemberProfileReplyResponseDTO.class,
+                        board.boardNo, board.boardTitle,
+                        boardReply.replyContent, board.boardDate))
+                .from(board)
+                .join(boardReply)
+                .on(board.eq(boardReply.boardNo))
+                .where(boardReply.replyNickName.eq(memberNickName).and(boardReply.replyRandom.eq(memberRandom)))
+                .fetch();
     }
 
     // [커뮤니티 프로필] 마이 페이지 - 내가 누른 좋아요 확인
     @Override
     public List<MemberProfieLikeResponseDTO> selectMemberLike(Long memberNo) {
-        return null;
+        return queryFactory.select(Projections.constructor(MemberProfieLikeResponseDTO.class,
+                        board.member_no.memberNo, board.boardTitle,
+                        board.member_no.memberNickname, board.member_no.memberRandom,
+                        board.boardDate, board.boardReadCount))
+                .from(boardLike)
+                .join(board)
+                .on(board.eq(boardLike.boardNo))
+                .where(boardLike.memberNo.memberNo.eq(memberNo))
+                .fetch();
     }
 
 }
