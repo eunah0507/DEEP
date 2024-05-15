@@ -94,6 +94,4 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom{
                 .orderBy(board.boardNo.desc())
                 .fetch();
     }
-
-
 }

@@ -59,6 +59,9 @@ dependencies {
 	implementation platform('software.amazon.awssdk:bom:2.15.0')
 	implementation 'software.amazon.awssdk:s3'
 	implementation group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '2.3.2'
+
+	implementation group: 'com.cwbase', name: 'logback-redis-appender', version: '1.1.6'
+
 }
 
 tasks.named('test') {
