@@ -1,10 +1,7 @@
 package com.basic.deep.board.service;
 
 import com.basic.deep.board.dto.*;
-import com.basic.deep.board.entity.Board;
-import com.basic.deep.board.entity.BoardImg;
-import com.basic.deep.board.entity.BoardLike;
-import com.basic.deep.board.entity.BoardTag;
+import com.basic.deep.board.entity.*;
 import com.basic.deep.board.repository.*;
 import com.basic.deep.member.entity.Member;
 import com.basic.deep.member.repository.MemberRepository;
@@ -54,7 +51,7 @@ public class BoardServiceImpl implements BoardService {
                         .boardContent(boardWriteRequestDTO.getContent())
                         .boardDate(LocalDateTime.now())
                         .member_no(member)
-                        .boardReadCount(0)
+                        .boardReadCount(0L)
                         .build()
         );
 
@@ -162,24 +159,16 @@ public class BoardServiceImpl implements BoardService {
         return boardDeleteResponseDTO;
     }
 
-    // 게시글 검색
-    @Override
-    public List<BoardSearchResponseDTO> searchBoard(BoardSearchRequestDTO boardSearchRequestDTO, Long memberNo) {
-
-        return null;
-    }
-
-
     // 게시글 1개 상세 조회
     @Override
     public BoardDetailResponseDTO boardDetail(BoardDetailRequestDTO boardDetailRequestDTO, Long memberNo) {
         Board board = boardRepository.getReferenceById(boardDetailRequestDTO.getBoardNo());
         Member member = board.getMember_no();
-        List<String> boardImg = imgRepository.selectBoardDetailImg(board);
+        List<String> boardImg = imgRepository.findAllBoardDetailImg(board);
         Optional<BoardLike> boardLike = boardLikeRepository.selectBoardLike(board.getBoardNo(), memberNo);
         Long boardLikeCount = boardLikeRepository.selectBoardDetailLikeCount(board.getBoardNo());
         Long replyCount = replyRepository.selectReplyCount(board.getBoardNo());
-        List<String> boardTag = tagRepository.selectBoardDetailTag(board);
+        List<String> boardTag = tagRepository.findAllBoardDetailTag(board);
 
         // 게시글 조회수 증가
         board.plusView();
@@ -209,9 +198,95 @@ public class BoardServiceImpl implements BoardService {
 
     // 1개 게시판 목록 전체 조회
     @Override
-    public BoardCategoryListResponseDTO boardCategoryDetail(BoardCategoryRequestDTO boardCategoryRequestDTO) {
+    public List<BoardCategoryListResponseDTO> boardCategoryDetail(BoardCategoryListRequestDTO boardCategoryListRequestDTO) {
+        List<BoardCategoryListResponseDTO> boardCategory = boardRepository.findAllBoardCategory(boardCategoryListRequestDTO.getCategory(), boardCategoryListRequestDTO.getPage());
+        boardCategory = boardCategory.stream().map(this::boardList).toList();
+
+        return boardCategory;
+    }
+
+    // 1개 게시판 목록 전체 조회 이어서
+    public BoardCategoryListResponseDTO boardList(BoardCategoryListResponseDTO boardCategoryListResponseDTO){
+        Board board = boardRepository.getReferenceById(boardCategoryListResponseDTO.getBoardNo());
+        boardCategoryListResponseDTO.setLike(boardLikeRepository.selectBoardDetailLikeCount(board.getBoardNo()));
+        boardCategoryListResponseDTO.setReply(replyRepository.selectReplyCount(board.getBoardNo()));
+        boardCategoryListResponseDTO.setTag(tagRepository.findAllBoardDetailTag(board));
+
+        return boardCategoryListResponseDTO;
+    }
 
 
+     // 메인 페이지용 게시판 조회
+    @Override
+    public List<BoardMainIndexResponseDTO> boardMainPage() {
+        List<BoardCategoryListResponseDTO> notice = boardRepository.findAllBoardCategory(Category.notice, 0L);
+        List<BoardMainIndexResponseDTO> mainNotice = new java.util.ArrayList<>(notice.stream().map(o -> boardMainIndex(o, Category.notice)).limit(1).toList());
+
+        List<BoardCategoryListResponseDTO> skill = boardRepository.findAllBoardCategory(Category.skill, 0L);
+        List<BoardMainIndexResponseDTO> mainSkill = skill.stream().map(o -> boardMainIndex(o, Category.skill)).limit(5).toList();
+
+        List<BoardCategoryListResponseDTO> qna = boardRepository.findAllBoardCategory(Category.qna, 0L);
+        List<BoardMainIndexResponseDTO> mainQnA = qna.stream().map(o -> boardMainIndex(o, Category.qna)).limit(5).toList();
+
+        List<BoardCategoryListResponseDTO> community = boardRepository.findAllBoardCategory(Category.community, 0L);
+        List<BoardMainIndexResponseDTO> mainCommunity = community.stream().map(o -> boardMainIndex(o, Category.community)).limit(5).toList();
+
+        List<BoardCategoryListResponseDTO> discussion = boardRepository.findAllBoardCategory(Category.discussion, 0L);
+        List<BoardMainIndexResponseDTO> mainDiscussion = discussion.stream().map(o -> boardMainIndex(o, Category.discussion)).limit(5).toList();
+
+        mainNotice.addAll(mainSkill);
+        mainNotice.addAll(mainQnA);
+        mainNotice.addAll(mainCommunity);
+        mainNotice.addAll(mainDiscussion);
+
+        return mainNotice;
+    }
+
+    // 로그인 후 메인페이지 전체 조회 이어서
+    public BoardMainIndexResponseDTO boardMainIndex(BoardCategoryListResponseDTO boardCategoryListResponseDTO, Category category){
+        BoardMainIndexResponseDTO boardMainIndexResponseDTO = new BoardMainIndexResponseDTO();
+        Member member = memberRepository.selectMemberNickAndRandom(boardCategoryListResponseDTO.getMemberNickName(), boardCategoryListResponseDTO.getMemberRandom()).orElse(null);
+
+        boardMainIndexResponseDTO.setBoardNo(boardCategoryListResponseDTO.getBoardNo());
+        boardMainIndexResponseDTO.setCategory(category);
+        boardMainIndexResponseDTO.setBoardTitle(boardCategoryListResponseDTO.getBoardTitle());
+        boardMainIndexResponseDTO.setMemberNickName(boardCategoryListResponseDTO.getMemberNickName());
+        boardMainIndexResponseDTO.setMemberRandom(boardCategoryListResponseDTO.getMemberRandom());
+        boardMainIndexResponseDTO.setMemberFile(member.getMemberFile());
+        boardMainIndexResponseDTO.setBoardCreatedTime(boardCategoryListResponseDTO.getBoardCreatedTime());
+        boardMainIndexResponseDTO.setLike(boardLikeRepository.selectBoardDetailLikeCount(boardMainIndexResponseDTO.getBoardNo()));
+        boardMainIndexResponseDTO.setReply(replyRepository.selectReplyCount(boardMainIndexResponseDTO.getBoardNo()));
+
+        return boardMainIndexResponseDTO;
+    }
+
+    // 게시글 검색
+    @Override
+    public List<BoardSearchResponseDTO> searchBoard(BoardSearchRequestDTO boardSearchRequestDTO) {
+        List<BoardSearchResponseDTO> searchBoard = boardRepository.selectBoardByTitleOrContent(boardSearchRequestDTO.getKeyword());
+        searchBoard = searchBoard.stream().map(this::searchOtherThings).toList();
+
+        return searchBoard;
+    }
+
+    // 게시글 검색 이어서
+    public BoardSearchResponseDTO searchOtherThings(BoardSearchResponseDTO boardSearchResponseDTO){
+        Board board = boardRepository.getReferenceById(boardSearchResponseDTO.getBoardNo());
+        Member member = board.getMember_no();
+        boardSearchResponseDTO.setMemberNickName(member.getMemberNickname());
+        boardSearchResponseDTO.setMemberRandom(member.getMemberRandom());
+
+        boardSearchResponseDTO.setLike(boardLikeRepository.selectBoardDetailLikeCount(board.getBoardNo()));
+        boardSearchResponseDTO.setReply(replyRepository.selectReplyCount(board.getBoardNo()));
+        boardSearchResponseDTO.setTag(tagRepository.findAllBoardDetailTag(board));
+
+        return boardSearchResponseDTO;
+    }
+
+
+    // 인기글 게시판 목록 조회
+    @Override
+    public List<BoardBestResponseDTO> boardBest(BoardBestRequestDTO boardBestRequestDTO) {
         return null;
     }
 }

@@ -23,7 +23,7 @@ public class ImgRepositoryImpl implements ImgRepositoryCustom{
 
     // 게시글 1개 상세 조회 - 이미지 조회
     @Override
-    public List<String> selectBoardDetailImg(Board boardNo) {
+    public List<String> findAllBoardDetailImg(Board boardNo) {
         return queryFactory.select(boardImg.imgFile)
                 .from(boardImg)
                 .where(boardImg.boardNo.eq(boardNo))

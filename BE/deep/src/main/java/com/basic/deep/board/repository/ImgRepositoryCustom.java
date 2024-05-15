@@ -11,5 +11,5 @@ public interface ImgRepositoryCustom {
     void deleteBoard(Board boardNo);
 
     // 게시글 1개 상세 조회 - 이미지 조회
-    List<String> selectBoardDetailImg(Board boardNo);
+    List<String> findAllBoardDetailImg(Board boardNo);
 }

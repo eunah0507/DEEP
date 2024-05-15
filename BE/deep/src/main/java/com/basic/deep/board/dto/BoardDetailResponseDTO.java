@@ -14,7 +14,7 @@ public class BoardDetailResponseDTO {
     private String memberRandom;
     private String memberFile;
     private LocalDateTime boardCreatedTime;
-    private int view;
+    private Long view;
     private List<String> img;
     private Boolean meLike;
     private Long like;

@@ -67,7 +67,7 @@ public class BoardController {
 
     // 게시글 삭제
     @DeleteMapping("/delete")
-    public ResponseEntity<?> delete(@ModelAttribute BoardDeleteRequestDTO boardDeleteRequestDTO) {
+    public ResponseEntity<?> boardDelete(@ModelAttribute BoardDeleteRequestDTO boardDeleteRequestDTO) {
         Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
 
         BoardDeleteResponseDTO boardDeleteResponseDTO = boardService.boardDelete(boardDeleteRequestDTO, memberNo);
@@ -127,7 +127,7 @@ public class BoardController {
 
     // 게시글 1개에 좋아요 누르기
     @PostMapping("/like")
-    public ResponseEntity<?> like(@RequestBody BoardLikeRequestDTO boardLikeRequestDTO){
+    public ResponseEntity<?> boardLike(@RequestBody BoardLikeRequestDTO boardLikeRequestDTO){
         Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         BoardLikeResponseDTO boardLikeResponseDTO = boardLikeService.boardLike(boardLikeRequestDTO, memberNo);
 
@@ -137,8 +137,9 @@ public class BoardController {
     // 게시글 검색
     @PostMapping("/search")
     public ResponseEntity<?> search(@RequestBody BoardSearchRequestDTO boardSearchRequestDTO){
+        List<BoardSearchResponseDTO> boardSearchResponseDTO = boardService.searchBoard(boardSearchRequestDTO);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(boardSearchResponseDTO, HttpStatus.OK);
     }
 
     // 게시글 1개 상세 조회 - 댓글 조회
@@ -162,17 +163,24 @@ public class BoardController {
     }
 
     // 게시글 목록 조회 (게시판 하나 조회)
-    @GetMapping("/category")
+    @PostMapping("/category")
     public ResponseEntity<?> categoryList(@RequestBody BoardCategoryListRequestDTO boardCategoryListRequestDTO){
+        if (boardCategoryListRequestDTO.getPage() <= 1){
+            boardCategoryListRequestDTO.setPage(0L);
+        }else{
+            boardCategoryListRequestDTO.setPage(boardCategoryListRequestDTO.getPage() -1);
+        }
+        List<BoardCategoryListResponseDTO> boardCategoryListResponseDTO = boardService.boardCategoryDetail(boardCategoryListRequestDTO);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(boardCategoryListResponseDTO, HttpStatus.OK);
     }
 
     // 게시글 목록 조회 (메인 페이지용)
     @GetMapping("/main-index")
     public ResponseEntity<?> mainIndex(){
+        List<BoardMainIndexResponseDTO> boardMainIndexResponseDTO = boardService.boardMainPage();
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(boardMainIndexResponseDTO, HttpStatus.OK);
     }
 
     // 인기글 목록 조회

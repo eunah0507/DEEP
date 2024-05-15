@@ -38,7 +38,7 @@ public class TagServiceImpl implements TagService{
         Long likeCount = boardLikeRepository.selectBoardDetailLikeCount(boardSearchTagResponseDTO.getBoardNo());
         Long replyCount = replyRepository.selectReplyCount(boardSearchTagResponseDTO.getBoardNo());
         Board board = boardRepository.getReferenceById(boardSearchTagResponseDTO.getBoardNo());
-        List<String> tagList = tagRepository.selectBoardDetailTag(board);
+        List<String> tagList = tagRepository.findAllBoardDetailTag(board);
 
         boardSearchTagResponseDTO.setLike(likeCount);
         boardSearchTagResponseDTO.setReply(replyCount);

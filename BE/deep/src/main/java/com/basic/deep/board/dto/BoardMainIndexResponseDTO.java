@@ -12,7 +12,9 @@ public class BoardMainIndexResponseDTO {
     private String boardTitle;
     private String memberNickName;
     private String memberRandom;
+    private String memberFile;
     private LocalDateTime boardCreatedTime;
     private Long like;
     private Long reply;
+
 }

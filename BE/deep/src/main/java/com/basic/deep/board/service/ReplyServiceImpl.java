@@ -118,6 +118,6 @@ public class ReplyServiceImpl implements ReplyService {
     public List<ReplyDetailResponseDTO> replyDatail(ReplyDetailRequestDTO replyDetailRequestDTO) {
         // List라서 return으로 시작한다.
         // replyRepository에서 boardRepository를 받아온다.
-        return replyRepository.selectReplyDetail(boardRepository.getReferenceById(replyDetailRequestDTO.getBoardNo()));
+        return replyRepository.findAllReplyDetail(boardRepository.getReferenceById(replyDetailRequestDTO.getBoardNo()));
     }
 }

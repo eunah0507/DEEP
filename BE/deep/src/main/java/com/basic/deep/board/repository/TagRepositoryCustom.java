@@ -13,7 +13,7 @@ public interface TagRepositoryCustom {
     void deleteBoard(Board boardNo);
 
     // 게시글 1개 조회 > 태그가 뭐 있는지 조회
-    List<String> selectBoardDetailTag(Board boardNo);
+    List<String> findAllBoardDetailTag(Board boardNo);
 
     // 태그별 조회
     List<BoardSearchTagResponseDTO> selectTag(String tag, Long page);

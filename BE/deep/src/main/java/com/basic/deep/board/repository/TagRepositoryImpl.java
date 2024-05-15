@@ -28,7 +28,7 @@ public class TagRepositoryImpl implements TagRepositoryCustom {
 
     // 게시글 1개 상세 조회 > 태그가 뭐뭐 있는지 조회
     @Override
-    public List<String> selectBoardDetailTag(Board boardNo) {
+    public List<String> findAllBoardDetailTag(Board boardNo) {
         return queryFactory.select(boardTag.tagName)
                 .from(boardTag)
                 .where(boardTag.boardNo.eq(boardNo))
@@ -53,6 +53,7 @@ public class TagRepositoryImpl implements TagRepositoryCustom {
                 .on(board.boardNo.eq(boardTag.boardNo.boardNo).and(boardTag.tagName.eq(tag)))
                 .join(member)
                 .on(board.member_no.eq(member))
+                .orderBy(board.boardNo.desc())
                 .limit(10)
                 .offset(page*10)
                 .fetch();

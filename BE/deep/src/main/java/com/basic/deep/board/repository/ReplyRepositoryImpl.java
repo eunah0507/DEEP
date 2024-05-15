@@ -36,7 +36,7 @@ public class ReplyRepositoryImpl implements ReplyRepositoryCustom{
 
     // 게시글 1개 상세 조회 > 댓글 전체 조회
     @Override
-    public List<ReplyDetailResponseDTO> selectReplyDetail(Board boardNo) {
+    public List<ReplyDetailResponseDTO> findAllReplyDetail(Board boardNo) {
         return queryFactory.select(Projections.constructor(
                 ReplyDetailResponseDTO.class, boardReply.ReplyNo, boardReply.replyNickName,
                         boardReply.replyRandom, member.memberFile,

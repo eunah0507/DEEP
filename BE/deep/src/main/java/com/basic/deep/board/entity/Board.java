@@ -30,7 +30,7 @@ public class Board {
     private LocalDateTime boardModifyDate;
 
     @Column(name = "board_readcount")
-    private int boardReadCount;
+    private Long boardReadCount;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "board_category", nullable = false)

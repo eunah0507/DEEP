@@ -1,9 +1,12 @@
 package com.basic.deep.board.repository;
 
+import com.basic.deep.board.dto.BoardBestResponseDTO;
 import com.basic.deep.board.dto.BoardCategoryListResponseDTO;
+import com.basic.deep.board.dto.BoardMainIndexResponseDTO;
 import com.basic.deep.board.dto.BoardSearchResponseDTO;
 import com.basic.deep.board.entity.Board;
 import com.basic.deep.board.entity.BoardLike;
+import com.basic.deep.board.entity.Category;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,10 +17,16 @@ public interface BoardRepositoryCustom {
     void deleteBoard(Long boardNo);
 
     // 게시글 검색
-    List<BoardSearchResponseDTO> selectBoardByTitleOrContent(String title, String cotnent);
+    List<BoardSearchResponseDTO> selectBoardByTitleOrContent(String keyword);
 
     // 1개 게시판 전체 조회
-    List<BoardCategoryListResponseDTO> selectBoardCategoryAll(Board boardNo);
+    List<BoardCategoryListResponseDTO> findAllBoardCategory(Category category, Long page);
+
+//    // 메인 페이지용 게시판 조회
+//    List<BoardMainIndexResponseDTO> findAllBoardMain(Board boardNo);
+
+    // 인기글 게시판 목록 조회
+    List<BoardBestResponseDTO> findAllBoardLike(Board boardNo);
 
 
 

@@ -16,5 +16,5 @@ public interface ReplyRepositoryCustom {
     Long selectReplyCount(Long boardNo);
 
     // 게시글 1개 상세 조회 > 댓글 전체 조회
-    List<ReplyDetailResponseDTO> selectReplyDetail(Board boardNo);
+    List<ReplyDetailResponseDTO> findAllReplyDetail(Board boardNo);
 }
