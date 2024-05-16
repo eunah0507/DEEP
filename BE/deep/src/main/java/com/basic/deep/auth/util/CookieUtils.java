@@ -20,6 +20,9 @@ public class CookieUtils {
         }
     }
 
+    // 소셜 로그인 과정 중에서, 리다이렉트 되면서 데이터를 보낼 때 URL에 담아서 보내면 보안상에 이유가 있기 때문에 존재하는 코드
+    // 이 addCookie는 소셜 로그인이 진행되는 과정 중에서만 잠깐 쓰이고 바로 삭제된다.
+    // 로그인 시 쿠키 관련과는 연관X
     public static void addCookie(HttpServletResponse response, String name, String value, int maxAge) {
         Cookie cookie = new Cookie(name, value);
         cookie.setPath("/");
