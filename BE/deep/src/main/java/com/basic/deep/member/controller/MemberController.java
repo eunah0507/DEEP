@@ -22,6 +22,7 @@ import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.server.Cookie;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -78,7 +79,8 @@ public class MemberController {
     // 회원가입
     // DTO의 @Email 혹은 @NotBlank등을 적용시키기 위해 Vaild 사용
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody @Valid MemberSignUpRequestDTO memberSignUpRequestDTO) {
+    public ResponseEntity<?> signup(@RequestBody @Valid MemberSignUpRequestDTO memberSignUpRequestDTO, Cookie cookie) {
+
         MemberSignUpResponseDTO memberSignUpResponseDTO = memberService.memberSignUp(memberSignUpRequestDTO);
         return new ResponseEntity<MemberSignUpResponseDTO>(memberSignUpResponseDTO, HttpStatus.OK);
     }
@@ -430,5 +432,10 @@ public class MemberController {
         List<MemberProfieLikeResponseDTO> memberProfieLikeResponseDTO = memberService.myLike(memberNo);
 
         return new ResponseEntity<>(memberProfieLikeResponseDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/cookie-check")
+    public ResponseEntity<?> cookieCheck(@CookieValue("Refresh") String refresh){
+        return new ResponseEntity<>(refresh,HttpStatus.OK);
     }
 }
