@@ -68,7 +68,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom{
         return queryFactory.select(Projections.constructor(BoardBestResponseDTO.class,
                         board.boardNo, board.boardCategory,
                         board.boardTitle, board.member_no.memberNickname,
-                        board.member_no.memberRandom, board.member_no.memberFile,
+                        board.member_no.memberRandom, board.boardContent , board.member_no.memberFile,
                         board.boardDate, boardLike.likeNo.count()))
                 .from(board)
                 .join(boardLike)
