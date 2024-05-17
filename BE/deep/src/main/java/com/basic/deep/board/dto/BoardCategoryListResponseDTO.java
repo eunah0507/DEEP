@@ -9,7 +9,7 @@ import java.util.List;
 public class BoardCategoryListResponseDTO {
     private Long boardNo;
     private String boardTitle;
-    private String boardCotent;
+    private String boardContent;
     private String memberNickName;
     private String memberRandom;
     private String memberFile;
@@ -19,10 +19,10 @@ public class BoardCategoryListResponseDTO {
     private Long reply;
     private List<String> tag;
 
-    public BoardCategoryListResponseDTO(Long boardNo, String boardTitle, String boardCotent, String memberNickName, String memberRandom, String memberFile, LocalDateTime boardCreatedTime, Long view) {
+    public BoardCategoryListResponseDTO(Long boardNo, String boardTitle, String boardContent, String memberNickName, String memberRandom, String memberFile, LocalDateTime boardCreatedTime, Long view) {
         this.boardNo = boardNo;
         this.boardTitle = boardTitle;
-        this.boardCotent = boardCotent;
+        this.boardContent = boardContent;
         this.memberNickName = memberNickName;
         this.memberRandom = memberRandom;
         this.memberFile = memberFile;
