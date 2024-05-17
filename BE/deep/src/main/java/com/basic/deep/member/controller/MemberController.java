@@ -123,7 +123,8 @@ public class MemberController {
             JsonWebToken jsonWebToken = JwtTokenUtils.allocateToken(memberNo, "ROLE_USER");
             MultiValueMap<String, String> headers = new HttpHeaders();
             // 엑세스 토큰을 넣어준다. 헤더에 들어간다. DB에는 저장되지 않는다.
-            headers.add("Access", jsonWebToken.getAccessToken());
+            // 백엔드에서만 토큰을 관리하기 때문에 header에 AccessToken을 보내지 않는다.
+//            headers.add("Access", jsonWebToken.getAccessToken());
 
             // AccessToken도 쿠키로 준다.
             // 원래 AccssToken을 Authorization이라는 이름으로 줬으나, Access로 변경

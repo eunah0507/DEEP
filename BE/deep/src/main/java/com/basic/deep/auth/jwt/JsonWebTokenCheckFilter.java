@@ -47,6 +47,8 @@ public class JsonWebTokenCheckFilter extends OncePerRequestFilter {
             }
         }
 
+        // request에 모든 Cookie를 읽는다. > refresh라고 적혀있는 쿠키가 있다면 access라는 String에 넣는다.
+        // 근데 이 과정을 거쳐서도 null 이라면 BAD_REQUEST를 보낸다.
         try {
             String access = null;
             for(Cookie cookie : request.getCookies()) {
@@ -61,6 +63,8 @@ public class JsonWebTokenCheckFilter extends OncePerRequestFilter {
 
             if (JwtTokenUtils.isValidToken(access)) { // ACCESS 토큰 유효기간 안지남.
                 Authentication authentication = jsonWebTokenProvider.getAuthentication(access); // 정상 토큰이면 SecurityContext 저장
+                // 제대로 된 토큰이라면 SecurityContextHolder에 담는다.
+                // 담은 토큰을 Controller에서 활용할 수 있게 전송하는 코드
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } else { // ACCESS 토큰 유효기간 지남.+ REFRESH 있음
 

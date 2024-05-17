@@ -7,6 +7,7 @@ import com.basic.deep.member.entity.Member;
 import com.basic.deep.member.repository.MemberRepository;
 import com.basic.deep.member.service.S3UploadService;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @Transactional
 public class BoardServiceImpl implements BoardService {
@@ -55,23 +57,33 @@ public class BoardServiceImpl implements BoardService {
                         .build()
         );
 
-        for (String o : boardWriteRequestDTO.getTag()) {
-            BoardTag boardWriteTag = tagRepository.save(
-                    BoardTag.builder()
-                            .tagName(o)
-                            .boardNo(boardWrite)
-                            .build()
-            );
+        log.info("[boardWriteRequestDTO.getTag().isEmpty()] = {} ",boardWriteRequestDTO.getTag().isEmpty());
+        log.info("[boardWriteRequestDTO.getTag().size()] = {} ",boardWriteRequestDTO.getTag().size());
+        if (!boardWriteRequestDTO.getTag().isEmpty()) {
+            for (String o : boardWriteRequestDTO.getTag()) {
+                BoardTag boardWriteTag = tagRepository.save(
+                        BoardTag.builder()
+                                .tagName(o)
+                                .boardNo(boardWrite)
+                                .build()
+                );
+            }
         }
 
-        for (MultipartFile o : boardWriteRequestDTO.getImg()) {
-            String boardImgUrl = s3UploadService.upload(o, "deepBoardImg");
-            BoardImg boardWriteImg = imgRepository.save(
-                    BoardImg.builder()
-                            .imgFile(boardImgUrl)
-                            .boardNo(boardWrite)
-                            .build()
-            );
+        log.info("[boardWriteRequestDTO.getImg().isEmpty()] = {} ",boardWriteRequestDTO.getImg().isEmpty());
+        log.info("[boardWriteRequestDTO.getImg().size()] = {} ",boardWriteRequestDTO.getImg().size());
+        if (!boardWriteRequestDTO.getImg().isEmpty()) {
+            for (MultipartFile o : boardWriteRequestDTO.getImg()) {
+                if(!o.isEmpty()) {
+                    String boardImgUrl = s3UploadService.upload(o, "deepBoardImg");
+                    BoardImg boardWriteImg = imgRepository.save(
+                            BoardImg.builder()
+                                    .imgFile(boardImgUrl)
+                                    .boardNo(boardWrite)
+                                    .build()
+                    );
+                }
+            }
         }
 
         BoardWriteResponseDTO boardWriteResponseDTO = new BoardWriteResponseDTO();
@@ -116,13 +128,15 @@ public class BoardServiceImpl implements BoardService {
         }
 
         for (MultipartFile o : boardModifyRequestDTO.getImg()) {
-            String boardImgUrl = s3UploadService.upload(o, "deepBoardImg");
-            BoardImg boardWriteImg = imgRepository.save(
-                    BoardImg.builder()
-                            .imgFile(boardImgUrl)
-                            .boardNo(board)
-                            .build()
-            );
+            if(!o.isEmpty()) {
+                String boardImgUrl = s3UploadService.upload(o, "deepBoardImg");
+                BoardImg boardWriteImg = imgRepository.save(
+                        BoardImg.builder()
+                                .imgFile(boardImgUrl)
+                                .boardNo(board)
+                                .build()
+                );
+            }
         }
 
         BoardModifyResponseDTO boardModifyResponseDTO = new BoardModifyResponseDTO();
@@ -206,7 +220,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     // 1개 게시판 목록 전체 조회 이어서
-    public BoardCategoryListResponseDTO boardList(BoardCategoryListResponseDTO boardCategoryListResponseDTO){
+    public BoardCategoryListResponseDTO boardList(BoardCategoryListResponseDTO boardCategoryListResponseDTO) {
         Board board = boardRepository.getReferenceById(boardCategoryListResponseDTO.getBoardNo());
         boardCategoryListResponseDTO.setLike(boardLikeRepository.selectBoardDetailLikeCount(board.getBoardNo()));
         boardCategoryListResponseDTO.setReply(replyRepository.selectReplyCount(board.getBoardNo()));
@@ -216,7 +230,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
 
-     // 메인 페이지용 게시판 조회
+    // 메인 페이지용 게시판 조회
     @Override
     public List<BoardMainIndexResponseDTO> boardMainPage() {
         List<BoardCategoryListResponseDTO> notice = boardRepository.findAllBoardCategory(Category.notice, 0L);
@@ -247,7 +261,7 @@ public class BoardServiceImpl implements BoardService {
     // boardMainIndexResponseDTO.setBest(true);
     // 이건 다른 게시판에서 넘어오는 글들과 인기 게시판 글을 구분하기 위한 DTO
     // 컬럼으로 존재 X, 오로지 메인 페이지에서 구분하기 위해 만든 것.
-    public BoardMainIndexResponseDTO boardMainBest(BoardBestResponseDTO boardBestResponseDTO){
+    public BoardMainIndexResponseDTO boardMainBest(BoardBestResponseDTO boardBestResponseDTO) {
         BoardMainIndexResponseDTO boardMainIndexResponseDTO = new BoardMainIndexResponseDTO();
 
         boardMainIndexResponseDTO.setBoardNo(boardBestResponseDTO.getBoardNo());
@@ -265,7 +279,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     // 로그인 후 메인페이지 전체 조회 이어서
-    public BoardMainIndexResponseDTO boardMainIndex(BoardCategoryListResponseDTO boardCategoryListResponseDTO, Category category){
+    public BoardMainIndexResponseDTO boardMainIndex(BoardCategoryListResponseDTO boardCategoryListResponseDTO, Category category) {
         BoardMainIndexResponseDTO boardMainIndexResponseDTO = new BoardMainIndexResponseDTO();
         Member member = memberRepository.selectMemberNickAndRandom(boardCategoryListResponseDTO.getMemberNickName(), boardCategoryListResponseDTO.getMemberRandom()).orElse(null);
 
@@ -293,7 +307,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     // 게시글 검색 이어서
-    public BoardSearchResponseDTO searchOtherThings(BoardSearchResponseDTO boardSearchResponseDTO){
+    public BoardSearchResponseDTO searchOtherThings(BoardSearchResponseDTO boardSearchResponseDTO) {
         Board board = boardRepository.getReferenceById(boardSearchResponseDTO.getBoardNo());
         Member member = board.getMember_no();
         boardSearchResponseDTO.setMemberNickName(member.getMemberNickname());
@@ -317,7 +331,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     // 인기글 게시판 이어서
-    public BoardBestResponseDTO boardBestPlus(BoardBestResponseDTO boardBestResponseDTO){
+    public BoardBestResponseDTO boardBestPlus(BoardBestResponseDTO boardBestResponseDTO) {
         boardBestResponseDTO.setReply(replyRepository.selectReplyCount(boardBestResponseDTO.getBoardNo()));
 
         return boardBestResponseDTO;
