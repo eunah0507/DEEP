@@ -128,6 +128,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         );
     }
 
+    // 유저 검색
     @Override
     public List<MemberSearchResponseDTO> selectMemberByNickNameAndRandom(String nickname, String random) {
         return queryFactory.select(
@@ -135,7 +136,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                         member.memberNickname,member.memberRandom,member.memberFile,member.memberIntroduce)
         )
                 .from(member)
-                .where(member.memberNickname.in(nickname).or(member.memberRandom.in(random)))
+                .where(member.memberNickname.like("%" + nickname + "%").or(member.memberRandom.in(random)))
                 .fetch();
     }
 
