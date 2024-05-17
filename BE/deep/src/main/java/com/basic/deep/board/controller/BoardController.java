@@ -49,7 +49,7 @@ public class BoardController {
     public ResponseEntity<?> write(@ModelAttribute BoardWriteRequestDTO boardWriteRequestDTO) {
         Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         BoardWriteResponseDTO boardWriteResponseDTO = boardService.boardWrite(boardWriteRequestDTO, memberNo);
-        log.info(Boolean);
+        
         return new ResponseEntity<>(boardWriteResponseDTO, HttpStatus.OK);
     }
 
