@@ -13,9 +13,11 @@ function ProfileEdit() {
     const [nickName, setNickName] = useState("");
     const [introduce, setIntroduce] = useState("");
     const [imgFile, setImgFile] = useState(null);
+    const [imgFileSize, setImgFileSize] = useState(0);
     const [profileImg, setProfileImg] = useState("");
     const [isNickName, setIsNickName] = useState(false);
     const [isIntroduce, setIsIntroduce] = useState(false);
+    const [isComplete, setIsComplete] = useState(false);
 
     const member = useSelector((state) => state.member.value);
 
@@ -64,6 +66,7 @@ function ProfileEdit() {
         const imageUrl = URL.createObjectURL(e.target.files[0]);
         setProfileImg(imageUrl);
         setImgFile(e.target.files[0]);
+        setImgFileSize(e.target.files[0].size);
     };
 
     const handleCancel = () => {
@@ -71,8 +74,16 @@ function ProfileEdit() {
     };
 
     const profileEdit = () => {
+        const limitsize = 1024 ** 2 * 10;
+
+        setIsComplete(true);
+
         if (nickName.length === 0) {
             alert("닉네임은 필수 입력값입니다.");
+            setIsComplete(false);
+        } else if (imgFileSize > limitsize) {
+            alert("이미지의 최대 크기는 10MB 이하입니다.");
+            setIsComplete(false);
         } else {
             if (imgFile === null) {
                 formData.append("memberNickName", nickName);
@@ -196,7 +207,12 @@ function ProfileEdit() {
                         >
                             취소
                         </Button>
-                        <Button smallWidth largeFont onClick={profileEdit}>
+                        <Button
+                            smallWidth
+                            largeFont
+                            disabled={isComplete}
+                            onClick={profileEdit}
+                        >
                             완료
                         </Button>
                     </div>

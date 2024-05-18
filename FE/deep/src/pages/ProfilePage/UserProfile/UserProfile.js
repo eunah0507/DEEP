@@ -97,7 +97,7 @@ function UserProfile() {
                         프로필 편집
                     </Button>
                 </div>
-                <div className="user_contents">
+                <div className="user_contents_menu">
                     <ul className="user_contents_item">
                         <li
                             className={
@@ -124,9 +124,11 @@ function UserProfile() {
                             내가 쓴 댓글
                         </li>
                     </ul>
-                    {tab === 0 ? <Likes /> : <></>}
-                    {tab === 1 ? <UserPost /> : <></>}
-                    {tab === 2 ? <UserComments /> : <></>}
+                    <div className="user_contents_container">
+                        {tab === 0 ? <Likes /> : <></>}
+                        {tab === 1 ? <UserPost /> : <></>}
+                        {tab === 2 ? <UserComments /> : <></>}
+                    </div>
                 </div>
             </ProfileContainer>
         </ProfileWrapper>
