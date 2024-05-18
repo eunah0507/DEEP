@@ -116,6 +116,7 @@ function ProfileEdit() {
                 .catch((error) => {
                     console.log(error);
                     alert("프로필 편집에 실패하였습니다.\n다시 시도해 주세요.");
+                    setIsComplete(false);
                 });
         }
     };
