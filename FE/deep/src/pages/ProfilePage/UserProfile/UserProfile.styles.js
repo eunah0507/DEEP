@@ -88,7 +88,7 @@ export const ProfileContainer = styled.div`
     }
 
     /* user contents */
-    .user_contents .user_contents_item {
+    .user_contents_menu .user_contents_item {
         display: flex;
         align-items: center;
         width: 100%;
@@ -96,7 +96,7 @@ export const ProfileContainer = styled.div`
         border-bottom: 1px solid #ddd;
     }
 
-    .user_contents .user_contents_item li {
+    .user_contents_menu .user_contents_item li {
         width: 33%;
         height: 50px;
         line-height: 50px;
@@ -105,11 +105,15 @@ export const ProfileContainer = styled.div`
         cursor: pointer;
     }
 
-    .user_contents .user_contents_item li.selected {
+    .user_contents_menu .user_contents_item li.selected {
         border-bottom: 3px solid #1e88e5;
     }
 
     .user_contents_item {
         padding: 0 30px;
+    }
+
+    .user_contents_container {
+        min-height: 500px;
     }
 `;

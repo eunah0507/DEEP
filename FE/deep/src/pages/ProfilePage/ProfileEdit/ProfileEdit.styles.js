@@ -5,14 +5,13 @@ export const EditWrapper = styled.div`
     display: flex;
     justify-content: center;
     height: 100vh;
-    margin: auto 0;
 `;
 
 export const EditContainer = styled.div`
     display: flex;
     justify-content: center;
     width: 820px;
-    height: calc(100vh - 60px);
+    height: calc(100% - 60px);
     margin-top: 60px;
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;

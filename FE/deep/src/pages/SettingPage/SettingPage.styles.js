@@ -3,14 +3,13 @@ import styled from "styled-components";
 export const SettingWrapper = styled.div`
     display: flex;
     justify-content: center;
-    align-items: center;
     height: 100vh;
-    margin: auto 0;
 `;
 
 export const SettingContainer = styled.div`
     width: 610px;
-    height: calc(100vh - 60px);
+    height: calc(100% - 60px);
+    margin-top: 60px;
     padding: 50px 30px 0;
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;
