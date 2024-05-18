@@ -15,8 +15,15 @@ import SignUpSuccess from "../pages/SignUpPage/Step/SignUpSuccess";
 import HomePage from "../pages/HomePage/HomePage";
 import SettingPage from "../pages/SettingPage/SettingPage";
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
-import MyProfile from "../pages/ProfilePage/MyProfile";
 import CommunityPage from "../pages/BoardPage/Community/CommunityPage";
+import ProfileEdit from "../pages/ProfilePage/ProfileEdit/ProfileEdit";
+import PrivateRoute from "../layout/PrivateRoute";
+import UserProfile from "../pages/ProfilePage/UserProfile/UserProfile";
+import PostEditor from "../pages/BoardPage/PostEditor/PostEditor";
+import BestPage from "../pages/BoardPage/Best/BestPage";
+import QnAPage from "../pages/BoardPage/QnA/QnAPage";
+import NoticePage from "../pages/BoardPage/Notice/NoticePage";
+import SkillPage from "../pages/BoardPage/Skill/SkillPage";
 
 function AppRoutes() {
     return (
@@ -37,12 +44,20 @@ function AppRoutes() {
                     <Route index element={<FindPw />} />
                     <Route path="reset" element={<FindPwSuccess />} />
                 </Route>
-                <Route path="/home" element={<HomePage />} />
-                <Route path="/setting" element={<SettingPage />} />
-                <Route path="/profile" element={<ProfilePage />}>
-                    <Route index element={<MyProfile />} />
+                <Route element={<PrivateRoute />}>
+                    <Route path="/home" element={<HomePage />} />
+                    <Route path="/settings" element={<SettingPage />} />
+                    <Route path="/profile" element={<ProfilePage />}>
+                        <Route path=":id" element={<UserProfile />} />
+                        <Route path="edit" element={<ProfileEdit />} />
+                    </Route>
+                    <Route path="/notice" element={<NoticePage />} />
+                    <Route path="/best" element={<BestPage />} />
+                    <Route path="/skill" element={<SkillPage />} />
+                    <Route path="/qna" element={<QnAPage />} />
+                    <Route path="/community" element={<CommunityPage />} />
+                    <Route path="/post/create" element={<PostEditor />} />
                 </Route>
-                <Route path="/community" element={<CommunityPage />} />
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </Router>

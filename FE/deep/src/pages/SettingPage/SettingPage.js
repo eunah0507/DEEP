@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { SettingContainer, SettingWrapper } from "./SettingPage.styles";
 import { SlArrowRight } from "react-icons/sl";
 import axiosInstance from "../../apis/axiosInstance";
-import { getCookie } from "../../apis/cookie";
 
 function SettingPage() {
     const [name, setName] = useState("");
@@ -10,15 +9,10 @@ function SettingPage() {
     const [date, setDate] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
-    const [accessToken, setAccessToken] = useState("");
 
     useEffect(() => {
         axiosInstance
-            .get("/deep/member/info", {
-                headers: {
-                    Authorization: `${getCookie("Authorization")}`,
-                },
-            })
+            .get("/deep/member/info")
             .then((response) => {
                 const data = response.data;
 
@@ -29,11 +23,16 @@ function SettingPage() {
                 const day = ("0" + date.getDate()).slice(-2);
                 const signUpDate = `${year}.${month}.${day}`;
 
+                const phoneNumber = data.memberPhone.replace(
+                    /^(\d{2,3})(\d{3,4})(\d{4})$/,
+                    `$1-$2-$3`
+                );
+
                 setName(data.memberName);
                 setId(data.memberID);
                 setDate(signUpDate);
                 setEmail(data.memberMail);
-                setPhone(data.memberPhone);
+                setPhone(phoneNumber);
             })
             .catch((error) => console.log(error));
     }, []);
