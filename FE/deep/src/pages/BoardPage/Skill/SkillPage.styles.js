@@ -1,13 +1,13 @@
 import styled from "styled-components";
 
-export const CommunityWrapper = styled.div`
+export const SkillWrapper = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
     margin: auto 0;
 `;
 
-export const CommunityContainer = styled.div`
+export const SkillContainer = styled.div`
     width: 820px;
     height: calc(100% - 60px);
     margin: 60px 0 200px;

@@ -1,22 +1,15 @@
-import { Link } from "react-router-dom";
-import { HeaderContainer, LoginBtn, SignUpBtn } from "./Header.styles";
-import headerLogo from "../../assets/images/deep-logo-header.svg";
+import { useSelector } from "react-redux";
+import { HeaderWrapper } from "./Header.styles";
+import Login from "./Login/Login";
+import Logout from "./Logout/Logout";
 
 function Header() {
+    const member = useSelector((state) => state.member.value);
+
     return (
-        <HeaderContainer>
-            <header className="wrap">
-                <Link to="/">
-                    <img src={headerLogo} alt="deep-logo" />
-                </Link>
-                <div className="buttons">
-                    <LoginBtn inverted to="/login">
-                        로그인
-                    </LoginBtn>
-                    <SignUpBtn to="/signup/terms-agree">회원가입</SignUpBtn>
-                </div>
-            </header>
-        </HeaderContainer>
+        <HeaderWrapper>
+            {member.isAuthorized ? <Login /> : <Logout />}
+        </HeaderWrapper>
     );
 }
 

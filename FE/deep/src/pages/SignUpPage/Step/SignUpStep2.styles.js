@@ -46,14 +46,14 @@ export const SignUpContainer = styled.div`
     }
 
     .form_item.error input {
-        outline: 2px solid #e57373;
+        outline: 2px solid ${palette.red[3]};
     }
 
     .form_item.error .noValid {
         display: block;
         margin-top: 10px;
         margin-bottom: 20px;
-        color: #e53935;
+        color: ${palette.red[7]};
         font-size: 1.4rem;
         text-indent: 5px;
     }
