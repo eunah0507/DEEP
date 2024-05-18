@@ -408,7 +408,7 @@ public class MemberController {
 
     // [커뮤니티 프로필] 마이 페이지 - 내가 쓴 글 확인
     @GetMapping("/profile-post")
-    public ResponseEntity<?> profilePost(){
+    public ResponseEntity<?> profilePost() {
         Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         List<MemberProfilePostResponseDTO> memberProfilePostResponseDTO = memberService.myPost(memberNo);
 
@@ -417,7 +417,7 @@ public class MemberController {
 
     // [커뮤니티 프로필] 마이 페이지 - 내가 쓴 댓글 확인
     @GetMapping("/profile-reply")
-    public ResponseEntity<?> profileReply(){
+    public ResponseEntity<?> profileReply() {
         Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         List<MemberProfileReplyResponseDTO> memberProfileReplyResponseDTO = memberService.myReply(memberNo);
 
@@ -425,10 +425,9 @@ public class MemberController {
     }
 
 
-
     // [커뮤니티 프로필] 마이 페이지 - 내가 누른 좋아요 확인
     @GetMapping("/profile-like")
-    private ResponseEntity<?> profileLike(){
+    private ResponseEntity<?> profileLike() {
         Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         List<MemberProfieLikeResponseDTO> memberProfieLikeResponseDTO = memberService.myLike(memberNo);
 
@@ -436,7 +435,26 @@ public class MemberController {
     }
 
     @GetMapping("/cookie-check")
-    public ResponseEntity<?> cookieCheck(@CookieValue("Refresh") String refresh){
-        return new ResponseEntity<>(refresh,HttpStatus.OK);
+    public ResponseEntity<?> cookieCheck(@CookieValue("Refresh") String refresh) {
+        return new ResponseEntity<>(refresh, HttpStatus.OK);
+    }
+
+    // 로그아웃
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout() {
+        MultiValueMap<String, String> headers = new HttpHeaders();
+        MemberLogOutResponseDTO memberLogOutResponseDTO = new MemberLogOutResponseDTO();
+        memberLogOutResponseDTO.setMessage("Success");
+
+        // 리프레시 토큰을 제거한다.
+        ResponseCookie cookie = ResponseCookie.from("Refresh", "")
+                .sameSite("None")
+                .httpOnly(false)
+                .secure(true)
+                .path("/")
+                .maxAge(0)
+                .build();
+        headers.add("Set-Cookie", cookie.toString());
+        return new ResponseEntity<>(memberLogOutResponseDTO, headers, HttpStatus.OK);
     }
 }
