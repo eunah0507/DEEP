@@ -14,6 +14,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../../store/memberStore";
 import Search from "../Search/Search";
+import axiosInstance from "../../../apis/axiosInstance";
 
 function Login() {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -44,6 +45,14 @@ function Login() {
     };
 
     const userLogout = () => {
+        axiosInstance
+            .get("/deep/member/logout")
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
         dispatch(logout());
         navigate("/");
     };
