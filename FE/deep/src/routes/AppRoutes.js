@@ -24,6 +24,7 @@ import BestPage from "../pages/BoardPage/Best/BestPage";
 import QnAPage from "../pages/BoardPage/QnA/QnAPage";
 import NoticePage from "../pages/BoardPage/Notice/NoticePage";
 import SkillPage from "../pages/BoardPage/Skill/SkillPage";
+import PostDetail from "../pages/BoardPage/PostDetail/PostDetail";
 
 function AppRoutes() {
     return (
@@ -57,6 +58,7 @@ function AppRoutes() {
                     <Route path="/qna" element={<QnAPage />} />
                     <Route path="/community" element={<CommunityPage />} />
                     <Route path="/post/create" element={<PostEditor />} />
+                    <Route path="/community/:id" element={<PostDetail />} />
                 </Route>
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>

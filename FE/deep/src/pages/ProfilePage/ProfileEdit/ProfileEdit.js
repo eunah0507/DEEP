@@ -64,6 +64,8 @@ function ProfileEdit() {
 
     const handleImgUpload = (e) => {
         const imageUrl = URL.createObjectURL(e.target.files[0]);
+        console.log(e.target.files[0]);
+        console.log(typeof e.target.files[0]);
         setProfileImg(imageUrl);
         setImgFile(e.target.files[0]);
         setImgFileSize(e.target.files[0].size);

@@ -99,7 +99,7 @@ export const UserInfoContainer = styled.div`
         border: 1px solid #ddd;
         border-radius: 5px;
         background: #fff;
-        filter: drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.05));
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
         z-index: 99;
     }
 

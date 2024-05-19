@@ -67,9 +67,9 @@ export const PostListContainer = styled.li`
     .tags .tag {
         display: inline;
         margin-right: 10px;
-        padding: 5px 13px;
+        padding: 7px 13px;
         border: 1px solid ${palette.blue[4]};
-        border-radius: 15px;
+        border-radius: 20px;
         color: ${palette.blue[7]};
         font-size: 1.4rem;
         font-weight: 600;
