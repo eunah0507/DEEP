@@ -33,7 +33,10 @@ function Post({ post }) {
                 </div>
             </div>
             <h4 className="post_title">{post.boardTitle}</h4>
-            <p className="post_content">{post.boardContent}</p>
+            <p
+                className="post_content"
+                dangerouslySetInnerHTML={{ __html: post.boardContent }}
+            ></p>
             <div className="contents_container">
                 <ul className="tags">
                     {post.tag.map((t) => {
