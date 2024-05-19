@@ -12,6 +12,6 @@ public class BoardWriteRequestDTO implements Serializable {
     private String title;
     private Category category;
     private String content;
-    private List<MultipartFile> img;
+//    private List<MultipartFile> img;
     private List<String> tag;
 }

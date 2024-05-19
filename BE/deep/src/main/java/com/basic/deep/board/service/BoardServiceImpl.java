@@ -70,21 +70,21 @@ public class BoardServiceImpl implements BoardService {
             }
         }
 
-        log.info("[boardWriteRequestDTO.getImg().isEmpty()] = {} ",boardWriteRequestDTO.getImg().isEmpty());
-        log.info("[boardWriteRequestDTO.getImg().size()] = {} ",boardWriteRequestDTO.getImg().size());
-        if (!boardWriteRequestDTO.getImg().isEmpty()) {
-            for (MultipartFile o : boardWriteRequestDTO.getImg()) {
-                if(!o.isEmpty()) {
-                    String boardImgUrl = s3UploadService.upload(o, "deepBoardImg");
-                    BoardImg boardWriteImg = imgRepository.save(
-                            BoardImg.builder()
-                                    .imgFile(boardImgUrl)
-                                    .boardNo(boardWrite)
-                                    .build()
-                    );
-                }
-            }
-        }
+//        log.info("[boardWriteRequestDTO.getImg().isEmpty()] = {} ",boardWriteRequestDTO.getImg().isEmpty());
+//        log.info("[boardWriteRequestDTO.getImg().size()] = {} ",boardWriteRequestDTO.getImg().size());
+//        if (!boardWriteRequestDTO.getImg().isEmpty()) {
+//            for (MultipartFile o : boardWriteRequestDTO.getImg()) {
+//                if(!o.isEmpty()) {
+//                    String boardImgUrl = s3UploadService.upload(o, "deepBoardImg");
+//                    BoardImg boardWriteImg = imgRepository.save(
+//                            BoardImg.builder()
+//                                    .imgFile(boardImgUrl)
+//                                    .boardNo(boardWrite)
+//                                    .build()
+//                    );
+//                }
+//            }
+//        }
 
         BoardWriteResponseDTO boardWriteResponseDTO = new BoardWriteResponseDTO();
         boardWriteResponseDTO.setBoardNo(boardWrite.getBoardNo());
@@ -127,17 +127,17 @@ public class BoardServiceImpl implements BoardService {
             );
         }
 
-        for (MultipartFile o : boardModifyRequestDTO.getImg()) {
-            if(!o.isEmpty()) {
-                String boardImgUrl = s3UploadService.upload(o, "deepBoardImg");
-                BoardImg boardWriteImg = imgRepository.save(
-                        BoardImg.builder()
-                                .imgFile(boardImgUrl)
-                                .boardNo(board)
-                                .build()
-                );
-            }
-        }
+//        for (MultipartFile o : boardModifyRequestDTO.getImg()) {
+//            if(!o.isEmpty()) {
+//                String boardImgUrl = s3UploadService.upload(o, "deepBoardImg");
+//                BoardImg boardWriteImg = imgRepository.save(
+//                        BoardImg.builder()
+//                                .imgFile(boardImgUrl)
+//                                .boardNo(board)
+//                                .build()
+//                );
+//            }
+//        }
 
         BoardModifyResponseDTO boardModifyResponseDTO = new BoardModifyResponseDTO();
         boardModifyResponseDTO.setBoardNo(board.getBoardNo());

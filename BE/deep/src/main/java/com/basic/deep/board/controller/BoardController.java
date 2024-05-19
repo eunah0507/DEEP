@@ -46,7 +46,7 @@ public class BoardController {
 
     // 게시글 작성
     @PostMapping("/write")
-    public ResponseEntity<?> write(@ModelAttribute BoardWriteRequestDTO boardWriteRequestDTO) {
+    public ResponseEntity<?> write(@RequestBody BoardWriteRequestDTO boardWriteRequestDTO) {
         Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         BoardWriteResponseDTO boardWriteResponseDTO = boardService.boardWrite(boardWriteRequestDTO, memberNo);
 
@@ -55,7 +55,7 @@ public class BoardController {
 
     // 게시글 수정
     @PutMapping("/modify")
-    public ResponseEntity<?> modify(@ModelAttribute BoardModifyRequestDTO boardModifyRequestDTO) {
+    public ResponseEntity<?> modify(@RequestBody BoardModifyRequestDTO boardModifyRequestDTO) {
         Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         BoardModifyResponseDTO boardModifyResponseDTO = boardService.boardModify(boardModifyRequestDTO, memberNo);
 
@@ -197,5 +197,17 @@ public class BoardController {
         List<BoardBestResponseDTO> boardBestResponseDTO = boardService.boardBest(boardBestRequestDTO);
 
         return new ResponseEntity<>(boardBestResponseDTO, HttpStatus.OK);
+    }
+
+    // 이미지 보내기
+    @PostMapping("/img")
+    public ResponseEntity<?> postImg(@ModelAttribute BoardImgRequestDTO boardImgRequestDTO){
+        // 이미지를 s3를 거쳐서 보낸다
+        String postImg = s3UploadService.upload(boardImgRequestDTO.getImg(), "deepBoardImg");
+
+        // 그걸 다시 responsebody에 담아서 보낸다.
+        BoardImgResponseDTO boardImgResponseDTO = new BoardImgResponseDTO();
+        boardImgResponseDTO.setImg(postImg);
+        return new ResponseEntity<>(boardImgResponseDTO, HttpStatus.OK);
     }
 }

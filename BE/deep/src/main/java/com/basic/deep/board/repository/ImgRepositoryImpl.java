@@ -14,6 +14,7 @@ public class ImgRepositoryImpl implements ImgRepositoryCustom{
     private JPAQueryFactory queryFactory;
 
     // 게시글 수정 시 이미지 일괄 삭제 후 다시 삽입
+    // 죽은 코드
     @Override
     public void deleteBoard(Board boardNo) {
         queryFactory.delete(boardImg)
@@ -22,6 +23,7 @@ public class ImgRepositoryImpl implements ImgRepositoryCustom{
     }
 
     // 게시글 1개 상세 조회 - 이미지 조회
+    // 죽은 코드
     @Override
     public List<String> findAllBoardDetailImg(Board boardNo) {
         return queryFactory.select(boardImg.imgFile)
