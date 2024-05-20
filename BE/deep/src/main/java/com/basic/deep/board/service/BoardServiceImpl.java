@@ -155,12 +155,13 @@ public class BoardServiceImpl implements BoardService {
         Board board = boardRepository.getReferenceById(boardDeleteRequestDTO.getBoardNo());
         Member member = memberRepository.getReferenceById(memberNo);
 
-        // 게시판 글쓴이랑 member랑 비교해서 다른 사람이면 잘못된 접근이므로 null을 return한다.
-        // 더 좋은 코드로 replace 가능하지만 내가 해석 못하니까 그냥 이대로 둔다 ^^
-        // 더 좋은 코드 = !Objects.equals(board.getMember_no().getMemberNo(), memberNo)
-        if (board.getMember_no().getMemberNo() != memberNo) {
-            return null;
-        }
+//        // 게시판 글쓴이랑 member랑 비교해서 다른 사람이면 잘못된 접근이므로 null을 return한다.
+//        // 더 좋은 코드로 replace 가능하지만 내가 해석 못하니까 그냥 이대로 둔다 ^^
+//        // 더 좋은 코드 = !Objects.equals(board.getMember_no().getMemberNo(), memberNo)
+          // 아래 if문을 쓸 경우, 내 글에 다른 사람이 댓글을 달았을 때 삭제가 안되므로 주석처리함
+//        if (board.getMember_no().getMemberNo() != memberNo) {
+//            return null;
+//        }
 
         // 삭제는 하위 테이블 먼저 삭제한다. 마지막으로 상위테이블을 삭제해야한다.
         imgRepository.deleteBoard(board);
