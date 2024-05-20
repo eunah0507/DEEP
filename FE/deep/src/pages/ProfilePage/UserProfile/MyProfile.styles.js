@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const UserProfileWrapper = styled.div`
+export const MyProfileWrapper = styled.div`
     display: flex;
     justify-content: center;
     height: 100%;
@@ -8,10 +8,9 @@ export const UserProfileWrapper = styled.div`
     border: 1px solid #ddd;
 `;
 
-export const UserProfileContainer = styled.div`
+export const MyProfileContainer = styled.div`
     width: 820px;
     height: calc(100% - 60px);
-    min-height: 1020px;
     margin-top: 60px;
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;
@@ -88,22 +87,48 @@ export const UserProfileContainer = styled.div`
         margin: 0 auto;
     }
 
-    /* nothing profile */
-    .nothing_profile_container {
-        padding: 200px 100px 100px;
+    /* user contents */
+    .user_contents_menu .user_contents_item {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: 50px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .user_contents_menu .user_contents_item li {
+        width: 33%;
+        height: 50px;
+        line-height: 50px;
         text-align: center;
+        font-size: 1.6rem;
+        cursor: pointer;
     }
 
-    .nothing_profile_container .nothing_profile .nothing_profile_image {
-        width: 300px;
-        height: 300px;
-        opacity: 0.5;
+    .user_contents_menu .user_contents_item li.selected {
+        border-bottom: 3px solid #1e88e5;
     }
 
-    .nothing_profile_container span {
-        display: block;
-        margin-top: 30px;
-        color: #666;
-        font-size: 2.4rem;
+    .user_contents_item {
+        padding: 0 30px;
+    }
+
+    .user_contents_container {
+        height: 500px;
+        min-height: 500px;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .user_contents_container::-webkit-scrollbar {
+        width: 16px;
+    }
+
+    .user_contents_container::-webkit-scrollbar-thumb {
+        height: 40px;
+        border: 4px solid transparent;
+        border-radius: 10px;
+        background-color: #ddd;
+        background-clip: padding-box;
     }
 `;

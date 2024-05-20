@@ -31,14 +31,9 @@ export const CommentsPageContainer = styled.div`
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
 
+    /* nothing comments */
     .nothing_comment_container {
         padding: 50px;
-        text-align: center;
-    }
-
-    .nothing_comment_container .nothing_comment {
-        display: flex;
-        justify-content: center;
         text-align: center;
     }
 
@@ -55,6 +50,7 @@ export const CommentsPageContainer = styled.div`
         font-size: 1.6rem;
     }
 
+    /* comments */
     .comments .comment {
         padding: 30px;
         border-bottom: 1px solid #ddd;
@@ -77,6 +73,7 @@ export const CommentsPageContainer = styled.div`
     .comments .comment .user_info {
         display: flex;
         align-items: center;
+        cursor: pointer;
     }
 
     .comments .comment .user_info .user_profile_img {

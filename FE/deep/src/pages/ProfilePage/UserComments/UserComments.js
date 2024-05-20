@@ -2,9 +2,12 @@ import { useEffect, useState } from "react";
 import axiosInstance from "../../../apis/axiosInstance";
 import { CommentsContainer } from "./UserComments.styles";
 import Button from "../../../components/Button/Button";
+import { useNavigate } from "react-router-dom";
 
 function UserComment() {
     const [comments, setComments] = useState([]);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         axiosInstance
@@ -24,12 +27,25 @@ function UserComment() {
         return comment.boardCreatedTime.split("T")[1].split(".")[0].slice(0, 5);
     });
 
+    const handleClickComment = (e, category, boardNo) => {
+        navigate(`/${category}/${boardNo}`);
+    };
+
     return (
         <CommentsContainer>
             <ul className="user_comments">
                 {comments.map((comment, index) => {
                     return (
-                        <li className="user_comment">
+                        <li
+                            className="user_comment"
+                            onClick={(e) =>
+                                handleClickComment(
+                                    e,
+                                    comment.category,
+                                    comment.boardNo
+                                )
+                            }
+                        >
                             <div className="user_comment_info">
                                 <p className="comment">
                                     {comment.replyContent}

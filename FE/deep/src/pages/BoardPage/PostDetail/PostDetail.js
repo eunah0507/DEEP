@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import axiosInstance from "../../../apis/axiosInstance";
 import {
     CommentsContainer,
@@ -17,6 +17,7 @@ import CommentsPage from "../Comments/CommentsPage";
 function PostDetail() {
     const [userProfileImg, setUserProfileImg] = useState("");
     const [userNickName, setUserNickName] = useState("");
+    const [userRandom, setUserRandom] = useState("");
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [tags, setTags] = useState([]);
@@ -34,9 +35,10 @@ function PostDetail() {
 
     const member = useSelector((state) => state.member.value);
 
+    const category = location.pathname.split("/")[1];
     const boardNo = location.pathname.split("/")[2];
 
-    useEffect(() => {
+    useMemo(() => {
         axiosInstance
             .post("/deep/board/detail", {
                 boardNo: boardNo,
@@ -53,6 +55,8 @@ function PostDetail() {
                 setViews(data.view);
                 setLikes(data.like);
                 setComments(data.reply);
+                setIsLike(data.meLike);
+                setUserRandom(data.memberRandom.replace("#", ""));
 
                 if (
                     member.memberNickName === data.memberNickName &&
@@ -68,13 +72,14 @@ function PostDetail() {
             });
     }, []);
 
-    useEffect(() => {
+    useMemo(() => {
         axiosInstance
             .post("/deep/board/detail", {
                 boardNo: boardNo,
             })
             .then((response) => {
                 const data = response.data;
+
                 setLikes(data.like);
                 setIsLike(data.meLike);
             })
@@ -85,7 +90,7 @@ function PostDetail() {
             });
     }, [isLike]);
 
-    useEffect(() => {
+    useMemo(() => {
         axiosInstance
             .post("/deep/board/detail", {
                 boardNo: boardNo,
@@ -94,13 +99,6 @@ function PostDetail() {
                 const data = response.data;
 
                 setComments(data.reply);
-
-                if (
-                    member.memberNickName === data.memberNickName &&
-                    member.memberRandom === data.memberRandom
-                ) {
-                    setIsMyPost(true);
-                }
             })
             .catch((error) => {
                 console.log(error);
@@ -119,6 +117,10 @@ function PostDetail() {
 
     const formattedDate = `${year}.${month}.${day} ${hours}:${minutes}`;
 
+    const handleClickProfile = () => {
+        navigate(`/profile/${userNickName}/${userRandom}`);
+    };
+
     const handleClickMenu = () => {
         setIsPostMenuOpen(!isPostMenuOpen);
     };
@@ -131,7 +133,7 @@ function PostDetail() {
             .delete(`/deep/board/delete?boardNo=${boardNo}`)
             .then((response) => {
                 alert("게시글이 삭제되었습니다.");
-                navigate(-1);
+                navigate(`/${category}`);
             })
             .catch((error) => {
                 console.log(error);
@@ -139,23 +141,23 @@ function PostDetail() {
             });
     };
 
-    const handleClickLike = async () => {
+    const handleClickLike = () => {
         setIsLike(!isLike);
         console.log(isLike);
 
-        const likeInfo = {
-            boardNo: boardNo,
-            like: !isLike,
-        };
+        // const likeInfo = {
+        //     boardNo: boardNo,
+        //     like: !isLike,
+        // };
 
-        await axiosInstance
-            .post("/deep/board/like", likeInfo)
-            .then((response) => {
-                console.log(response);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        // axiosInstance
+        //     .post("/deep/board/like", likeInfo)
+        //     .then((response) => {
+        //         console.log(response);
+        //     })
+        //     .catch((error) => {
+        //         console.log(error);
+        //     });
     };
 
     return (
@@ -163,7 +165,10 @@ function PostDetail() {
             <PostDetailWrapper>
                 <PostDetailContainer>
                     <div className="post_header">
-                        <div className="user_profile">
+                        <div
+                            className="user_profile"
+                            onClick={handleClickProfile}
+                        >
                             {userProfile === null ? (
                                 <img
                                     className="user_profile_img"

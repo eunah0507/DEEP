@@ -4,9 +4,12 @@ import { LikesContainer } from "./Likes.styles";
 import { GrView } from "react-icons/gr";
 import likesIcon from "../../../assets/images/deep-icon-likes.svg";
 import commentsIcon from "../../../assets/images/deep-icon-comments.svg";
+import { useNavigate } from "react-router-dom";
 
 function Likes() {
     const [likes, setLikes] = useState([]);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         axiosInstance
@@ -16,6 +19,10 @@ function Likes() {
             })
             .catch((error) => console.log(error));
     }, []);
+
+    const handleClickPost = (e, category, boardNo) => {
+        navigate(`/${category}/${boardNo}`);
+    };
 
     const postCreatedDate = likes.map((like) => {
         return like.boardCreatedTime.split("T")[0].replaceAll("-", ".");
@@ -30,7 +37,12 @@ function Likes() {
             <ul className="post_likes">
                 {likes.map((like, index) => {
                     return (
-                        <li className="post_like">
+                        <li
+                            className="post_like"
+                            onClick={(e) =>
+                                handleClickPost(e, like.category, like.boardNo)
+                            }
+                        >
                             <div className="post_info">
                                 <p className="post_title">{like.boardTitle}</p>
                                 <div className="user_post_info">

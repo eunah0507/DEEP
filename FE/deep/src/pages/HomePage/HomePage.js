@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { HomeContainer, HomeWrapper } from "./HomePage.styles";
 import axiosInstance from "../../apis/axiosInstance";
 import MainPost from "./MainPost/MainPost";
@@ -10,7 +10,7 @@ function HomePage() {
     const [qna, setQna] = useState([]);
     const [community, setCommunity] = useState([]);
 
-    useEffect(() => {
+    useMemo(() => {
         axiosInstance
             .get("/deep/board/main-index")
             .then((response) => {
@@ -74,6 +74,8 @@ function HomePage() {
                                         post={post}
                                         boardNo={post.boardNo}
                                         category={post.category}
+                                        nickName={post.memberNickName}
+                                        random={post.memberRandom}
                                     />
                                 );
                             })}
@@ -88,6 +90,8 @@ function HomePage() {
                                         post={post}
                                         boardNo={post.boardNo}
                                         category={post.category}
+                                        nickName={post.memberNickName}
+                                        random={post.memberRandom}
                                     />
                                 );
                             })}
@@ -104,6 +108,8 @@ function HomePage() {
                                         post={post}
                                         boardNo={post.boardNo}
                                         category={post.category}
+                                        nickName={post.memberNickName}
+                                        random={post.memberRandom}
                                     />
                                 );
                             })}
@@ -118,6 +124,8 @@ function HomePage() {
                                         post={post}
                                         boardNo={post.boardNo}
                                         category={post.category}
+                                        nickName={post.memberNickName}
+                                        random={post.memberRandom}
                                     />
                                 );
                             })}
