@@ -32,6 +32,8 @@ export const SearchInputContainer = styled.div`
         transform: translateY(-50%);
         width: 25px;
         height: 25px;
+        object-fit: contain;
+        opacity: 0.5;
     }
 `;
 

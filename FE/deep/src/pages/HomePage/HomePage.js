@@ -2,8 +2,10 @@ import { useMemo, useState } from "react";
 import { HomeContainer, HomeWrapper } from "./HomePage.styles";
 import axiosInstance from "../../apis/axiosInstance";
 import MainPost from "./MainPost/MainPost";
+import Loading from "../../components/Loading/Loading";
 
 function HomePage() {
+    const [loading, setLoading] = useState(true);
     const [notice, setNotice] = useState([]);
     const [best, setBest] = useState([]);
     const [skill, setSkill] = useState([]);
@@ -48,6 +50,7 @@ function HomePage() {
                 setSkill(skillPosts);
                 setQna(qnaPosts);
                 setCommunity(communityPosts);
+                setLoading(false);
             })
             .catch((error) => {
                 console.log(error);
@@ -56,84 +59,92 @@ function HomePage() {
     }, []);
 
     return (
-        <HomeWrapper>
-            <HomeContainer>
-                <div className="notice">
-                    <h3>공지사항</h3>
-                    <div className="notice_content">
-                        {notice.length > 0 && <p>{notice[0].boardTitle}</p>}
-                    </div>
-                </div>
-                <div className="boards">
-                    <div className="best board">
-                        <h4>인기글</h4>
-                        <ul>
-                            {best.map((post) => {
-                                return (
-                                    <MainPost
-                                        post={post}
-                                        boardNo={post.boardNo}
-                                        category={post.category}
-                                        nickName={post.memberNickName}
-                                        random={post.memberRandom}
-                                    />
-                                );
-                            })}
-                        </ul>
-                    </div>
-                    <div className="skill board">
-                        <h4>기술 트렌드</h4>
-                        <ul>
-                            {skill.map((post) => {
-                                return (
-                                    <MainPost
-                                        post={post}
-                                        boardNo={post.boardNo}
-                                        category={post.category}
-                                        nickName={post.memberNickName}
-                                        random={post.memberRandom}
-                                    />
-                                );
-                            })}
-                        </ul>
-                    </div>
-                </div>
-                <div className="boards">
-                    <div className="qna board">
-                        <h4>QnA</h4>
-                        <ul>
-                            {qna.map((post) => {
-                                return (
-                                    <MainPost
-                                        post={post}
-                                        boardNo={post.boardNo}
-                                        category={post.category}
-                                        nickName={post.memberNickName}
-                                        random={post.memberRandom}
-                                    />
-                                );
-                            })}
-                        </ul>
-                    </div>
-                    <div className="community board">
-                        <h4>커뮤니티</h4>
-                        <ul>
-                            {community.map((post) => {
-                                return (
-                                    <MainPost
-                                        post={post}
-                                        boardNo={post.boardNo}
-                                        category={post.category}
-                                        nickName={post.memberNickName}
-                                        random={post.memberRandom}
-                                    />
-                                );
-                            })}
-                        </ul>
-                    </div>
-                </div>
-            </HomeContainer>
-        </HomeWrapper>
+        <>
+            {loading ? (
+                <Loading />
+            ) : (
+                <HomeWrapper>
+                    <HomeContainer>
+                        <div className="notice">
+                            <h3>공지사항</h3>
+                            <div className="notice_content">
+                                {notice.length > 0 && (
+                                    <p>{notice[0].boardTitle}</p>
+                                )}
+                            </div>
+                        </div>
+                        <div className="boards">
+                            <div className="best board">
+                                <h4>인기글</h4>
+                                <ul>
+                                    {best.map((post) => {
+                                        return (
+                                            <MainPost
+                                                post={post}
+                                                boardNo={post.boardNo}
+                                                category={post.category}
+                                                nickName={post.memberNickName}
+                                                random={post.memberRandom}
+                                            />
+                                        );
+                                    })}
+                                </ul>
+                            </div>
+                            <div className="skill board">
+                                <h4>기술 트렌드</h4>
+                                <ul>
+                                    {skill.map((post) => {
+                                        return (
+                                            <MainPost
+                                                post={post}
+                                                boardNo={post.boardNo}
+                                                category={post.category}
+                                                nickName={post.memberNickName}
+                                                random={post.memberRandom}
+                                            />
+                                        );
+                                    })}
+                                </ul>
+                            </div>
+                        </div>
+                        <div className="boards">
+                            <div className="qna board">
+                                <h4>QnA</h4>
+                                <ul>
+                                    {qna.map((post) => {
+                                        return (
+                                            <MainPost
+                                                post={post}
+                                                boardNo={post.boardNo}
+                                                category={post.category}
+                                                nickName={post.memberNickName}
+                                                random={post.memberRandom}
+                                            />
+                                        );
+                                    })}
+                                </ul>
+                            </div>
+                            <div className="community board">
+                                <h4>커뮤니티</h4>
+                                <ul>
+                                    {community.map((post) => {
+                                        return (
+                                            <MainPost
+                                                post={post}
+                                                boardNo={post.boardNo}
+                                                category={post.category}
+                                                nickName={post.memberNickName}
+                                                random={post.memberRandom}
+                                            />
+                                        );
+                                    })}
+                                </ul>
+                            </div>
+                        </div>
+                    </HomeContainer>
+                </HomeWrapper>
+            )}
+        </>
     );
 }
 

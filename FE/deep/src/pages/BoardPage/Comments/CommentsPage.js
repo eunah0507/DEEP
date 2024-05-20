@@ -13,7 +13,6 @@ import { useNavigate } from "react-router-dom";
 
 function CommentsPage({ boardNo }) {
     const [postComments, setPostComments] = useState([]);
-    const [commentsCount, setCommentsCount] = useState("");
     const [commentValue, setCommentValue] = useState("");
     const [isCommentMenuOpen, setIsCommentMenuOpen] = useState(false);
     const [isIndex, setIsIndex] = useState(null);
@@ -25,12 +24,11 @@ function CommentsPage({ boardNo }) {
             .get(`/deep/board/reply-list?boardNo=${boardNo}`)
             .then((response) => {
                 setPostComments(response.data.reverse());
-                setCommentsCount(response.data.length);
             })
             .catch((error) => {
                 console.log(error);
             });
-    }, [commentsCount]);
+    }, [postComments]);
 
     const handleInputComment = (e) => {
         setCommentValue(e.target.value);
@@ -104,7 +102,7 @@ function CommentsPage({ boardNo }) {
 
     return (
         <CommentsPageWrapper>
-            <h4 className="total_comments">{commentsCount}개의 댓글</h4>
+            <h4 className="total_comments">{postComments.length}개의 댓글</h4>
             <div className="comment_input">
                 <Input
                     type="text"
