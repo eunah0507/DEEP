@@ -8,6 +8,7 @@ import {
 import userProfile from "../../../assets/images/deep-profile-blue.png";
 import { GrView } from "react-icons/gr";
 import likesIcon from "../../../assets/images/deep-icon-likes.svg";
+import userLikedIcon from "../../../assets/images/deep-icon-likes-blue.svg";
 import commentsIcon from "../../../assets/images/deep-icon-comments.svg";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -25,6 +26,7 @@ function PostDetail() {
     const [comments, setComments] = useState(0);
     const [isPostMenuOpen, setIsPostMenuOpen] = useState(false);
     const [isMyPost, setIsMyPost] = useState(false);
+    const [isLike, setIsLike] = useState(false);
 
     const navigate = useNavigate();
 
@@ -64,7 +66,48 @@ function PostDetail() {
                 alert("게시물이 존재하지 않습니다.");
                 navigate("/home");
             });
-    }, [boardNo]);
+    }, []);
+
+    useEffect(() => {
+        axiosInstance
+            .post("/deep/board/detail", {
+                boardNo: boardNo,
+            })
+            .then((response) => {
+                const data = response.data;
+                setLikes(data.like);
+                setIsLike(data.meLike);
+            })
+            .catch((error) => {
+                console.log(error);
+                alert("게시물이 존재하지 않습니다.");
+                navigate("/home");
+            });
+    }, [isLike]);
+
+    useEffect(() => {
+        axiosInstance
+            .post("/deep/board/detail", {
+                boardNo: boardNo,
+            })
+            .then((response) => {
+                const data = response.data;
+
+                setComments(data.reply);
+
+                if (
+                    member.memberNickName === data.memberNickName &&
+                    member.memberRandom === data.memberRandom
+                ) {
+                    setIsMyPost(true);
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+                alert("게시물이 존재하지 않습니다.");
+                navigate("/home");
+            });
+    }, [comments]);
 
     const date = new Date(boardCreatedTime);
     date.setHours(date.getHours() + 9);
@@ -93,6 +136,25 @@ function PostDetail() {
             .catch((error) => {
                 console.log(error);
                 alert("게시글 삭제에 실패했습니다.");
+            });
+    };
+
+    const handleClickLike = async () => {
+        setIsLike(!isLike);
+        console.log(isLike);
+
+        const likeInfo = {
+            boardNo: boardNo,
+            like: !isLike,
+        };
+
+        await axiosInstance
+            .post("/deep/board/like", likeInfo)
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                console.log(error);
             });
     };
 
@@ -178,8 +240,13 @@ function PostDetail() {
                                 <GrView />
                                 <span>{views}</span>
                             </span>
-                            <span className="likes">
-                                <img src={likesIcon} alt="likes-icon" />
+                            <span className="likes" onClick={handleClickLike}>
+                                {isLike ? (
+                                    <img src={userLikedIcon} alt="likes-icon" />
+                                ) : (
+                                    <img src={likesIcon} alt="likes-icon" />
+                                )}
+
                                 <span>{likes}</span>
                             </span>
                             <span className="comments">

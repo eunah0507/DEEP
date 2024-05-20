@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, redirect, useNavigate } from "react-router-dom";
 import {
     LoginContainer,
     KakaoLoginBtn,
@@ -117,6 +117,7 @@ function LoginPage() {
     const socialLogin = (params) => {
         const authURL = `https://dev.deeep.site/deep/member/login/${params}`;
         window.location.href = authURL;
+        // return redirect("/home");
     };
 
     return (

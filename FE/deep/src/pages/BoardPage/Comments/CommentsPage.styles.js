@@ -82,6 +82,7 @@ export const CommentsPageContainer = styled.div`
     .comments .comment .user_info .user_profile_img {
         width: 50px;
         height: 50px;
+        border: 1px solid #eee;
         border-radius: 50%;
         object-fit: cover;
     }
