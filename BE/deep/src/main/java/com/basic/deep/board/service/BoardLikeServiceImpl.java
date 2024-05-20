@@ -6,7 +6,9 @@ import com.basic.deep.board.entity.Board;
 import com.basic.deep.board.entity.BoardLike;
 import com.basic.deep.board.repository.BoardLikeRepository;
 import com.basic.deep.board.repository.BoardRepository;
+import com.basic.deep.member.entity.Alert;
 import com.basic.deep.member.entity.Member;
+import com.basic.deep.member.repository.AlertRepository;
 import com.basic.deep.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +29,11 @@ public class BoardLikeServiceImpl implements BoardLikeService {
     @Autowired
     private BoardLikeRepository boardLikeRepository;
 
+    @Autowired
+    private AlertRepository alertRepository;
+
     // 게시글 좋아요 - 추가, 삭제, 조회 모두
     // 조회를 통해서 true, false 판별
-    //
     @Override
     public BoardLikeResponseDTO boardLike(BoardLikeRequestDTO boardLikeRequestDTO, Long memberNo) {
         Member member = memberRepository.getReferenceById(memberNo);
@@ -50,6 +54,14 @@ public class BoardLikeServiceImpl implements BoardLikeService {
                         BoardLike.builder()
                                 .boardNo(board)
                                 .memberNo(member)
+                                .build()
+                );
+
+                alertRepository.save(
+                        Alert.builder()
+                                .memberID(board.getMember_no().getMemberID())
+                                .alertTitle("좋아요 알림")
+                                .alertContent(board.getBoardTitle() + "글에 좋아요가 추가 되었습니다.")
                                 .build()
                 );
             }

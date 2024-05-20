@@ -183,7 +183,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     @Override
     public List<MemberProfieLikeResponseDTO> selectMemberLike(Long memberNo) {
         return queryFactory.select(Projections.constructor(MemberProfieLikeResponseDTO.class,
-                        board.member_no.memberNo, board.boardCategory ,board.boardTitle,
+                        board.boardNo, board.boardCategory ,board.boardTitle,
                         board.member_no.memberNickname, board.member_no.memberRandom,
                         board.boardDate, board.boardReadCount))
                 .from(boardLike)

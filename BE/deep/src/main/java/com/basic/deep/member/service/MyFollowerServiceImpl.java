@@ -1,8 +1,10 @@
 package com.basic.deep.member.service;
 
 import com.basic.deep.member.dto.*;
+import com.basic.deep.member.entity.Alert;
 import com.basic.deep.member.entity.MyFollower;
 import com.basic.deep.member.entity.Member;
+import com.basic.deep.member.repository.AlertRepository;
 import com.basic.deep.member.repository.MyFollowerRepository;
 import com.basic.deep.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
@@ -22,6 +24,10 @@ public class MyFollowerServiceImpl implements MyFollowerService {
     @Autowired
     private MyFollowerRepository myFollowerRepository;
 
+    @Autowired
+    private AlertRepository alertRepository;
+
+    // 타인 > 나 : 누가 나를 친구추가 했을 때
     @Override
     public FollowingResponseDTO followingOtherUsers(FollowingRequestDTO followingRequestDTO, Long memberNo) {
        Member member = memberRepository.getReferenceById(memberNo);
@@ -36,6 +42,15 @@ public class MyFollowerServiceImpl implements MyFollowerService {
                            .memberNo(selectInfo)
                            .build()
            );
+
+           alertRepository.save(
+                   Alert.builder()
+                           .memberID(selectInfo.getMemberID())
+                           .alertTitle("친구 추가 알림")
+                           .alertContent(member.getMemberID() + "님이 회원님을 친구 추가 했습니다.")
+                           .build()
+           );
+
 
 
            FollowingResponseDTO followingResponseDTO = new FollowingResponseDTO();

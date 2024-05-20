@@ -22,6 +22,7 @@ public class AddFriendsServiceImpl implements AddFriendsService{
     @Autowired
     private AddFriendsRepository addFriendsRepository;
 
+    // 친구 추가
     @Override
     public FollowingResponseDTO followingOtherUsers(FollowingRequestDTO followingRequestDTO, Long memberNo) {
         Member member = memberRepository.getReferenceById(memberNo);

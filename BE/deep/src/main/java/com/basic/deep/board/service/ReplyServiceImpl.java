@@ -5,7 +5,9 @@ import com.basic.deep.board.entity.Board;
 import com.basic.deep.board.entity.BoardReply;
 import com.basic.deep.board.repository.BoardRepository;
 import com.basic.deep.board.repository.ReplyRepository;
+import com.basic.deep.member.entity.Alert;
 import com.basic.deep.member.entity.Member;
+import com.basic.deep.member.repository.AlertRepository;
 import com.basic.deep.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,9 @@ public class ReplyServiceImpl implements ReplyService {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private AlertRepository alertRepository;
+
 
     // 댓글 작성
     @Override
@@ -46,6 +51,15 @@ public class ReplyServiceImpl implements ReplyService {
                             .replyDate(LocalDateTime.now())
                             .build()
             );
+
+            alertRepository.save(
+                    Alert.builder()
+                            .memberID(board.getMember_no().getMemberID())
+                            .alertTitle("새로운 댓글 알림")
+                            .alertContent(board.getBoardTitle() + "글에 새로운 댓글이 추가 되었습니다.")
+                            .build()
+            );
+
         } else {
             BoardReply boardReply = replyRepository.getReferenceById(replyWriteRequestDTO.getParentNo());
 
@@ -58,6 +72,14 @@ public class ReplyServiceImpl implements ReplyService {
                             .replyRandom(member.getMemberRandom())
                             .replyImg(member.getMemberFile())
                             .replyDate(LocalDateTime.now())
+                            .build()
+            );
+
+            alertRepository.save(
+                    Alert.builder()
+                            .memberID(board.getMember_no().getMemberID())
+                            .alertTitle("새로운 댓글 알림")
+                            .alertContent(boardReply.getReplyContent() + "글에 새로운 댓글이 추가 되었습니다.")
                             .build()
             );
         }
