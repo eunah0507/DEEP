@@ -22,6 +22,9 @@ public class BoardReply {
     @Column(name = "reply_random", length = 100, nullable = false)
     private String replyRandom;
 
+    @Column(name = "reply_img", length = 3000)
+    private String replyImg;
+
     @Column(name = "reply_content", length = 800, nullable = false)
     private String replyContent;
 

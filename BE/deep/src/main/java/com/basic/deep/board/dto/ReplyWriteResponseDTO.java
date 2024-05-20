@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public class ReplyWriteResponseDTO {
     private String memberNickName;
     private String memberRandom;
+    private String memberFile;
     private LocalDateTime replyCreatedTime;
     private Long replyNo;
 }

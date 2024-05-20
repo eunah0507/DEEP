@@ -42,6 +42,7 @@ public class ReplyServiceImpl implements ReplyService {
                             .replyContent(replyWriteRequestDTO.getReplyContent())
                             .replyNickName(member.getMemberNickname())
                             .replyRandom(member.getMemberRandom())
+                            .replyImg(member.getMemberFile())
                             .replyDate(LocalDateTime.now())
                             .build()
             );
@@ -55,6 +56,7 @@ public class ReplyServiceImpl implements ReplyService {
                             .replyContent(replyWriteRequestDTO.getReplyContent())
                             .replyNickName(member.getMemberNickname())
                             .replyRandom(member.getMemberRandom())
+                            .replyImg(member.getMemberFile())
                             .replyDate(LocalDateTime.now())
                             .build()
             );
@@ -63,6 +65,7 @@ public class ReplyServiceImpl implements ReplyService {
         ReplyWriteResponseDTO replyWriteResponseDTO = new ReplyWriteResponseDTO();
         replyWriteResponseDTO.setMemberNickName(replyWrite.getReplyNickName());
         replyWriteResponseDTO.setMemberRandom(replyWrite.getReplyRandom());
+        replyWriteResponseDTO.setMemberFile(replyWrite.getReplyImg());
         replyWriteResponseDTO.setReplyCreatedTime(replyWrite.getReplyDate());
         replyWriteResponseDTO.setReplyNo(replyWrite.getReplyNo());
 
@@ -90,6 +93,7 @@ public class ReplyServiceImpl implements ReplyService {
         ReplyModifyResponseDTO replyModifyResponseDTO = new ReplyModifyResponseDTO();
         replyModifyResponseDTO.setMemberNickName(boardReply.getReplyNickName());
         replyModifyResponseDTO.setMemberRandom(boardReply.getReplyRandom());
+        replyModifyResponseDTO.setMemberFile(boardReply.getReplyImg());
         replyModifyResponseDTO.setReplyUpdateTim(boardReply.getReplyModifyDate());
         replyModifyResponseDTO.setReplyCreatedTime(boardReply.getReplyDate());
 

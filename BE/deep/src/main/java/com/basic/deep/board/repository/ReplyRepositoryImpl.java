@@ -39,7 +39,7 @@ public class ReplyRepositoryImpl implements ReplyRepositoryCustom{
     public List<ReplyDetailResponseDTO> findAllReplyDetail(Board boardNo) {
         return queryFactory.select(Projections.constructor(
                 ReplyDetailResponseDTO.class, boardReply.ReplyNo, boardReply.replyNickName,
-                        boardReply.replyRandom, member.memberFile,
+                        boardReply.replyRandom, boardReply.replyImg,
                         boardReply.replyContent, boardReply.replyDate))
                 .from(boardReply)
                 .join(member)
