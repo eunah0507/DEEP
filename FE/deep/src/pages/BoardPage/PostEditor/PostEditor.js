@@ -4,10 +4,13 @@ import {
     PostEditorContainer,
     PostEditorWrapper,
     CreatePostBtn,
+    PostButton,
 } from "./PostEditor.styles";
 import TextEditor from "./TextEditor";
 import axiosInstance from "../../../apis/axiosInstance";
 import { GoChevronDown } from "react-icons/go";
+import Button from "../../../components/Button/Button";
+import { useNavigate } from "react-router-dom";
 
 function PostEditor() {
     const [value, setValue] = useState("");
@@ -20,6 +23,9 @@ function PostEditor() {
     const [isCategory, setIsCategory] = useState(false);
     const [isTitle, setIsTitle] = useState(false);
     const [isContents, setIsContents] = useState(false);
+    const [isDisable, setIsDisable] = useState(false);
+
+    const navigate = useNavigate();
 
     const handleChangeTitle = (e) => {
         setTitle(e.target.value);
@@ -71,6 +77,8 @@ function PostEditor() {
         } else if (contents === "") {
             alert("내용을 입력해 주세요.");
         } else {
+            setIsDisable(true);
+
             const contentsInfo = {
                 title: title,
                 category: category,
@@ -83,12 +91,19 @@ function PostEditor() {
                 .then((response) => {
                     console.log(response);
                     alert("게시글 작성이 완료되었습니다.");
+                    navigate(`/${category}/${response.data.boardNo}`);
                 })
                 .catch((error) => {
                     console.log(error);
                     alert("게시글 작성이 실패하였습니다.\n다시 시도해 주세요.");
+                    setIsDisable(false);
                 });
         }
+    };
+
+    const cancelCreatePost = () => {
+        alert("변경사항이 저장되지 않을 수 있습니다.");
+        navigate(-1);
     };
 
     return (
@@ -99,6 +114,7 @@ function PostEditor() {
                     <button
                         className="category_default_value"
                         onClick={handleClickCategory}
+                        onBlur={() => setIsClick(false)}
                     >
                         {value === ""
                             ? "카테고리를 선택해 주세요."
@@ -113,20 +129,23 @@ function PostEditor() {
                         <li>
                             <button
                                 className="skill"
-                                onClick={handleClickSkill}
+                                onMouseDown={handleClickSkill}
                             >
                                 기술 트렌드
                             </button>
                         </li>
                         <li>
-                            <button className="qna" onClick={handleClickQna}>
+                            <button
+                                className="qna"
+                                onMouseDown={handleClickQna}
+                            >
                                 QnA
                             </button>
                         </li>
                         <li>
                             <button
                                 className="community"
-                                onClick={handleClickCommunity}
+                                onMouseDown={handleClickCommunity}
                             >
                                 커뮤니티
                             </button>
@@ -162,9 +181,14 @@ function PostEditor() {
                         onKeyPress={handleAddTags}
                     />
                 </div>
-                <CreatePostBtn largeWidth inverted onClick={createPost}>
-                    작성하기
-                </CreatePostBtn>
+                <div className="buttons">
+                    <PostButton inverted onClick={cancelCreatePost}>
+                        취소
+                    </PostButton>
+                    <PostButton onClick={createPost} disabled={isDisable}>
+                        작성하기
+                    </PostButton>
+                </div>
             </PostEditorContainer>
         </PostEditorWrapper>
     );

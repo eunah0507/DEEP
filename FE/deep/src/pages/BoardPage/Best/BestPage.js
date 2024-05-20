@@ -4,9 +4,12 @@ import userProfile from "../../../assets/images/deep-profile-blue.png";
 import { BestContainer, BestWrapper } from "./BestPage.styles";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../../apis/axiosInstance";
+import { useNavigate } from "react-router-dom";
 
 function BestPage() {
     const [posts, setPosts] = useState([]);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         axiosInstance
@@ -20,8 +23,20 @@ function BestPage() {
     }, []);
 
     const postCreatedTime = posts.map((post) => {
-        return post.boardCreatedTime.split("T")[0].replaceAll("-", ".");
+        const date = new Date(post.boardCreatedTime);
+        date.setHours(date.getHours() + 9);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+
+        const formattedDate = `${year}.${month}.${day}`;
+
+        return formattedDate;
     });
+
+    const handleClickPost = (e, index) => {
+        navigate(`/${posts[index].category}/${posts[index].boardNo}`);
+    };
 
     return (
         <BestWrapper>
@@ -32,24 +47,29 @@ function BestPage() {
                 <ul className="posts">
                     {posts.map((post, index) => {
                         return (
-                            <li className="post">
-                                <div className="user_profile">
-                                    {post.memberFile === null ? (
-                                        <img
-                                            className="user_profile_img"
-                                            src={userProfile}
-                                            alt="user-profile-image"
-                                        />
-                                    ) : (
-                                        <img
-                                            className="user_profile_img"
-                                            src={post.memberFile}
-                                            alt="user-profile-image"
-                                        />
-                                    )}
-                                    <span className="user_name">
-                                        {post.memberNickName}
-                                    </span>
+                            <li
+                                className="post"
+                                onClick={(e) => handleClickPost(e, index)}
+                            >
+                                <div>
+                                    <div className="user_profile">
+                                        {post.memberFile === null ? (
+                                            <img
+                                                className="user_profile_img"
+                                                src={userProfile}
+                                                alt="user-profile-image"
+                                            />
+                                        ) : (
+                                            <img
+                                                className="user_profile_img"
+                                                src={post.memberFile}
+                                                alt="user-profile-image"
+                                            />
+                                        )}
+                                        <span className="user_name">
+                                            {post.memberNickName}
+                                        </span>
+                                    </div>
                                 </div>
                                 <h4 className="post_title">
                                     {post.boardTitle}

@@ -114,6 +114,21 @@ export const ProfileContainer = styled.div`
     }
 
     .user_contents_container {
+        height: 500px;
         min-height: 500px;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .user_contents_container::-webkit-scrollbar {
+        width: 16px;
+    }
+
+    .user_contents_container::-webkit-scrollbar-thumb {
+        height: 40px;
+        border: 4px solid transparent;
+        border-radius: 10px;
+        background-color: #ddd;
+        background-clip: padding-box;
     }
 `;
