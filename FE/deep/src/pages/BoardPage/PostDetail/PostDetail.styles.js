@@ -180,6 +180,10 @@ export const PostDetailContainer = styled.div`
         height: 20px;
         margin-right: 7px;
     }
+
+    .contents_item_container .contents_item .likes {
+        cursor: pointer;
+    }
 `;
 
 export const CommentsContainer = styled.div`

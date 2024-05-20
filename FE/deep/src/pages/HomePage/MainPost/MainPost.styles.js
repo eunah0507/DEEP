@@ -5,6 +5,7 @@ export const MainPostContainer = styled.li`
     padding: 20px;
     border: 1px solid #ddd;
     border-radius: 5px;
+    cursor: pointer;
 
     .user_profile {
         display: flex;

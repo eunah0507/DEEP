@@ -57,7 +57,6 @@ function CommentsPage({ boardNo }) {
         axiosInstance
             .post("/deep/board/reply-write", commentInfo)
             .then((response) => {
-                console.log(response);
                 setCommentValue("");
             })
             .catch((error) => {

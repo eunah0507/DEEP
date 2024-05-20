@@ -69,7 +69,13 @@ function HomePage() {
                         <h4>인기글</h4>
                         <ul>
                             {best.map((post) => {
-                                return <MainPost post={post} />;
+                                return (
+                                    <MainPost
+                                        post={post}
+                                        boardNo={post.boardNo}
+                                        category={post.category}
+                                    />
+                                );
                             })}
                         </ul>
                     </div>
@@ -77,7 +83,13 @@ function HomePage() {
                         <h4>기술 트렌드</h4>
                         <ul>
                             {skill.map((post) => {
-                                return <MainPost post={post} />;
+                                return (
+                                    <MainPost
+                                        post={post}
+                                        boardNo={post.boardNo}
+                                        category={post.category}
+                                    />
+                                );
                             })}
                         </ul>
                     </div>
@@ -87,7 +99,13 @@ function HomePage() {
                         <h4>QnA</h4>
                         <ul>
                             {qna.map((post) => {
-                                return <MainPost post={post} />;
+                                return (
+                                    <MainPost
+                                        post={post}
+                                        boardNo={post.boardNo}
+                                        category={post.category}
+                                    />
+                                );
                             })}
                         </ul>
                     </div>
@@ -95,7 +113,13 @@ function HomePage() {
                         <h4>커뮤니티</h4>
                         <ul>
                             {community.map((post) => {
-                                return <MainPost post={post} />;
+                                return (
+                                    <MainPost
+                                        post={post}
+                                        boardNo={post.boardNo}
+                                        category={post.category}
+                                    />
+                                );
                             })}
                         </ul>
                     </div>
