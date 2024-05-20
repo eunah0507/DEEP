@@ -47,9 +47,7 @@ function Login() {
     const userLogout = () => {
         axiosInstance
             .get("/deep/member/logout")
-            .then((response) => {
-                console.log(response);
-            })
+            .then((response) => {})
             .catch((error) => {
                 console.log(error);
             });

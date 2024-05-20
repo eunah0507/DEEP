@@ -58,7 +58,10 @@ function AppRoutes() {
                     <Route path="/qna" element={<QnAPage />} />
                     <Route path="/community" element={<CommunityPage />} />
                     <Route path="/post/create" element={<PostEditor />} />
-                    <Route path="/community/:id" element={<PostDetail />} />
+                    <Route
+                        path="/:category/:boardNo"
+                        element={<PostDetail />}
+                    />
                 </Route>
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>

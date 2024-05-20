@@ -7,7 +7,6 @@ export const PostEditorWrapper = styled.div`
     justify-content: center;
     height: 100%;
     margin: 0 auto 200px;
-    /* border: 1px solid #ddd; */
 `;
 
 export const PostEditorContainer = styled.div`
@@ -72,9 +71,6 @@ export const PostEditorContainer = styled.div`
         display: none;
     }
 
-    .post_category .select_category li {
-    }
-
     .post_category .select_category li button {
         width: 100%;
         height: 50px;
@@ -103,9 +99,16 @@ export const PostEditorContainer = styled.div`
     .tags {
         margin-top: 10px;
     }
+
+    .buttons {
+        margin-top: 50px;
+    }
+
+    .buttons button:first-child {
+        margin-right: 20px;
+    }
 `;
 
-export const CreatePostBtn = styled(Button)`
-    width: 100%;
-    margin-top: 50px;
+export const PostButton = styled(Button)`
+    width: 400px;
 `;

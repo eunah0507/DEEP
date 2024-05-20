@@ -30,6 +30,7 @@ export const BestContainer = styled.div`
         padding: 30px;
         border: 1px solid #ddd;
         border-radius: 5px;
+        cursor: pointer;
     }
 
     .post .user_profile {

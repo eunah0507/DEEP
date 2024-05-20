@@ -5,7 +5,7 @@ import "@toast-ui/editor/dist/i18n/ko-kr";
 import "@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css";
 import "prismjs/themes/prism.css";
 import Prism from "prismjs";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import codeSyntaxHighlight from "@toast-ui/editor-plugin-code-syntax-highlight";
 import axiosInstance from "../../../apis/axiosInstance";
 
@@ -16,7 +16,7 @@ function TextEditor(props) {
         ["bold", "italic", "strike"],
         ["hr", "quote"],
         ["ul", "ol"],
-        ["code", "codeblock"],
+        ["code"],
         ["link", "image"],
     ];
 

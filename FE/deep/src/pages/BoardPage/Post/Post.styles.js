@@ -7,6 +7,7 @@ export const PostListContainer = styled.li`
     padding: 30px;
     border: 1px solid #ddd;
     border-radius: 5px;
+    cursor: pointer;
 
     .post_container {
         display: flex;
@@ -59,13 +60,22 @@ export const PostListContainer = styled.li`
         overflow: hidden;
     }
 
+    .post_content p {
+        line-height: 30px;
+    }
+
+    .post_content img {
+        width: 100%;
+        object-fit: contain;
+    }
+
     .contents_container {
         display: flex;
         justify-content: space-between;
     }
 
     .tags .tag {
-        display: inline;
+        display: inline-block;
         margin-right: 10px;
         padding: 7px 13px;
         border: 1px solid ${palette.blue[4]};
@@ -83,11 +93,11 @@ export const PostListContainer = styled.li`
     .contents_item span {
         display: inline-flex;
         align-items: center;
+        margin-right: 15px;
     }
 
-    .contents_item .views {
-        margin-right: 15px;
-        font-size: 1.4rem;
+    .contents_item span:last-child {
+        margin-right: 0;
     }
 
     .contents_item .views svg {
@@ -96,17 +106,7 @@ export const PostListContainer = styled.li`
         margin-right: 7px;
     }
 
-    .contents_item .likes {
-        margin-right: 15px;
-    }
-
-    .contents_item .likes img {
-        width: 20px;
-        height: 20px;
-        margin-right: 7px;
-    }
-
-    .contents_item .comments img {
+    .contents_item span img {
         width: 20px;
         height: 20px;
         margin-right: 7px;
