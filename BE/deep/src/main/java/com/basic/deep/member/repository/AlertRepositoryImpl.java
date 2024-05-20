@@ -35,4 +35,18 @@ public class AlertRepositoryImpl implements AlertRepositoryCustom {
 
         return firstSelectNextDelete;
     }
+
+    @Override
+    public List<Alert> selectMemberID() {
+        return queryFactory.select(alert)
+                .from(alert)
+                .fetch();
+    }
+
+    @Override
+    public void deleteMemberID(Long alertNo) {
+        queryFactory.delete(alert)
+                .where(alert.alertNo.eq(alertNo))
+                .execute();
+    }
 }
