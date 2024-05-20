@@ -11,6 +11,7 @@ export const MainPostContainer = styled.li`
         display: flex;
         align-items: center;
         margin-bottom: 20px;
+        cursor: pointer;
     }
 
     .user_profile img {

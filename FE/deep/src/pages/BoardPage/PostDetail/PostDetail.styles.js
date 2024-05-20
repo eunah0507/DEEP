@@ -26,6 +26,7 @@ export const PostDetailContainer = styled.div`
         display: flex;
         align-items: center;
         margin-bottom: 30px;
+        cursor: pointer;
     }
 
     .user_profile .user_profile_img {

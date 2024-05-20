@@ -15,6 +15,7 @@ export const LikesContainer = styled.div`
         width: 100%;
         padding: 30px 0;
         border-bottom: 1px solid #ddd;
+        cursor: pointer;
     }
 
     .post_likes li:last-child {

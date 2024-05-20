@@ -4,9 +4,12 @@ import { UserPostContainer } from "./UserPost.styles";
 import { GrView } from "react-icons/gr";
 import likesIcon from "../../../assets/images/deep-icon-likes.svg";
 import commentsIcon from "../../../assets/images/deep-icon-comments.svg";
+import { useNavigate } from "react-router-dom";
 
 function UserPost() {
     const [posts, setPosts] = useState([]);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         axiosInstance
@@ -16,6 +19,10 @@ function UserPost() {
             })
             .catch((error) => console.log(error));
     }, []);
+
+    const handleClickPost = (e, category, boardNo) => {
+        navigate(`/${category}/${boardNo}`);
+    };
 
     const postCreatedDate = posts.map((post) => {
         return post.boardCreatedTime.split("T")[0].replaceAll("-", ".");
@@ -30,7 +37,12 @@ function UserPost() {
             <ul className="user_posts">
                 {posts.map((post, index) => {
                     return (
-                        <li className="user_post">
+                        <li
+                            className="user_post"
+                            onClick={(e) =>
+                                handleClickPost(e, post.category, post.boardNo)
+                            }
+                        >
                             <div className="post_info">
                                 <p className="post_title">{post.boardTitle}</p>
                                 <div className="user_post_time">

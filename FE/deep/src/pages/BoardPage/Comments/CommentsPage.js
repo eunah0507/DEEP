@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
     CommentsPageContainer,
     CommentsPageWrapper,
@@ -9,29 +9,34 @@ import Button from "../../../components/Button/Button";
 import userInfo from "../../../assets/images/deep-profile-blue.png";
 import { useSelector } from "react-redux";
 import commentIcon from "../../../assets/images/deep-icon-comments.svg";
+import { useNavigate } from "react-router-dom";
 
 function CommentsPage({ boardNo }) {
     const [postComments, setPostComments] = useState([]);
+    const [commentsCount, setCommentsCount] = useState("");
     const [commentValue, setCommentValue] = useState("");
     const [isCommentMenuOpen, setIsCommentMenuOpen] = useState(false);
     const [isIndex, setIsIndex] = useState(null);
 
     const member = useSelector((state) => state.member.value);
 
-    useEffect(() => {
+    useMemo(() => {
         axiosInstance
             .get(`/deep/board/reply-list?boardNo=${boardNo}`)
             .then((response) => {
                 setPostComments(response.data.reverse());
+                setCommentsCount(response.data.length);
             })
             .catch((error) => {
                 console.log(error);
             });
-    }, [postComments]);
+    }, [commentsCount]);
 
     const handleInputComment = (e) => {
         setCommentValue(e.target.value);
     };
+
+    const navigate = useNavigate();
 
     const commentCreatedTime = postComments.map((comment) => {
         const date = new Date(comment.replyCreatedTime);
@@ -71,6 +76,12 @@ function CommentsPage({ boardNo }) {
         }
     };
 
+    const handleClickProfile = (e, nickName, random) => {
+        const userRandom = random.replace("#", "");
+
+        navigate(`/profile/${nickName}/${userRandom}`);
+    };
+
     const handleClickMenu = (e, index) => {
         setIsCommentMenuOpen(!isCommentMenuOpen);
         setIsIndex(index);
@@ -93,7 +104,7 @@ function CommentsPage({ boardNo }) {
 
     return (
         <CommentsPageWrapper>
-            <h4 className="total_comments">{postComments.length}개의 댓글</h4>
+            <h4 className="total_comments">{commentsCount}개의 댓글</h4>
             <div className="comment_input">
                 <Input
                     type="text"
@@ -124,7 +135,16 @@ function CommentsPage({ boardNo }) {
                             return (
                                 <li className="comment">
                                     <div className="comment_top">
-                                        <div className="user_info">
+                                        <div
+                                            className="user_info"
+                                            onClick={(e) =>
+                                                handleClickProfile(
+                                                    e,
+                                                    comment.memberNickName,
+                                                    comment.memberRandom
+                                                )
+                                            }
+                                        >
                                             {comment.memberFile === null ? (
                                                 <img
                                                     className="user_profile_img"
