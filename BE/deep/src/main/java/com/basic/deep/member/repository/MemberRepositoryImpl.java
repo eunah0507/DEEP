@@ -156,7 +156,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     public List<MemberProfilePostResponseDTO> selectMemberPost(Long memberNo) {
         return queryFactory.select(
                 Projections.constructor(MemberProfilePostResponseDTO.class,
-                        board.boardNo, board.boardTitle,
+                        board.boardNo, board.boardCategory ,board.boardTitle,
                         board.boardDate, board.boardReadCount)
                 )
                 .from(member)
@@ -170,7 +170,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     @Override
     public List<MemberProfileReplyResponseDTO> selectMemberReply(String memberNickName, String memberRandom) {
         return queryFactory.select(Projections.constructor(MemberProfileReplyResponseDTO.class,
-                        board.boardNo, board.boardTitle,
+                        board.boardNo, board.boardCategory ,board.boardTitle,
                         boardReply.replyContent, board.boardDate))
                 .from(board)
                 .join(boardReply)
@@ -183,7 +183,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     @Override
     public List<MemberProfieLikeResponseDTO> selectMemberLike(Long memberNo) {
         return queryFactory.select(Projections.constructor(MemberProfieLikeResponseDTO.class,
-                        board.member_no.memberNo, board.boardTitle,
+                        board.member_no.memberNo, board.boardCategory ,board.boardTitle,
                         board.member_no.memberNickname, board.member_no.memberRandom,
                         board.boardDate, board.boardReadCount))
                 .from(boardLike)
