@@ -17,16 +17,39 @@ import java.util.Optional;
 import static com.basic.deep.board.entity.QBoard.board;
 import static com.basic.deep.member.entity.QMember.member;
 import static com.basic.deep.board.entity.QBoardLike.boardLike;
+import static com.basic.deep.board.entity.QBoardReply.boardReply;
+import static com.basic.deep.board.entity.QBoardImg.boardImg;
+import static com.basic.deep.board.entity.QBoardTag.boardTag;
 
 public class BoardRepositoryImpl implements BoardRepositoryCustom{
 
     @Autowired
     private JPAQueryFactory queryFactory;
 
-    // 게시글 삭제
-
+    // 게시글 삭제 : 1. 게시글에 달린 좋아요 삭제
     @Override
     public void deleteBoard(Long boardNo) {
+        // 게시글 삭제 : 1. 게시글에 달린 좋아요 삭제
+        queryFactory.delete(boardLike)
+                .where(boardLike.boardNo.boardNo.eq(boardNo))
+                .execute();
+
+        // 게시글 삭제 : 2. 게시글에 달린 이미지들 삭제
+        queryFactory.delete(boardImg)
+                .where(boardImg.boardNo.boardNo.eq(boardNo))
+                .execute();
+
+        // 게시글 삭제 : 3. 게시글에 달린 댓글들 삭제
+        queryFactory.delete(boardReply)
+                .where(boardReply.boardNo.boardNo.eq(boardNo))
+                .execute();
+
+        // 게시글 삭제 : 4. 게시글에 달린 태그 삭제
+        queryFactory.delete(boardTag)
+                .where(boardTag.boardNo.boardNo.eq(boardNo))
+                .execute();
+
+        // 게시글 삭제 : 5. 게시글 삭제
         queryFactory.delete(board)
                 .where(board.boardNo.eq(boardNo))
                 .execute();
