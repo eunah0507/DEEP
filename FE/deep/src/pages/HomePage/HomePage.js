@@ -4,6 +4,8 @@ import axiosInstance from "../../apis/axiosInstance";
 import MainPost from "./MainPost/MainPost";
 import Loading from "../../components/Loading/Loading";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login } from "../../store/memberStore";
 
 function HomePage() {
     const [loading, setLoading] = useState(true);
@@ -13,9 +15,42 @@ function HomePage() {
     const [qna, setQna] = useState([]);
     const [community, setCommunity] = useState([]);
 
+    const dispatch = useDispatch();
+
     const navigate = useNavigate();
 
     useMemo(() => {
+        axiosInstance
+            .get("/deep/member/info")
+            .then((response) => {
+                const data = response.data;
+
+                if (data.memberFile === null) {
+                    data.memberFile = "";
+                }
+
+                if (data.memberIntroduce === null) {
+                    data.memberIntroduce = "";
+                }
+
+                const payload = {
+                    isAuthorized: true,
+                    memberNickName: data.memberNickName,
+                    memberRandom: data.memberRandom,
+                    memberFile: data.memberFile,
+                    memberIntroduce: data.memberIntroduce,
+                };
+
+                dispatch(login(payload));
+                navigate("/home");
+            })
+            .catch((error) => {
+                console.log(error);
+                alert(
+                    "회원님의 정보를 불러올 수 없습니다.\n다시 로그인 해 주세요."
+                );
+            });
+
         axiosInstance
             .get("/deep/board/main-index")
             .then((response) => {
@@ -165,6 +200,7 @@ function HomePage() {
                             </div>
                         </div>
                     </HomeContainer>
+                    <div></div>
                 </HomeWrapper>
             )}
         </>
