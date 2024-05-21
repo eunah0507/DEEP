@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -32,8 +33,8 @@ public class AlertController {
     private SseEmitterService sseEmitterService;
 
 
-    @GetMapping(value = "/connectAlert/{memberID}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public ResponseEntity<SseEmitter> connectAlert(@PathVariable String memberID) {
+    @GetMapping(value = "/connectAlert", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public ResponseEntity<SseEmitter> connectAlert(@RequestParam String memberID) {
         SseEmitter emitter = sseEmitterService.subscribe(memberID);
         return ResponseEntity.ok(emitter);
     }
