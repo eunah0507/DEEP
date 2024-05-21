@@ -19,6 +19,8 @@ function HomePage() {
 
     const navigate = useNavigate();
 
+    console.log("home");
+
     useMemo(() => {
         axiosInstance
             .get("/deep/member/info")
@@ -42,7 +44,7 @@ function HomePage() {
                 };
 
                 dispatch(login(payload));
-                navigate("/home");
+                console.log(response);
             })
             .catch((error) => {
                 console.log(error);
