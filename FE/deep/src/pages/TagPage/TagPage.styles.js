@@ -13,6 +13,29 @@ export const TagPageContainer = styled.div`
     height: calc(100% - 60px);
     margin: 60px 0 200px;
 
+    .nothing_tag_container {
+        margin-top: 250px;
+    }
+
+    .nothing_tag_container .nothing_tag {
+        display: flex;
+        justify-content: center;
+    }
+
+    .nothing_tag_container .nothing_tag .search_nothing {
+        width: 300px;
+        height: 300px;
+        opacity: 0.5;
+    }
+
+    .nothing_tag_container span {
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+        color: #666;
+        font-size: 2.4rem;
+    }
+
     .tag_title {
         width: 100%;
         height: 50px;
