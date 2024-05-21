@@ -67,4 +67,12 @@ public interface MemberService {
     // [커뮤니티 프로필] 마이 페이지 - 내가 누른 좋아요 확인
     List<MemberProfieLikeResponseDTO> myLike(Long memberNo);
 
+    // [다른 사람의 마이 페이지] - 해당 유저가 작성한 글 확인
+    List<MemberOthersPostResponseDTO> othersPost(String memberNickName, String memberRandom);
+
+    // [다른 사람의 마이 페이지] - 해당 유저가 작성한 댓글 확인
+    List<MemberOthersReplyResponseDTO> othersReply(String memberNickName, String memberRandom);
+
+
+
 }

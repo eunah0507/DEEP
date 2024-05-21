@@ -457,4 +457,20 @@ public class MemberController {
         headers.add("Set-Cookie", cookie.toString());
         return new ResponseEntity<>(memberLogOutResponseDTO, headers, HttpStatus.OK);
     }
+
+    // [다른 사람의 마이 페이지] - 해당 유저가 작성한 글 확인
+    @PostMapping("/others-post")
+    public ResponseEntity<?> othersPost(@RequestBody MemberOthersPostRequestDTO memberOthersPostRequestDTO){
+        List<MemberOthersPostResponseDTO> memberOthersPostResponseDTO = memberService.othersPost(memberOthersPostRequestDTO.getMemberNickName(), memberOthersPostRequestDTO.getMemberRandom());
+
+        return new ResponseEntity<>(memberOthersPostResponseDTO, HttpStatus.OK);
+    }
+
+    // [다른 사람의 마이 페이지] - 해당 유저가 작성한 글 확인
+    @PostMapping("/others-reply")
+    public ResponseEntity<?> othersReply(@RequestBody MemberOthersReplyRequestDTO memberOthersReplyRequestDTO){
+        List<MemberOthersReplyResponseDTO> memberOthersReplyResponseDTO = memberService.othersReply(memberOthersReplyRequestDTO.getMemberNickName(), memberOthersReplyRequestDTO.getMemberRandom());
+
+        return new ResponseEntity<>(memberOthersReplyResponseDTO, HttpStatus.OK);
+    }
 }

@@ -1,9 +1,6 @@
 package com.basic.deep.member.repository;
 
-import com.basic.deep.member.dto.MemberProfieLikeResponseDTO;
-import com.basic.deep.member.dto.MemberProfilePostResponseDTO;
-import com.basic.deep.member.dto.MemberProfileReplyResponseDTO;
-import com.basic.deep.member.dto.MemberSearchResponseDTO;
+import com.basic.deep.member.dto.*;
 import com.basic.deep.member.entity.Member;
 import com.basic.deep.member.entity.SocialType;
 import com.querydsl.core.Tuple;
@@ -193,4 +190,30 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 .fetch();
     }
 
+    // [다른 사람의 마이 페이지] - 해당 유저가 작성한 글 확인
+    // eq안은 보라색이면 안됨
+    @Override
+    public List<MemberOthersPostResponseDTO> selectOtherMemberPost(String memberNickName, String memberRandom) {
+        return queryFactory.select(Projections.constructor(MemberOthersPostResponseDTO.class,
+                        board.boardNo, board.boardCategory,
+                        board.boardTitle, board.boardDate, board.boardReadCount))
+                .from(member)
+                .join(board)
+                .on(member.memberNo.eq(board.member_no.memberNo))
+                .where(member.memberNickname.eq(memberNickName).and(member.memberRandom.eq(memberRandom)))
+                .fetch();
+    }
+
+    // [다른 사람의 마이 페이지] - 해당 유저가 작성한 댓글 확인
+    @Override
+    public List<MemberOthersReplyResponseDTO> selectOtherMemberReply(String memberNickName, String memberRandom) {
+        return queryFactory.select(Projections.constructor(MemberOthersReplyResponseDTO.class,
+                        board.boardNo, board.boardCategory,
+                        board.boardTitle, boardReply.replyContent, board.boardDate))
+                .from(board)
+                .join(boardReply)
+                .on(board.eq(boardReply.boardNo))
+                .where(boardReply.replyNickName.eq(memberNickName).and(boardReply.replyRandom.eq(memberRandom)))
+                .fetch();
+    }
 }

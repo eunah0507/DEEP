@@ -1,9 +1,6 @@
 package com.basic.deep.member.repository;
 
-import com.basic.deep.member.dto.MemberProfieLikeResponseDTO;
-import com.basic.deep.member.dto.MemberProfilePostResponseDTO;
-import com.basic.deep.member.dto.MemberProfileReplyResponseDTO;
-import com.basic.deep.member.dto.MemberSearchResponseDTO;
+import com.basic.deep.member.dto.*;
 import com.basic.deep.member.entity.Member;
 import com.basic.deep.member.entity.SocialType;
 import com.querydsl.core.Tuple;
@@ -57,5 +54,12 @@ public interface MemberRepositoryCustom {
 
     // [커뮤니티 프로필] 마이 페이지 - 내가 누른 좋아요 확인
     List<MemberProfieLikeResponseDTO> selectMemberLike(Long memberNo);
+
+    // [다른 사람의 마이 페이지] - 해당 유저가 작성한 글 확인
+    List<MemberOthersPostResponseDTO> selectOtherMemberPost(String memberNickName, String memberRandom);
+
+    // [다른 사람의 마이 페이지] - 해당 유저가 작성한 댓글 확인
+    List<MemberOthersReplyResponseDTO> selectOtherMemberReply(String memberNickName, String memberRandom);
+
 
 }

@@ -362,7 +362,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     // [커뮤니티 프로필] 마이 페이지 - 내가 쓴 글 확인 이어서
-    public MemberProfilePostResponseDTO profilePost(MemberProfilePostResponseDTO memberProfilePostResponseDTO){
+    public MemberProfilePostResponseDTO profilePost(MemberProfilePostResponseDTO memberProfilePostResponseDTO) {
         memberProfilePostResponseDTO.setLike(boardLikeRepository.selectBoardDetailLikeCount(memberProfilePostResponseDTO.getBoardNo()));
         memberProfilePostResponseDTO.setReply(replyRepository.selectReplyCount(memberProfilePostResponseDTO.getBoardNo()));
 
@@ -387,11 +387,37 @@ public class MemberServiceImpl implements MemberService {
         return memberProfileLike;
     }
 
+
     // [커뮤니티 프로필] 마이 페이지 - 내가 누른 좋아요 확인 이어서
-    public MemberProfieLikeResponseDTO profileLike(MemberProfieLikeResponseDTO memberProfieLikeResponseDTO){
+    public MemberProfieLikeResponseDTO profileLike(MemberProfieLikeResponseDTO memberProfieLikeResponseDTO) {
         memberProfieLikeResponseDTO.setLike(boardLikeRepository.selectBoardDetailLikeCount(memberProfieLikeResponseDTO.getBoardNo()));
         memberProfieLikeResponseDTO.setReply(replyRepository.selectReplyCount(memberProfieLikeResponseDTO.getBoardNo()));
 
         return memberProfieLikeResponseDTO;
+    }
+
+    // [다른 사람의 마이 페이지] - 해당 유저가 작성한 글 확인
+    @Override
+    public List<MemberOthersPostResponseDTO> othersPost(String memberNickName, String memberRandom) {
+        List<MemberOthersPostResponseDTO> otherMemberPost = memberRepository.selectOtherMemberPost(memberNickName, memberRandom);
+        otherMemberPost = otherMemberPost.stream().map(this::othersWritePost).toList();
+
+        return otherMemberPost;
+    }
+
+    // [다른 사람의 마이 페이지] - 해당 유저가 작성한 글 이어서
+    public MemberOthersPostResponseDTO othersWritePost(MemberOthersPostResponseDTO memberOthersPostResponseDTO) {
+        memberOthersPostResponseDTO.setLike(boardLikeRepository.selectBoardDetailLikeCount(memberOthersPostResponseDTO.getBoardNo()));
+        memberOthersPostResponseDTO.setReply(replyRepository.selectReplyCount(memberOthersPostResponseDTO.getBoardNo()));
+
+        return memberOthersPostResponseDTO;
+    }
+
+    // [다른 사람의 마이 페이지] - 해당 유저가 작성한 댓글 확인
+    @Override
+    public List<MemberOthersReplyResponseDTO> othersReply(String memberNickName, String memberRandom) {
+        List<MemberOthersReplyResponseDTO> memberOthersReplyResponseDTO = memberRepository.selectOtherMemberReply(memberNickName, memberRandom);
+
+        return memberOthersReplyResponseDTO;
     }
 }
