@@ -4,6 +4,7 @@ import axiosInstance from "../../apis/axiosInstance";
 import { useLocation, useNavigate } from "react-router-dom";
 import likesIcon from "../../assets/images/deep-icon-likes.svg";
 import commentsIcon from "../../assets/images/deep-icon-comments.svg";
+import searchNothing from "../../assets/images/deep-profile-nothing.png";
 
 function TagPage() {
     const [tags, setTags] = useState([]);
@@ -53,79 +54,102 @@ function TagPage() {
     };
 
     return (
-        <TagPageWrapper>
-            <TagPageContainer>
-                <div className="tag_title">
-                    <h4>{`#${searchTag}`}</h4>
-                </div>
-                <ul className="posts_container">
-                    {tags.map((tag) => {
-                        return (
-                            <li className="post">
-                                <div className="user_profile">
-                                    <span
-                                        className="user_name"
-                                        onClick={(e) =>
-                                            handleClickProfile(
-                                                e,
-                                                tag.memberNickName,
-                                                tag.memberRandom
-                                            )
-                                        }
-                                    >
-                                        {tag.memberNickName}
-                                    </span>
-                                    <div className="content_time">
-                                        <span>
-                                            {createdTime(tag.boardCreatedTime)}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div
-                                    className="post_content"
-                                    onClick={(e) =>
-                                        handleClickPost(
-                                            e,
-                                            tag.category,
-                                            tag.boardNo
-                                        )
-                                    }
-                                >
-                                    <h4 className="post_title">
-                                        {tag.boardTitle}
-                                    </h4>
-                                    <div className="contents_container">
-                                        <ul className="tags">
-                                            {tag.tag.map((t) => {
-                                                return (
-                                                    <li className="tag">{t}</li>
-                                                );
-                                            })}
-                                        </ul>
-                                        <div className="contents_item">
-                                            <span className="likes">
-                                                <img
-                                                    src={likesIcon}
-                                                    alt="likes-icon"
-                                                />
-                                                <span>{tag.like}</span>
+        <>
+            {tags.length === 0 ? (
+                <TagPageWrapper>
+                    <TagPageContainer>
+                        <div className="nothing_tag_container">
+                            <div className="nothing_tag">
+                                <img
+                                    className="search_nothing"
+                                    src={searchNothing}
+                                    alt="nothing tag image"
+                                />
+                            </div>
+                            <span>검색 결과가 없습니다.</span>
+                        </div>
+                    </TagPageContainer>
+                </TagPageWrapper>
+            ) : (
+                <TagPageWrapper>
+                    <TagPageContainer>
+                        <div className="tag_title">
+                            <h4>{`#${searchTag}`}</h4>
+                        </div>
+                        <ul className="posts_container">
+                            {tags.map((tag) => {
+                                return (
+                                    <li className="post">
+                                        <div className="user_profile">
+                                            <span
+                                                className="user_name"
+                                                onClick={(e) =>
+                                                    handleClickProfile(
+                                                        e,
+                                                        tag.memberNickName,
+                                                        tag.memberRandom
+                                                    )
+                                                }
+                                            >
+                                                {tag.memberNickName}
                                             </span>
-                                            <span className="comments">
-                                                <img
-                                                    src={commentsIcon}
-                                                    alt="comments-icon"
-                                                />
-                                                <span>{tag.reply}</span>
-                                            </span>
+                                            <div className="content_time">
+                                                <span>
+                                                    {createdTime(
+                                                        tag.boardCreatedTime
+                                                    )}
+                                                </span>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </li>
-                        );
-                    })}
-                </ul>
-            </TagPageContainer>
-        </TagPageWrapper>
+                                        <div
+                                            className="post_content"
+                                            onClick={(e) =>
+                                                handleClickPost(
+                                                    e,
+                                                    tag.category,
+                                                    tag.boardNo
+                                                )
+                                            }
+                                        >
+                                            <h4 className="post_title">
+                                                {tag.boardTitle}
+                                            </h4>
+                                            <div className="contents_container">
+                                                <ul className="tags">
+                                                    {tag.tag.map((t) => {
+                                                        return (
+                                                            <li className="tag">
+                                                                {t}
+                                                            </li>
+                                                        );
+                                                    })}
+                                                </ul>
+                                                <div className="contents_item">
+                                                    <span className="likes">
+                                                        <img
+                                                            src={likesIcon}
+                                                            alt="likes-icon"
+                                                        />
+                                                        <span>{tag.like}</span>
+                                                    </span>
+                                                    <span className="comments">
+                                                        <img
+                                                            src={commentsIcon}
+                                                            alt="comments-icon"
+                                                        />
+                                                        <span>{tag.reply}</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </TagPageContainer>
+                </TagPageWrapper>
+            )}
+        </>
     );
 }
 

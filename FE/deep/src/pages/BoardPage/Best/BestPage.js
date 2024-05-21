@@ -74,9 +74,12 @@ function BestPage() {
                                 <h4 className="post_title">
                                     {post.boardTitle}
                                 </h4>
-                                <p className="post_content">
-                                    {post.boardContent}
-                                </p>
+                                <p
+                                    className="post_content"
+                                    dangerouslySetInnerHTML={{
+                                        __html: post.boardContent,
+                                    }}
+                                ></p>
                                 <div className="contents_container">
                                     <div className="content_time">
                                         <span>{postCreatedTime[index]}</span>

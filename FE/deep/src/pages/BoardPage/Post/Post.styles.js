@@ -71,9 +71,9 @@ export const PostListContainer = styled.li`
         line-height: 30px;
     }
 
-    .post_content img {
-        width: 100%;
-        object-fit: contain;
+    .post_content p:has(img) {
+        display: none;
+        line-height: 0;
     }
 
     .contents_container {
