@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
     LoginContainer,
     KakaoLoginBtn,
@@ -14,6 +14,9 @@ import naverLogo from "../../assets/images/deep-naver-logo.svg";
 import googleLogo from "../../assets/images/deep-google-logo.svg";
 import { useState } from "react";
 import axiosInstance from "../../apis/axiosInstance";
+import { useDispatch } from "react-redux";
+import { login } from "../../store/memberStore";
+import { GiConsoleController } from "react-icons/gi";
 
 function LoginPage() {
     const [id, setId] = useState("");
@@ -21,6 +24,10 @@ function LoginPage() {
 
     const [isId, setIsId] = useState(false);
     const [isPw, setIsPw] = useState(false);
+
+    const dispatch = useDispatch();
+
+    const navigate = useNavigate();
 
     const handleCheckId = (e) => {
         setId(e.target.value);
@@ -64,7 +71,38 @@ function LoginPage() {
     const fetchData = async () => {
         await axiosInstance
             .post("/deep/member/login", loginInfo)
-            .then((response) => {})
+            .then((response) => {
+                axiosInstance
+                    .get("/deep/member/info")
+                    .then((response) => {
+                        const data = response.data;
+
+                        if (data.memberFile === null) {
+                            data.memberFile = "";
+                        }
+
+                        if (data.memberIntroduce === null) {
+                            data.memberIntroduce = "";
+                        }
+
+                        const payload = {
+                            isAuthorized: true,
+                            memberNickName: data.memberNickName,
+                            memberRandom: data.memberRandom,
+                            memberFile: data.memberFile,
+                            memberIntroduce: data.memberIntroduce,
+                        };
+
+                        dispatch(login(payload));
+                        navigate("/home");
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        alert(
+                            "회원님의 정보를 불러올 수 없습니다.\n다시 로그인 해 주세요."
+                        );
+                    });
+            })
             .catch((error) => {
                 console.log(error);
                 alert("아이디 또는 비밀번호를 다시 확인해 주세요.");
@@ -77,7 +115,7 @@ function LoginPage() {
         }
     };
 
-    const socialLogin = (params) => {
+    const socialLogin = async (params) => {
         const authURL = `https://dev.deeep.site/deep/member/login/${params}`;
         window.location.href = authURL;
     };

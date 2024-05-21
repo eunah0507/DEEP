@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { HomeContainer, HomeWrapper } from "./HomePage.styles";
 import axiosInstance from "../../apis/axiosInstance";
 import MainPost from "./MainPost/MainPost";
@@ -19,9 +19,7 @@ function HomePage() {
 
     const navigate = useNavigate();
 
-    console.log("home");
-
-    useMemo(() => {
+    useEffect(() => {
         axiosInstance
             .get("/deep/member/info")
             .then((response) => {
@@ -44,7 +42,6 @@ function HomePage() {
                 };
 
                 dispatch(login(payload));
-                console.log(response);
             })
             .catch((error) => {
                 console.log(error);
