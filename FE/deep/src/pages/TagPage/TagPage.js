@@ -4,9 +4,9 @@ import axiosInstance from "../../apis/axiosInstance";
 import { useLocation, useNavigate } from "react-router-dom";
 import likesIcon from "../../assets/images/deep-icon-likes.svg";
 import commentsIcon from "../../assets/images/deep-icon-comments.svg";
-import searchNothing from "../../assets/images/deep-profile-nothing.png";
 
 function TagPage() {
+    const [loading, setLoading] = useState(true);
     const [tags, setTags] = useState([]);
 
     const navigate = useNavigate();
@@ -25,6 +25,7 @@ function TagPage() {
             .post("/deep/board/search-tag", tagInfo)
             .then((response) => {
                 setTags(response.data);
+                setLoading(false);
             })
             .catch((error) => {
                 console.log(error);
@@ -55,21 +56,8 @@ function TagPage() {
 
     return (
         <>
-            {tags.length === 0 ? (
-                <TagPageWrapper>
-                    <TagPageContainer>
-                        <div className="nothing_tag_container">
-                            <div className="nothing_tag">
-                                <img
-                                    className="search_nothing"
-                                    src={searchNothing}
-                                    alt="nothing tag image"
-                                />
-                            </div>
-                            <span>검색 결과가 없습니다.</span>
-                        </div>
-                    </TagPageContainer>
-                </TagPageWrapper>
+            {loading ? (
+                <></>
             ) : (
                 <TagPageWrapper>
                     <TagPageContainer>

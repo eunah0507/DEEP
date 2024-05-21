@@ -69,6 +69,9 @@ function BestPage() {
                                         <span className="user_name">
                                             {post.memberNickName}
                                         </span>
+                                        <span className="user_random">
+                                            {post.memberRandom}
+                                        </span>
                                     </div>
                                 </div>
                                 <h4 className="post_title">

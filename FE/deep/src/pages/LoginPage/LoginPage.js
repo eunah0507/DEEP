@@ -16,6 +16,7 @@ import { useState } from "react";
 import axiosInstance from "../../apis/axiosInstance";
 import { useDispatch } from "react-redux";
 import { login } from "../../store/memberStore";
+import { GiConsoleController } from "react-icons/gi";
 
 function LoginPage() {
     const [id, setId] = useState("");
@@ -117,7 +118,37 @@ function LoginPage() {
     const socialLogin = (params) => {
         const authURL = `https://dev.deeep.site/deep/member/login/${params}`;
         window.location.href = authURL;
-        // return redirect("/home");
+
+        axiosInstance
+            .get("/deep/member/info")
+            .then((response) => {
+                const data = response.data;
+
+                if (data.memberFile === null) {
+                    data.memberFile = "";
+                }
+
+                if (data.memberIntroduce === null) {
+                    data.memberIntroduce = "";
+                }
+
+                const payload = {
+                    isAuthorized: true,
+                    memberNickName: data.memberNickName,
+                    memberRandom: data.memberRandom,
+                    memberFile: data.memberFile,
+                    memberIntroduce: data.memberIntroduce,
+                };
+
+                dispatch(login(payload));
+                navigate("/home");
+            })
+            .catch((error) => {
+                console.log(error);
+                alert(
+                    "회원님의 정보를 불러올 수 없습니다.\n다시 로그인 해 주세요."
+                );
+            });
     };
 
     return (
