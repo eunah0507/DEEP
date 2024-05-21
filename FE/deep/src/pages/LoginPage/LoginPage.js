@@ -145,9 +145,6 @@ function LoginPage() {
             })
             .catch((error) => {
                 console.log(error);
-                alert(
-                    "회원님의 정보를 불러올 수 없습니다.\n다시 로그인 해 주세요."
-                );
             });
     };
 
