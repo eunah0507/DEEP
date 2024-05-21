@@ -42,6 +42,12 @@ export const PostDetailContainer = styled.div`
         font-size: 1.6rem;
     }
 
+    .user_profile .user_random {
+        margin-left: 7px;
+        color: #999;
+        font-size: 1.6rem;
+    }
+
     /* post menu */
     .post_menu_container {
         position: relative;

@@ -3,6 +3,7 @@ import { HomeContainer, HomeWrapper } from "./HomePage.styles";
 import axiosInstance from "../../apis/axiosInstance";
 import MainPost from "./MainPost/MainPost";
 import Loading from "../../components/Loading/Loading";
+import { useNavigate } from "react-router-dom";
 
 function HomePage() {
     const [loading, setLoading] = useState(true);
@@ -11,6 +12,8 @@ function HomePage() {
     const [skill, setSkill] = useState([]);
     const [qna, setQna] = useState([]);
     const [community, setCommunity] = useState([]);
+
+    const navigate = useNavigate();
 
     useMemo(() => {
         axiosInstance
@@ -58,6 +61,26 @@ function HomePage() {
             });
     }, []);
 
+    const handleClickNotice = () => {
+        navigate("/notice");
+    };
+
+    const handleClickBest = () => {
+        navigate("/best");
+    };
+
+    const handleClickSkill = () => {
+        navigate("/skill");
+    };
+
+    const handleClickQna = () => {
+        navigate("/qna");
+    };
+
+    const handleClickCommunity = () => {
+        navigate("/community");
+    };
+
     return (
         <>
             {loading ? (
@@ -66,7 +89,7 @@ function HomePage() {
                 <HomeWrapper>
                     <HomeContainer>
                         <div className="notice">
-                            <h3>공지사항</h3>
+                            <h3 onClick={handleClickNotice}>공지사항</h3>
                             <div className="notice_content">
                                 {notice.length > 0 && (
                                     <p>{notice[0].boardTitle}</p>
@@ -75,7 +98,7 @@ function HomePage() {
                         </div>
                         <div className="boards">
                             <div className="best board">
-                                <h4>인기글</h4>
+                                <h4 onClick={handleClickBest}>인기글</h4>
                                 <ul>
                                     {best.map((post) => {
                                         return (
@@ -91,7 +114,7 @@ function HomePage() {
                                 </ul>
                             </div>
                             <div className="skill board">
-                                <h4>기술 트렌드</h4>
+                                <h4 onClick={handleClickSkill}>기술 트렌드</h4>
                                 <ul>
                                     {skill.map((post) => {
                                         return (
@@ -109,7 +132,7 @@ function HomePage() {
                         </div>
                         <div className="boards">
                             <div className="qna board">
-                                <h4>QnA</h4>
+                                <h4 onClick={handleClickQna}>QnA</h4>
                                 <ul>
                                     {qna.map((post) => {
                                         return (
@@ -125,7 +148,7 @@ function HomePage() {
                                 </ul>
                             </div>
                             <div className="community board">
-                                <h4>커뮤니티</h4>
+                                <h4 onClick={handleClickCommunity}>커뮤니티</h4>
                                 <ul>
                                     {community.map((post) => {
                                         return (

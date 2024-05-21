@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import axiosInstance from "../../../apis/axiosInstance";
 import {
     CommentsContainer,
@@ -148,19 +148,19 @@ function PostDetail() {
         setIsLike(!isLike);
         console.log(isLike);
 
-        // const likeInfo = {
-        //     boardNo: boardNo,
-        //     like: !isLike,
-        // };
+        const likeInfo = {
+            boardNo: boardNo,
+            like: !isLike,
+        };
 
-        // axiosInstance
-        //     .post("/deep/board/like", likeInfo)
-        //     .then((response) => {
-        //         console.log(response);
-        //     })
-        //     .catch((error) => {
-        //         console.log(error);
-        //     });
+        axiosInstance
+            .post("/deep/board/like", likeInfo)
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     };
 
     return (
@@ -191,6 +191,9 @@ function PostDetail() {
                                     )}
                                     <span className="user_name">
                                         {userNickName}
+                                    </span>
+                                    <span className="user_random">
+                                        {`#${userRandom}`}
                                     </span>
                                 </div>
                                 {isMyPost ? (

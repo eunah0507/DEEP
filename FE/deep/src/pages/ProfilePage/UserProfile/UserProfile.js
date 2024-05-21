@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 import userNothing from "../../../assets/images/deep-profile-nothing.png";
 
 function UserProfile() {
+    const [loading, setLoading] = useState(true);
     const [nickName, setNickName] = useState("");
     const [random, setRandom] = useState("");
     const [profileImg, setProfileImg] = useState(null);
@@ -31,6 +32,7 @@ function UserProfile() {
                 setProfileImg(data.memberFile);
                 setIntroduce(data.memberIntroduce);
                 setIsUser(true);
+                setLoading(false);
             })
             .catch((error) => {
                 console.log(error);
@@ -39,48 +41,57 @@ function UserProfile() {
     }, []);
 
     return (
-        <UserProfileWrapper>
-            <UserProfileContainer>
-                {isUser ? (
-                    <div className="user_profile_info">
-                        <div className="user_profile_item">
-                            <div className="user_profile">
-                                {profileImg === "" ? (
-                                    <img
-                                        src={userProfile}
-                                        alt="user-profile-image"
-                                    />
-                                ) : (
-                                    <img
-                                        src={profileImg}
-                                        alt="user-profile-image"
-                                    />
-                                )}
-                                {/* <img src="https://developersitedeep.s3.ap-northeast-2.amazonaws.com/deepProfile/5baba5e2-9d0d-49b3-9c58-b3315e7ae3a4.jpg" alt="user-profile-image" /> */}
-                                <span className="user_nickName">
-                                    {nickName}
-                                </span>
-                                <span className="user_number">{random}</span>
+        <>
+            {loading ? (
+                <UserProfileWrapper>
+                    <UserProfileContainer></UserProfileContainer>
+                </UserProfileWrapper>
+            ) : (
+                <UserProfileWrapper>
+                    <UserProfileContainer>
+                        {isUser ? (
+                            <div className="user_profile_info">
+                                <div className="user_profile_item">
+                                    <div className="user_profile">
+                                        {profileImg === "" ? (
+                                            <img
+                                                src={userProfile}
+                                                alt="user-profile-image"
+                                            />
+                                        ) : (
+                                            <img
+                                                src={profileImg}
+                                                alt="user-profile-image"
+                                            />
+                                        )}
+                                        <span className="user_nickName">
+                                            {nickName}
+                                        </span>
+                                        <span className="user_number">
+                                            {random}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="user_introduce">
+                                    <span>{introduce}</span>
+                                </div>
                             </div>
-                        </div>
-                        <div className="user_introduce">
-                            <span>{introduce}</span>
-                        </div>
-                    </div>
-                ) : (
-                    <div className="nothing_profile_container">
-                        <div className="nothing_profile">
-                            <img
-                                className="nothing_profile_image"
-                                src={userNothing}
-                                alt="profile nothing"
-                            />
-                        </div>
-                        <span>존재하지 않거나 탈퇴한 회원입니다.</span>
-                    </div>
-                )}
-            </UserProfileContainer>
-        </UserProfileWrapper>
+                        ) : (
+                            <div className="nothing_profile_container">
+                                <div className="nothing_profile">
+                                    <img
+                                        className="nothing_profile_image"
+                                        src={userNothing}
+                                        alt="profile nothing"
+                                    />
+                                </div>
+                                <span>존재하지 않거나 탈퇴한 회원입니다.</span>
+                            </div>
+                        )}
+                    </UserProfileContainer>
+                </UserProfileWrapper>
+            )}
+        </>
     );
 }
 

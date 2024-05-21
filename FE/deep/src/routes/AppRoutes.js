@@ -27,6 +27,7 @@ import PostDetail from "../pages/BoardPage/PostDetail/PostDetail";
 import MyProfile from "../pages/ProfilePage/UserProfile/MyProfile";
 import UserProfile from "../pages/ProfilePage/UserProfile/UserProfile";
 import ScrollToTop from "../components/ScrollToTop/ScrollToTop";
+import TagPage from "../pages/TagPage/TagPage";
 
 function AppRoutes() {
     return (
@@ -66,6 +67,7 @@ function AppRoutes() {
                             path="/:category/:boardNo"
                             element={<PostDetail />}
                         />
+                        <Route path="/tag/:id" element={<TagPage />} />
                     </Route>
                     <Route path="*" element={<NotFoundPage />} />
                 </Routes>

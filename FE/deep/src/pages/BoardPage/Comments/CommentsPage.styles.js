@@ -89,6 +89,12 @@ export const CommentsPageContainer = styled.div`
         font-size: 1.6rem;
     }
 
+    .comments .comment .user_info .user_random {
+        margin-left: 7px;
+        color: #999;
+        font-size: 1.6rem;
+    }
+
     /* comment menu */
     .comment_menu_container {
         position: relative;

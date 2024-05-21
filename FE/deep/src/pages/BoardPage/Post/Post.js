@@ -18,14 +18,27 @@ function Post({ post }) {
 
     const formattedDate = `${year}.${month}.${day}`;
 
+    const handleClickProfile = () => {
+        navigate(
+            `/profile/${post.memberNickName}/${post.memberRandom.replace(
+                "#",
+                ""
+            )}`
+        );
+    };
+
     const handleClickPost = () => {
         navigate(`${location.pathname}/${post.boardNo}`);
     };
 
+    const handleClickTag = (e, tag) => {
+        navigate(`/tag/${tag.replace("#", "")}`);
+    };
+
     return (
-        <PostListContainer className="post" onClick={handleClickPost}>
+        <PostListContainer className="post">
             <div className="post_container">
-                <div className="user_profile">
+                <div className="user_profile" onClick={handleClickProfile}>
                     {post.memberFile === null ? (
                         <img
                             className="user_profile_img"
@@ -40,35 +53,47 @@ function Post({ post }) {
                         />
                     )}
                     <span className="user_name">{post.memberNickName}</span>
+                    <span className="user_random">{post.memberRandom}</span>
                 </div>
                 <div className="content_time">
                     <span>{formattedDate}</span>
                 </div>
             </div>
-            <h4 className="post_title">{post.boardTitle}</h4>
-            <p
-                className="post_content"
-                dangerouslySetInnerHTML={{ __html: post.boardContent }}
-            ></p>
-            <div className="contents_container">
-                <ul className="tags">
-                    {post.tag.map((t) => {
-                        return <li className="tag">{t}</li>;
-                    })}
-                </ul>
-                <div className="contents_item">
-                    <span className="views">
-                        <GrView />
-                        <span>{post.view}</span>
-                    </span>
-                    <span className="likes">
-                        <img src={likesIcon} alt="likes-icon" />
-                        <span>{post.like}</span>
-                    </span>
-                    <span className="comments">
-                        <img src={commentsIcon} alt="comments-icon" />
-                        <span>{post.reply}</span>
-                    </span>
+            <div>
+                <div onClick={handleClickPost}>
+                    <h4 className="post_title">{post.boardTitle}</h4>
+                    <p
+                        className="post_content"
+                        dangerouslySetInnerHTML={{ __html: post.boardContent }}
+                    ></p>
+                </div>
+                <div className="contents_container">
+                    <ul className="tags">
+                        {post.tag.map((t) => {
+                            return (
+                                <li
+                                    className="tag"
+                                    onClick={(e) => handleClickTag(e, t)}
+                                >
+                                    {t}
+                                </li>
+                            );
+                        })}
+                    </ul>
+                    <div className="contents_item">
+                        <span className="views">
+                            <GrView />
+                            <span>{post.view}</span>
+                        </span>
+                        <span className="likes">
+                            <img src={likesIcon} alt="likes-icon" />
+                            <span>{post.like}</span>
+                        </span>
+                        <span className="comments">
+                            <img src={commentsIcon} alt="comments-icon" />
+                            <span>{post.reply}</span>
+                        </span>
+                    </div>
                 </div>
             </div>
         </PostListContainer>
