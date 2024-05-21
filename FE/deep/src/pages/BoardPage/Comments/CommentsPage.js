@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
     CommentsPageContainer,
     CommentsPageWrapper,
@@ -91,7 +91,6 @@ function CommentsPage({ boardNo }) {
         axiosInstance
             .delete(`/deep/board/reply-delete?replyNo=${replyNo}`)
             .then((response) => {
-                console.log();
                 alert("댓글이 삭제 되었습니다.");
             })
             .catch((error) => {
@@ -158,6 +157,9 @@ function CommentsPage({ boardNo }) {
                                             )}
                                             <span className="user_name">
                                                 {comment.memberNickName}
+                                            </span>
+                                            <span className="user_random">
+                                                {comment.memberRandom}
                                             </span>
                                         </div>
                                         {member.memberNickName ===

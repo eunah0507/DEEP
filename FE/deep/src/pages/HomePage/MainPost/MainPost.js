@@ -11,9 +11,18 @@ function MainPost({ post, boardNo, category }) {
         navigate(`/${category}/${boardNo}`);
     };
 
+    const handleClickProfile = () => {
+        navigate(
+            `/profile/${post.memberNickName}/${post.memberRandom.replace(
+                "#",
+                ""
+            )}`
+        );
+    };
+
     return (
-        <MainPostContainer onClick={handleClickPost}>
-            <div className="user_profile">
+        <MainPostContainer>
+            <div className="user_profile" onClick={handleClickProfile}>
                 {post.memberFile === null ? (
                     <img src={userProfile} alt="user-profile-image" />
                 ) : (
@@ -21,16 +30,18 @@ function MainPost({ post, boardNo, category }) {
                 )}
                 <span className="user_name">{post.memberNickName}</span>
             </div>
-            <h5 className="post_title">{post.boardTitle}</h5>
-            <div className="contents_item">
-                <span className="likes">
-                    <img src={likesIcon} alt="likes-icon" />
-                    <span>{post.like}</span>
-                </span>
-                <span className="comments">
-                    <img src={commentsIcon} alt="comments-icon" />
-                    <span>{post.reply}</span>
-                </span>
+            <div onClick={handleClickPost}>
+                <h5 className="post_title">{post.boardTitle}</h5>
+                <div className="contents_item">
+                    <span className="likes">
+                        <img src={likesIcon} alt="likes-icon" />
+                        <span>{post.like}</span>
+                    </span>
+                    <span className="comments">
+                        <img src={commentsIcon} alt="comments-icon" />
+                        <span>{post.reply}</span>
+                    </span>
+                </div>
             </div>
         </MainPostContainer>
     );

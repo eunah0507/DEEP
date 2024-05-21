@@ -22,6 +22,7 @@ export const HomeContainer = styled.div`
         margin-bottom: 20px;
         font-size: 2.2rem;
         font-weight: 600;
+        cursor: pointer;
     }
 
     .notice .notice_content {
@@ -54,6 +55,7 @@ export const HomeContainer = styled.div`
         margin-bottom: 20px;
         font-size: 2.2rem;
         font-weight: 600;
+        cursor: pointer;
     }
 
     .boards .board ul li:last-child {

@@ -19,6 +19,7 @@ export const PostListContainer = styled.li`
     .user_profile {
         display: flex;
         align-items: center;
+        cursor: pointer;
     }
 
     .user_profile_img {
@@ -31,7 +32,13 @@ export const PostListContainer = styled.li`
 
     .user_name {
         margin-left: 10px;
-        font-size: 1.4rem;
+        font-size: 1.6rem;
+    }
+
+    .user_random {
+        margin-left: 7px;
+        color: #999;
+        font-size: 1.6rem;
     }
 
     .content_time {
