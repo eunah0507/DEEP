@@ -48,7 +48,13 @@ export const BestContainer = styled.div`
 
     .post .user_name {
         margin-left: 10px;
-        font-size: 1.4rem;
+        font-size: 1.6rem;
+    }
+
+    .post .user_random {
+        margin-left: 7px;
+        color: #999;
+        font-size: 1.6rem;
     }
 
     /* post content */
