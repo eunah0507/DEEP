@@ -1,12 +1,16 @@
 package com.basic.deep.board.dto;
 
+import com.basic.deep.board.entity.Category;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.List;
 
 @Data
+@ToString
 public class BoardSearchResponseDTO {
     private Long boardNo;
+    private Category category;
     private String title;
     private String memberNickName;
     private String memberRandom;
@@ -16,8 +20,9 @@ public class BoardSearchResponseDTO {
     private Long reply;
     private List<String> tag;
 
-    public BoardSearchResponseDTO(Long boardNo, String title, String content, Long view) {
+    public BoardSearchResponseDTO(Long boardNo, Category category, String title, String content, Long view) {
         this.boardNo = boardNo;
+        this.category = category;
         this.title = title;
         this.content = content;
         this.view = view;

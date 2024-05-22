@@ -2,12 +2,14 @@ package com.basic.deep.board.dto;
 
 import com.basic.deep.board.entity.Category;
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.util.List;
 
 @Data
+@ToString
 public class BoardWriteRequestDTO implements Serializable {
     private String title;
     private Category category;

@@ -2,11 +2,13 @@ package com.basic.deep.board.dto;
 
 import com.basic.deep.board.entity.Category;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
+@ToString
 public class BoardSearchTagResponseDTO {
     private Long boardNo;
     private Category category;
