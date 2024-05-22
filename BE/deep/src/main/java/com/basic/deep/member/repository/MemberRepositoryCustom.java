@@ -40,8 +40,11 @@ public interface MemberRepositoryCustom {
     // memberNickName과 memberRandom으로 나머지 member 정보 뽑아오기
     Optional<Member> selectMemberNickAndRandom(String memberNickName, String memberRandom);
 
-    // 멤버 검색
+    // 멤버 검색 - 닉네임이 포함되는 유저 검색
     List<MemberSearchResponseDTO> selectMemberByNickNameAndRandom(String nickname, String random);
+
+    // 멤버 검색 - 고유 데이터 1건 조회
+    List<MemberSearchResponseDTO> selectMemberOnlyOne(String memberNickName, String memberRandom);
 
     // 다른 유저의 프로필 보기
     Optional<Member> selectOtherMemberNickNameAndRandom(String memberNickName, String memberRandom);

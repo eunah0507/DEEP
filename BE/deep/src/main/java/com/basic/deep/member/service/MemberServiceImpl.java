@@ -327,10 +327,18 @@ public class MemberServiceImpl implements MemberService {
     // 멤버(유저) 검색
     @Override
     public List<MemberSearchResponseDTO> searchMember(MemberSearchRequestDTO memberSearchRequestDTO) {
-        return memberRepository.selectMemberByNickNameAndRandom(
-                memberSearchRequestDTO.getMemberNickName(),
-                memberSearchRequestDTO.getMemberRandom()
-        );
+        if (!memberSearchRequestDTO.getMemberNickName().isBlank()) {
+            if(!memberSearchRequestDTO.getMemberRandom().isBlank()){
+                return memberRepository.selectMemberOnlyOne(memberSearchRequestDTO.getMemberNickName(), memberSearchRequestDTO.getMemberRandom());
+            }else{
+                return memberRepository.selectMemberByNickNameAndRandom(
+                        memberSearchRequestDTO.getMemberNickName(),
+                        memberSearchRequestDTO.getMemberRandom()
+                );
+            }
+        } else {
+            return null;
+        }
     }
 
     // 다른 유저의 프로필 보기

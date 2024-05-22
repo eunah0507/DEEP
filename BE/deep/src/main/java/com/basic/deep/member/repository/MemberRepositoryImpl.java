@@ -125,15 +125,27 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         );
     }
 
-    // 유저 검색
+    // 유저 검색 - 닉네임 검색시 닉네임 포함 데이터 조회
     @Override
     public List<MemberSearchResponseDTO> selectMemberByNickNameAndRandom(String nickname, String random) {
+            return queryFactory.select(
+                            Projections.constructor(MemberSearchResponseDTO.class,
+                                    member.memberNickname, member.memberRandom, member.memberFile, member.memberIntroduce)
+                    )
+                    .from(member)
+                    .where(member.memberNickname.like("%" + nickname + "%").or(member.memberRandom.in(random)))
+                    .fetch();
+    }
+
+    // 유저 검색 - 닉네임과 랜덤 둘 다 조회 시 고유 데이터 조회
+    @Override
+    public List<MemberSearchResponseDTO> selectMemberOnlyOne(String memberNickName, String memberRandom) {
         return queryFactory.select(
-                Projections.constructor(MemberSearchResponseDTO.class,
-                        member.memberNickname,member.memberRandom,member.memberFile,member.memberIntroduce)
-        )
+                        Projections.constructor(MemberSearchResponseDTO.class,
+                                member.memberNickname, member.memberRandom, member.memberFile, member.memberIntroduce)
+                )
                 .from(member)
-                .where(member.memberNickname.like("%" + nickname + "%").or(member.memberRandom.in(random)))
+                .where(member.memberNickname.eq(memberNickName).and(member.memberRandom.eq(memberRandom)))
                 .fetch();
     }
 
@@ -152,9 +164,9 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     @Override
     public List<MemberProfilePostResponseDTO> selectMemberPost(Long memberNo) {
         return queryFactory.select(
-                Projections.constructor(MemberProfilePostResponseDTO.class,
-                        board.boardNo, board.boardCategory ,board.boardTitle,
-                        board.boardDate, board.boardReadCount)
+                        Projections.constructor(MemberProfilePostResponseDTO.class,
+                                board.boardNo, board.boardCategory, board.boardTitle,
+                                board.boardDate, board.boardReadCount)
                 )
                 .from(member)
                 .join(board)
@@ -167,7 +179,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     @Override
     public List<MemberProfileReplyResponseDTO> selectMemberReply(String memberNickName, String memberRandom) {
         return queryFactory.select(Projections.constructor(MemberProfileReplyResponseDTO.class,
-                        board.boardNo, board.boardCategory ,board.boardTitle,
+                        board.boardNo, board.boardCategory, board.boardTitle,
                         boardReply.replyContent, board.boardDate))
                 .from(board)
                 .join(boardReply)
@@ -180,7 +192,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     @Override
     public List<MemberProfieLikeResponseDTO> selectMemberLike(Long memberNo) {
         return queryFactory.select(Projections.constructor(MemberProfieLikeResponseDTO.class,
-                        board.boardNo, board.boardCategory ,board.boardTitle,
+                        board.boardNo, board.boardCategory, board.boardTitle,
                         board.member_no.memberNickname, board.member_no.memberRandom,
                         board.boardDate, board.boardReadCount))
                 .from(boardLike)
