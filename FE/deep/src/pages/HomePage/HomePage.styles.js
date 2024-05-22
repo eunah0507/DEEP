@@ -16,6 +16,7 @@ export const HomeWrapper = styled.div`
         border-radius: 20px;
         background: #fff;
         box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.15);
+        z-index: 99;
     }
 
     .qr_code_container.hidden {

@@ -10,7 +10,7 @@ import headerLogo from "../../../assets/images/deep-logo-header.svg";
 import alarmIcon from "../../../assets/images/deep-icon-alarm.svg";
 import searchIcon from "../../../assets/images/deep-icon-search.svg";
 import userProfile from "../../../assets/images/deep-profile-blue.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../../store/memberStore";
 import Search from "../Search/Search";
@@ -19,11 +19,28 @@ import axiosInstance from "../../../apis/axiosInstance";
 function Login() {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [isAlarmOpen, setIsAlarmOpen] = useState(false);
+    const [alarm, setAlarm] = useState(null);
 
     const member = useSelector((state) => state.member.value);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        axiosInstance
+            .get("/deep/connectAlert", {
+                params: { memberID: member.memberID },
+            })
+            .then((response) => {
+                console.log(response);
+                console.log("알람");
+                setAlarm(response);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []);
 
     const handleClickProfile = () => {
         setIsProfileOpen(!isProfileOpen);
@@ -31,6 +48,10 @@ function Login() {
 
     const handleClickSearch = () => {
         setIsSearchOpen(!isSearchOpen);
+    };
+
+    const handleClickAlarm = () => {
+        setIsAlarmOpen(!isAlarmOpen);
     };
 
     const myProfile = () => {
@@ -86,9 +107,22 @@ function Login() {
                     <div className="search" onClick={handleClickSearch}>
                         <img src={searchIcon} alt="search-information" />
                     </div>
-                    <div className="alarm">
+                    <div
+                        className="alarm"
+                        onClick={handleClickAlarm}
+                        onBlur={() => setIsAlarmOpen(false)}
+                        tabIndex={0}
+                    >
                         <img src={alarmIcon} alt="user-alarm" />
                     </div>
+                    <ul
+                        className={
+                            "user_alarm_container " +
+                            (isAlarmOpen ? "" : "hidden")
+                        }
+                    >
+                        <li className="user_alarm"></li>
+                    </ul>
                 </ContentsContainer>
                 <div
                     className="user_profile"

@@ -16,7 +16,6 @@ import { useState } from "react";
 import axiosInstance from "../../apis/axiosInstance";
 import { useDispatch } from "react-redux";
 import { login } from "../../store/memberStore";
-import { GiConsoleController } from "react-icons/gi";
 
 function LoginPage() {
     const [id, setId] = useState("");
@@ -87,6 +86,7 @@ function LoginPage() {
 
                         const payload = {
                             isAuthorized: true,
+                            memberID: id,
                             memberNickName: data.memberNickName,
                             memberRandom: data.memberRandom,
                             memberFile: data.memberFile,
@@ -134,6 +134,7 @@ function LoginPage() {
 
                 const payload = {
                     isAuthorized: true,
+                    memberID: data.memberID,
                     memberNickName: data.memberNickName,
                     memberRandom: data.memberRandom,
                     memberFile: data.memberFile,

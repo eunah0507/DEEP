@@ -3,18 +3,32 @@ import { CommunityContainer, CommunityWrapper } from "./CommunityPage.styles";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../../apis/axiosInstance";
 import Post from "../Post/Post";
+import Paginate from "../../../components/Paginate/Paginate";
 
 function CommunityPage() {
     const [posts, setPosts] = useState([]);
+    const [pages, setPages] = useState(1);
+    const [maxPages, setMaxPages] = useState(1);
 
     useEffect(() => {
         axiosInstance
             .post("/deep/board/category", {
                 category: "community",
-                page: 1,
+                page: pages,
             })
             .then((response) => {
                 setPosts(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+        axiosInstance
+            .post("/deep/board/post-page", {
+                category: "community",
+            })
+            .then((response) => {
+                setMaxPages(response.data.maxPage);
             })
             .catch((error) => {
                 console.log(error);
@@ -35,6 +49,7 @@ function CommunityPage() {
                         return <Post post={post} />;
                     })}
                 </ul>
+                <Paginate pageCount={maxPages} />
             </CommunityContainer>
         </CommunityWrapper>
     );

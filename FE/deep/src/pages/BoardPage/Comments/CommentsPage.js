@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 function CommentsPage({ boardNo }) {
     const [postComments, setPostComments] = useState([]);
     const [commentValue, setCommentValue] = useState("");
+    const [isCreateComment, setIsCreateComment] = useState(false);
     const [isCommentMenuOpen, setIsCommentMenuOpen] = useState(false);
     const [isIndex, setIsIndex] = useState(null);
 
@@ -28,7 +29,7 @@ function CommentsPage({ boardNo }) {
             .catch((error) => {
                 console.log(error);
             });
-    }, [postComments]);
+    }, [isCreateComment]);
 
     const handleInputComment = (e) => {
         setCommentValue(e.target.value);
@@ -61,6 +62,7 @@ function CommentsPage({ boardNo }) {
             .post("/deep/board/reply-write", commentInfo)
             .then((response) => {
                 setCommentValue("");
+                setIsCreateComment(!isCreateComment);
             })
             .catch((error) => {
                 console.log(error);
@@ -99,6 +101,7 @@ function CommentsPage({ boardNo }) {
             .delete(`/deep/board/reply-delete?replyNo=${replyNo}`)
             .then((response) => {
                 alert("댓글이 삭제 되었습니다.");
+                setIsCreateComment(!isCreateComment);
             })
             .catch((error) => {
                 console.log(error);

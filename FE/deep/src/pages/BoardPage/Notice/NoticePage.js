@@ -20,6 +20,17 @@ function NoticePage() {
             .catch((error) => {
                 console.log(error);
             });
+
+        axiosInstance
+            .post("/deep/board/post-page", {
+                category: "notice",
+            })
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }, []);
 
     const noticeCreatedTime = notices.map((notice) => {

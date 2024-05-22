@@ -85,9 +85,6 @@ export const UserSearchContainer = styled.div`
         color: #999;
     }
 
-    .user_introduce_container {
-    }
-
     .user_introduce_container .user_introduce {
         font-size: 1.6rem;
     }
@@ -146,9 +143,6 @@ export const TextSearchContainer = styled.div`
         font-size: 1.6rem;
     }
 
-    .user_profile .user_name {
-    }
-
     .user_profile .user_random {
         margin-left: 7px;
         color: #999;
@@ -159,12 +153,14 @@ export const TextSearchContainer = styled.div`
     }
 
     .post_content_container .post_title {
+        margin-bottom: 30px;
         font-size: 1.8rem;
         font-weight: 600;
     }
 
     .post_content_container .post_content p {
         line-height: 30px;
+        font-size: 1.6rem;
     }
 
     .post_content_container .post_content p:has(img) {
@@ -177,11 +173,9 @@ export const TextSearchContainer = styled.div`
         justify-content: space-between;
     }
 
-    .tags {
-    }
-
     .tags .tag {
         display: inline-block;
+        margin-right: 10px;
         padding: 7px 13px;
         border: 1px solid ${palette.blue[6]};
         border-radius: 20px;

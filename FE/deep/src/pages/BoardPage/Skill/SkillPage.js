@@ -19,6 +19,17 @@ function SkillPage() {
             .catch((error) => {
                 console.log(error);
             });
+
+        axiosInstance
+            .post("/deep/board/post-page", {
+                category: "skill",
+            })
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }, []);
 
     return (

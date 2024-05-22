@@ -19,6 +19,17 @@ function QnAPage() {
             .catch((error) => {
                 console.log(error);
             });
+
+        axiosInstance
+            .post("/deep/board/post-page", {
+                category: "qna",
+            })
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }, []);
 
     return (

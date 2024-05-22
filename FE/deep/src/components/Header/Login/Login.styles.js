@@ -69,6 +69,41 @@ export const ContentsContainer = styled.div`
         width: 100%;
         height: 100%;
     }
+
+    .user_alarm_container {
+        position: absolute;
+        top: 50px;
+        right: 55px;
+        width: 250px;
+        height: 300px;
+        max-height: 300px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background: #fff;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        overflow-x: hidden;
+        overflow-y: auto;
+        z-index: 99;
+    }
+
+    .user_alarm_container::-webkit-scrollbar {
+        width: 16px;
+    }
+
+    .user_alarm_container::-webkit-scrollbar-thumb {
+        height: 40px;
+        border: 4px solid transparent;
+        border-radius: 10px;
+        background-color: #ddd;
+        background-clip: padding-box;
+    }
+
+    .user_alarm_container.hidden {
+        display: none;
+    }
+
+    .user_alarm {
+    }
 `;
 
 export const UserInfoContainer = styled.div`

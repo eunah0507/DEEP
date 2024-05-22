@@ -23,6 +23,17 @@ function BestPage() {
             .catch((error) => {
                 console.log(error);
             });
+
+        axiosInstance
+            .post("/deep/board/post-page", {
+                category: "best",
+            })
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }, []);
 
     const postCreatedTime = posts.map((post) => {

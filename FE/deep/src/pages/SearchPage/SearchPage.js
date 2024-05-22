@@ -53,7 +53,6 @@ function SearchPage() {
                     memberRandom: `#${random}`,
                 })
                 .then((response) => {
-                    console.log(response.data);
                     setUserSearch(response.data);
 
                     setIsUserSearch(true);
@@ -70,7 +69,6 @@ function SearchPage() {
                     page: 1,
                 })
                 .then((response) => {
-                    console.log(response.data);
                     setTagSearch(response.data);
 
                     setIsUserSearch(false);
@@ -87,10 +85,8 @@ function SearchPage() {
                     page: 1,
                 })
                 .then((response) => {
-                    console.log(response.data);
                     setTextSearch(response.data);
 
-                    setIsUserSearch(false);
                     setIsTextSearch(true);
                     setIsTagSearch(false);
                 })
@@ -98,16 +94,21 @@ function SearchPage() {
                     console.log(error);
                 });
 
-            // axiosInstance
-            //     .post("/deep/member/search", {
-            //         memberNickName: textValue,
-            //     })
-            //     .then((response) => {
-            //         console.log(response);
-            //     })
-            //     .catch((error) => {
-            //         console.log(error);
-            //     });
+            axiosInstance
+                .post("/deep/member/search", {
+                    memberNickName: textValue,
+                    memberRandom: "",
+                })
+                .then((response) => {
+                    console.log(response);
+                    setUserSearch(response.data);
+
+                    setIsUserSearch(true);
+                    setIsTagSearch(false);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         }
     }, [location]);
 

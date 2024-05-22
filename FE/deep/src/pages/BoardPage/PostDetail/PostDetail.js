@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import axiosInstance from "../../../apis/axiosInstance";
 import {
     CommentsContainer,
@@ -75,7 +75,7 @@ function PostDetail() {
             });
     }, []);
 
-    useMemo(() => {
+    useEffect(() => {
         axiosInstance
             .post("/deep/board/detail", {
                 boardNo: boardNo,
@@ -93,22 +93,22 @@ function PostDetail() {
             });
     }, [isLike]);
 
-    useMemo(() => {
-        axiosInstance
-            .post("/deep/board/detail", {
-                boardNo: boardNo,
-            })
-            .then((response) => {
-                const data = response.data;
+    // useEffect(() => {
+    //     axiosInstance
+    //         .post("/deep/board/detail", {
+    //             boardNo: boardNo,
+    //         })
+    //         .then((response) => {
+    //             const data = response.data;
 
-                setComments(data.reply);
-            })
-            .catch((error) => {
-                console.log(error);
-                alert("게시물이 존재하지 않습니다.");
-                navigate("/home");
-            });
-    }, [comments]);
+    //             setComments(data.reply);
+    //         })
+    //         .catch((error) => {
+    //             console.log(error);
+    //             alert("게시물이 존재하지 않습니다.");
+    //             navigate("/home");
+    //         });
+    // }, [comments]);
 
     const date = new Date(boardCreatedTime);
     date.setHours(date.getHours() + 9);
@@ -148,22 +148,21 @@ function PostDetail() {
             });
     };
 
-    const handleClickLike = () => {
+    const handleClickLike = async () => {
+        setIsLike(!isLike);
+
         const likeInfo = {
             boardNo: boardNo,
             like: !isLike,
         };
 
-        axiosInstance
+        await axiosInstance
             .post("/deep/board/like", likeInfo)
-            .then((response) => {
-                setIsLike(isLike);
-            })
+            .then((response) => {})
             .catch((error) => {
                 console.log(error);
             });
     };
-
     return (
         <>
             {loading ? (

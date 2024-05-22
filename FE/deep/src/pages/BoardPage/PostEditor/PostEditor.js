@@ -89,7 +89,6 @@ function PostEditor() {
             axiosInstance
                 .post("/deep/board/write", contentsInfo)
                 .then((response) => {
-                    console.log(response);
                     alert("게시글 작성이 완료되었습니다.");
                     navigate(`/${category}/${response.data.boardNo}`);
                 })
