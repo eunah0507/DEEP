@@ -148,19 +148,56 @@ export const TextSearchContainer = styled.div`
         color: #999;
     }
 
-    .post_content_container {
+    .post_content_wrapper {
         margin-bottom: 30px;
     }
 
-    .post_content_container .post_title {
+    .post_content_wrapper .post_title {
         margin-bottom: 30px;
         font-size: 1.8rem;
         font-weight: 600;
     }
 
-    .post_content_container .post_content p {
-        line-height: 30px;
+    .post_content_container {
+        overflow: hidden;
+        max-height: 300px;
+    }
+
+    .post_content_container .post_content {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        line-height: 1.8;
+        margin: 20px 0 30px;
         font-size: 1.6rem;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        word-break: keep-all;
+        overflow: hidden;
+    }
+
+    .post_content h1 {
+        font-size: 2.2rem;
+        font-weight: 600;
+    }
+
+    .post_content h2 {
+        font-size: 2rem;
+        font-weight: 600;
+    }
+
+    .post_content h3 {
+        font-size: 1.8rem;
+        font-weight: 600;
+    }
+
+    .post_content h4 {
+        font-size: 1.7rem;
+        font-weight: 600;
+    }
+
+    .post_content p {
+        line-height: 30px;
     }
 
     .post_content_container .post_content p:has(img) {
@@ -173,6 +210,7 @@ export const TextSearchContainer = styled.div`
         justify-content: space-between;
     }
 
+    /* tag */
     .tags .tag {
         display: inline-block;
         margin-right: 10px;
@@ -280,20 +318,21 @@ export const TagSearchContainer = styled.div`
         font-size: 1.6rem;
     }
 
-    .post_content_container {
+    /* post */
+    .post_content_wrapper {
         margin-bottom: 30px;
     }
 
-    .post_content_container .post_title {
+    .post_content_wrapper .post_title {
         font-size: 1.8rem;
         font-weight: 600;
     }
 
-    .post_content_container .post_content p {
+    .post_content_wrapper .post_content p {
         line-height: 30px;
     }
 
-    .post_content_container .post_content p:has(img) {
+    .post_content_wrapper .post_content p:has(img) {
         display: none;
         line-height: 0;
     }

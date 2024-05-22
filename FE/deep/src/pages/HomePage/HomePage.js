@@ -121,7 +121,7 @@ function HomePage() {
                         <div className="boards">
                             <div className="best board">
                                 <h4 onClick={handleClickBest}>인기글</h4>
-                                <ul>
+                                <ul className="board_container">
                                     {best.map((post) => {
                                         return (
                                             <MainPost
@@ -137,7 +137,7 @@ function HomePage() {
                             </div>
                             <div className="skill board">
                                 <h4 onClick={handleClickSkill}>기술 트렌드</h4>
-                                <ul>
+                                <ul className="board_container">
                                     {skill.map((post) => {
                                         return (
                                             <MainPost
@@ -155,7 +155,7 @@ function HomePage() {
                         <div className="boards">
                             <div className="qna board">
                                 <h4 onClick={handleClickQna}>QnA</h4>
-                                <ul>
+                                <ul className="board_container">
                                     {qna.map((post) => {
                                         return (
                                             <MainPost
@@ -171,7 +171,7 @@ function HomePage() {
                             </div>
                             <div className="community board">
                                 <h4 onClick={handleClickCommunity}>커뮤니티</h4>
-                                <ul>
+                                <ul className="board_container">
                                     {community.map((post) => {
                                         return (
                                             <MainPost

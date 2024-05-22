@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { palette } from "../../../styles/palette";
+import Input from "../../../components/Input/Input";
 
 export const CommentsPageWrapper = styled.div`
     width: 100%;
@@ -11,6 +12,8 @@ export const CommentsPageWrapper = styled.div`
     }
 
     .comment_input {
+        display: flex;
+        justify-content: space-between;
         padding: 30px;
         border: 1px solid #ddd;
         border-bottom: none;
@@ -18,10 +21,46 @@ export const CommentsPageWrapper = styled.div`
         border-top-right-radius: 5px;
     }
 
-    .comment_input input {
+    .comment_input textarea {
         width: 645px;
+        min-height: 90px;
+        max-height: 300px;
+        line-height: 1.5;
         margin-right: 28px;
+        padding: 13px 20px 0;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1.6rem;
+        font-family: "Pretendard Variable", Pretendard, -apple-system,
+            BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
+            "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
+            "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+        outline: none;
+        resize: none;
     }
+
+    .comment_input textarea:focus {
+        outline: 2px solid ${palette.blue[6]};
+    }
+
+    .comment_input textarea::-webkit-scrollbar {
+        width: 16px;
+    }
+
+    .comment_input textarea::-webkit-scrollbar-thumb {
+        height: 40px;
+        border: 4px solid transparent;
+        border-radius: 10px;
+        background-color: #ddd;
+        background-clip: padding-box;
+    }
+`;
+
+export const CommentInput = styled(Input)`
+    height: auto;
+    min-height: 50px;
+    white-space: break-spaces;
+    word-break: keep-all;
 `;
 
 export const CommentsPageContainer = styled.div`
@@ -159,6 +198,46 @@ export const CommentsPageContainer = styled.div`
         line-height: 30px;
         font-size: 1.6rem;
         word-break: keep-all;
+    }
+
+    /* comment modify */
+    .comment_modify_container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .comment_modify textarea {
+        width: 645px;
+        min-height: 90px;
+        max-height: 150px;
+        line-height: 1.5;
+        margin-right: 28px;
+        padding: 13px 20px 0;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1.6rem;
+        font-family: "Pretendard Variable", Pretendard, -apple-system,
+            BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
+            "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
+            "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+        outline: none;
+        resize: none;
+    }
+
+    .comment_modify textarea:focus {
+        outline: 2px solid ${palette.blue[6]};
+    }
+
+    .comment_modify textarea::-webkit-scrollbar {
+        width: 16px;
+    }
+
+    .comment_modify textarea::-webkit-scrollbar-thumb {
+        height: 40px;
+        border: 4px solid transparent;
+        border-radius: 10px;
+        background-color: #ddd;
+        background-clip: padding-box;
     }
 
     /* created time */

@@ -41,6 +41,7 @@ export const MyProfileContainer = styled.div`
     }
 
     .user_profile .user_nickName {
+        max-width: 320px;
         margin-left: 30px;
         margin-right: 5px;
         font-size: 2.4rem;
@@ -71,6 +72,11 @@ export const MyProfileContainer = styled.div`
 
     .user_followers {
         margin-right: 50px;
+        cursor: pointer;
+    }
+
+    .user_following {
+        cursor: pointer;
     }
 
     /* user introduce */
@@ -93,6 +99,7 @@ export const MyProfileContainer = styled.div`
         align-items: center;
         width: 100%;
         height: 50px;
+        padding: 0 30px;
         border-bottom: 1px solid #ddd;
     }
 
@@ -107,10 +114,6 @@ export const MyProfileContainer = styled.div`
 
     .user_contents_menu .user_contents_item li.selected {
         border-bottom: 3px solid #1e88e5;
-    }
-
-    .user_contents_item {
-        padding: 0 30px;
     }
 
     .user_contents_container {

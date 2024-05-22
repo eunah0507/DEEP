@@ -22,6 +22,7 @@ export const TagPageContainer = styled.div`
         border-radius: 25px;
         color: ${palette.blue[6]};
         text-align: center;
+        font-weight: 700;
     }
 
     .tag_title h4 {

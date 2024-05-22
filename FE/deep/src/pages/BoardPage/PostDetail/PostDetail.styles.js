@@ -143,6 +143,7 @@ export const PostDetailContainer = styled.div`
         color: ${palette.blue[7]};
         font-size: 1.4rem;
         font-weight: 600;
+        cursor: pointer;
     }
 
     /* contents item */

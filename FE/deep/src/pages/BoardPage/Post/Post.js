@@ -69,10 +69,14 @@ function Post({ post }) {
             <div>
                 <div onClick={handleClickPost}>
                     <h4 className="post_title">{post.boardTitle}</h4>
-                    <p
-                        className="post_content"
-                        dangerouslySetInnerHTML={{ __html: post.boardContent }}
-                    ></p>
+                    <div className="post_content_container">
+                        <p
+                            className="post_content"
+                            dangerouslySetInnerHTML={{
+                                __html: post.boardContent,
+                            }}
+                        ></p>
+                    </div>
                 </div>
                 <div className="contents_container">
                     <ul className="tags">

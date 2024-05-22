@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { palette } from "../../../styles/palette";
 
 export const BestWrapper = styled.div`
     display: flex;
@@ -62,9 +63,21 @@ export const BestContainer = styled.div`
         margin-top: 30px;
         font-size: 1.8rem;
         font-weight: 600;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        word-break: keep-all;
+        overflow: hidden;
+    }
+
+    .post_content_container {
+        overflow: hidden;
+        max-height: 300px;
     }
 
     .post .post_content {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
         line-height: 1.8;
         margin: 20px 0 30px;
         font-size: 1.6rem;
@@ -72,6 +85,11 @@ export const BestContainer = styled.div`
         text-overflow: ellipsis;
         word-break: keep-all;
         overflow: hidden;
+    }
+
+    .post .post_content p:has(img) {
+        display: none;
+        line-height: 0;
     }
 
     .post .contents_container {
@@ -119,5 +137,36 @@ export const BestContainer = styled.div`
         width: 20px;
         height: 20px;
         margin-right: 7px;
+    }
+
+    /* paginate */
+    .paginate {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 50px;
+        color: #666;
+    }
+
+    .paginate li svg {
+        width: 22px;
+        height: 22px;
+        cursor: pointer;
+    }
+
+    .paginate li svg:hover {
+        color: ${palette.blue[7]};
+    }
+
+    .paginate .page {
+        display: inline-block;
+        margin: 0 10px;
+        font-size: 2rem;
+        cursor: pointer;
+    }
+
+    .paginate .page:hover {
+        color: ${palette.blue[7]};
+        font-weight: 500;
     }
 `;

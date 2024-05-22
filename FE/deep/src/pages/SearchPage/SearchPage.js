@@ -100,7 +100,6 @@ function SearchPage() {
                     memberRandom: "",
                 })
                 .then((response) => {
-                    console.log(response);
                     setUserSearch(response.data);
 
                     setIsUserSearch(true);
@@ -139,7 +138,7 @@ function SearchPage() {
         }
     };
 
-    const handleClickTagPost = (e, category, boardNo) => {
+    const handleClickPost = (e, category, boardNo) => {
         navigate(`/${category}/${boardNo}`);
     };
 
@@ -246,16 +245,27 @@ function SearchPage() {
                                                         {post.memberRandom}
                                                     </span>
                                                 </div>
-                                                <div className="post_content_container">
+                                                <div
+                                                    className="post_content_wrapper"
+                                                    onClick={(e) =>
+                                                        handleClickPost(
+                                                            e,
+                                                            post.category,
+                                                            post.boardNo
+                                                        )
+                                                    }
+                                                >
                                                     <h5 className="post_title">
                                                         {post.title}
                                                     </h5>
-                                                    <p
-                                                        className="post_content"
-                                                        dangerouslySetInnerHTML={{
-                                                            __html: post.content,
-                                                        }}
-                                                    ></p>
+                                                    <div className="post_content_container">
+                                                        <p
+                                                            className="post_content"
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: post.content,
+                                                            }}
+                                                        ></p>
+                                                    </div>
                                                 </div>
                                                 <div className="contents_container">
                                                     <ul className="tags">
@@ -331,7 +341,7 @@ function SearchPage() {
                                             <li
                                                 className="post_container"
                                                 onClick={(e) =>
-                                                    handleClickTagPost(
+                                                    handleClickPost(
                                                         e,
                                                         post.category,
                                                         post.boardNo
@@ -357,16 +367,18 @@ function SearchPage() {
                                                         </span>
                                                     </div>
                                                 </div>
-                                                <div className="post_content_container">
+                                                <div className="post_content_wrapper">
                                                     <h5 className="post_title">
                                                         {post.boardTitle}
                                                     </h5>
-                                                    <p
-                                                        className="post_content"
-                                                        dangerouslySetInnerHTML={{
-                                                            __html: post.content,
-                                                        }}
-                                                    ></p>
+                                                    <div className="post_content_container">
+                                                        <p
+                                                            className="post_content"
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: post.content,
+                                                            }}
+                                                        ></p>
+                                                    </div>
                                                 </div>
                                                 <div className="contents_container">
                                                     <ul className="tags">

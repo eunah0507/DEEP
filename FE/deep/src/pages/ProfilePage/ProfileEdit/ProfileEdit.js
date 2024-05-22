@@ -64,8 +64,7 @@ function ProfileEdit() {
 
     const handleImgUpload = (e) => {
         const imageUrl = URL.createObjectURL(e.target.files[0]);
-        console.log(e.target.files[0]);
-        console.log(typeof e.target.files[0]);
+
         setProfileImg(imageUrl);
         setImgFile(e.target.files[0]);
         setImgFileSize(e.target.files[0].size);
@@ -167,7 +166,7 @@ function ProfileEdit() {
                                 닉네임 <span>(필수)</span>
                             </label>
                             <span className="text_length">
-                                {nickName.length}/20
+                                {nickName.length}/15
                             </span>
                         </div>
                         <Input
@@ -175,7 +174,7 @@ function ProfileEdit() {
                             id="nickname"
                             value={nickName}
                             placeholder="닉네임을 입력해 주세요."
-                            maxlength="20"
+                            maxlength="15"
                             onChange={handleCheckNickName}
                         />
                         <div className="noValid">

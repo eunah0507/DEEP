@@ -1,26 +1,18 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../../../apis/axiosInstance";
-import { useLocation, useNavigate } from "react-router-dom";
-import { UserCommentsContainer } from "./UserComments.styles";
+import { MyCommentsContainer } from "./MyComments.styles";
+import { useNavigate } from "react-router-dom";
 import commentsIcon from "../../../assets/images/deep-icon-comments.svg";
 
-function UserComments() {
+function MyComments() {
     const [loading, setLoading] = useState(true);
     const [comments, setComments] = useState([]);
 
     const navigate = useNavigate();
 
-    const location = useLocation();
-
-    const userNickName = decodeURIComponent(location.pathname.split("/")[2]);
-    const userRandom = location.pathname.split("/")[3];
-
     useEffect(() => {
         axiosInstance
-            .post("/deep/member/others-reply", {
-                memberNickName: userNickName,
-                memberRandom: `#${userRandom}`,
-            })
+            .get("/deep/member/profile-reply")
             .then((response) => {
                 setComments(response.data);
                 setLoading(false);
@@ -29,7 +21,11 @@ function UserComments() {
     }, []);
 
     const commentCreatedDate = comments.map((comment) => {
-        return comment.boardCreatedTime;
+        return comment.boardCreatedTime.split("T")[0].replaceAll("-", ".");
+    });
+
+    const commentCreatedTime = comments.map((comment) => {
+        return comment.boardCreatedTime.split("T")[1].split(".")[0].slice(0, 5);
     });
 
     const handleClickComment = (e, category, boardNo) => {
@@ -41,7 +37,7 @@ function UserComments() {
             {loading ? (
                 <></>
             ) : (
-                <UserCommentsContainer>
+                <MyCommentsContainer>
                     {comments.length === 0 ? (
                         <div className="nothing_comments_container">
                             <div className="nothing_comments">
@@ -73,8 +69,11 @@ function UserComments() {
                                         </div>
                                         <div className="contents_item">
                                             <div className="user_comment_time">
-                                                <span className="created_time">
+                                                <span className="created_date">
                                                     {commentCreatedDate[index]}
+                                                </span>
+                                                <span className="created_time">
+                                                    {commentCreatedTime[index]}
                                                 </span>
                                             </div>
                                         </div>
@@ -83,10 +82,10 @@ function UserComments() {
                             })}
                         </ul>
                     )}
-                </UserCommentsContainer>
+                </MyCommentsContainer>
             )}
         </>
     );
 }
 
-export default UserComments;
+export default MyComments;
