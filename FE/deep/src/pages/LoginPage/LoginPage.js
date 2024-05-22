@@ -116,7 +116,7 @@ function LoginPage() {
     };
 
     const socialLogin = async (params) => {
-        const authURL = `https://dev.deeep.site/deep/member/login/${params}`;
+        const authURL = `https://deeep.site/deep/member/login/${params}`;
         window.location.href = authURL;
 
         await axiosInstance
