@@ -1,7 +1,9 @@
 package com.basic.deep.member.repository;
 
+import com.basic.deep.member.dto.*;
 import com.basic.deep.member.entity.Member;
 import com.basic.deep.member.entity.SocialType;
+import com.querydsl.core.Tuple;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,8 +20,49 @@ public interface MemberRepositoryCustom {
     Optional<String> selectMemberID(String memberID);
 
     // 일반 로그인
-    Optional<Long> selectMemberIDandPW(String memberID, String memberPass);
+    Optional<Member> selectMemberIDandPW(String memberID);
 
     // ID 찾기
     List<Member> selectMemberByNameAndPhone(String memberName, String memberPhone);
+
+    // PW 찾기
+    Optional<Member> selectMemberMail(String memberID, String memberName, String memberPhone);
+
+    // memberInfo 조회
+    Optional<Member> selectMemberInfo(Long memberNo);
+
+    // 회원 탈퇴
+    void deleteMember(Long memberNo);
+
+    // Refresh Token과 ID가 같은지 확인
+    Optional<Long> memberRefreshTokenAndID(String memberID, String memberToken);
+
+    // memberNickName과 memberRandom으로 나머지 member 정보 뽑아오기
+    Optional<Member> selectMemberNickAndRandom(String memberNickName, String memberRandom);
+
+    // 멤버 검색 - 닉네임이 포함되는 유저 검색
+    List<MemberSearchResponseDTO> selectMemberByNickNameAndRandom(String nickname, String random);
+
+    // 멤버 검색 - 고유 데이터 1건 조회
+    List<MemberSearchResponseDTO> selectMemberOnlyOne(String memberNickName, String memberRandom);
+
+    // 다른 유저의 프로필 보기
+    Optional<Member> selectOtherMemberNickNameAndRandom(String memberNickName, String memberRandom);
+
+    // [커뮤니티 프로필] 마이 페이지 - 내가 쓴 글 확인
+    List<MemberProfilePostResponseDTO> selectMemberPost(Long memberNo);
+
+    // [커뮤니티 프로필] 마이 페이지 - 내가 쓴 댓글 확인
+    List<MemberProfileReplyResponseDTO> selectMemberReply(String memberNickName, String memberRandom);
+
+    // [커뮤니티 프로필] 마이 페이지 - 내가 누른 좋아요 확인
+    List<MemberProfieLikeResponseDTO> selectMemberLike(Long memberNo);
+
+    // [다른 사람의 마이 페이지] - 해당 유저가 작성한 글 확인
+    List<MemberOthersPostResponseDTO> selectOtherMemberPost(String memberNickName, String memberRandom);
+
+    // [다른 사람의 마이 페이지] - 해당 유저가 작성한 댓글 확인
+    List<MemberOthersReplyResponseDTO> selectOtherMemberReply(String memberNickName, String memberRandom);
+
+
 }

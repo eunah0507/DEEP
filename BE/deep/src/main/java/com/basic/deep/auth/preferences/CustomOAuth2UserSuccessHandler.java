@@ -59,10 +59,10 @@ public class CustomOAuth2UserSuccessHandler extends SimpleUrlAuthenticationSucce
         CookieUtils.deleteCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);
 
         //프론트에 전달할 쿠키
-        Cookie acessCookie = new Cookie("Access", jsonWebToken.getAccessToken());
-        acessCookie.setMaxAge((int) ACCESS_PERIOD);
-        acessCookie.setPath("/");
-        response.addCookie(acessCookie);
+//        Cookie acessCookie = new Cookie("Access", jsonWebToken.getAccessToken());
+//        acessCookie.setMaxAge((int) ACCESS_PERIOD);
+//        acessCookie.setPath("/");
+//        response.addCookie(acessCookie);
 
         ResponseCookie cookie = ResponseCookie.from("Refresh",jsonWebToken.getRefreshToken())
                 .sameSite("None")

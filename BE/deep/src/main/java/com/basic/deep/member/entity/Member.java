@@ -2,10 +2,16 @@ package com.basic.deep.member.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(name = "UniqueMemberNickNameAndRandom",
+                        columnNames = {"member_nickname", "member_random"})
+        })
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -28,8 +34,9 @@ public class Member {
     @Column(name = "member_pass", length = 2000, nullable = false)
     private String memberPass;
 
+    @Builder.Default
     @Column(name = "member_passhistory", length = 2000, nullable = false)
-    private String memberPassHistory;
+    private String memberPassHistory = BCrypt.hashpw("0", BCrypt.gensalt());
 
     @Column(name = "member_phone", length = 100, nullable = false)
     private String memberPhone;
@@ -84,4 +91,46 @@ public class Member {
         this.memberLastLogin = LocalDateTime.now();
     }
 
+    // 임시비밀번호로 비밀번호 변경
+    public void changePass(String memberPass) {
+        this.memberPass = BCrypt.hashpw(memberPass, BCrypt.gensalt());
+    }
+
+    // 커뮤니티 내 프로필 수정
+    public void chageModify(String memberNickname, String memberIntroduce, String memberFile) {
+        if (memberNickname != null) {
+            this.memberNickname = memberNickname;
+        }
+
+        if (memberIntroduce != null) {
+            this.memberIntroduce = memberIntroduce;
+        }
+
+        if (memberFile != null) {
+            this.memberFile = memberFile;
+        }
+    }
+
+    // 개인 프로필 편집 - 비밀번호 변경
+    public void memberUpdatePW(String changePW) {
+
+        this.memberPass = BCrypt.hashpw(changePW, BCrypt.gensalt());
+    }
+
+    // 개인 프로필 편집 - 이메일 변경
+    public void memberUpdateMail(String changeMail) {
+        this.memberMail = changeMail;
+    }
+
+    // 개인 프로필 편집 - 주소 변경
+    public void memberUpdateAddress(String changeAddress, String changeAddressDetail, String changeAddressZip) {
+        this.memberAddress = changeAddress;
+        this.memberAddressDetail = changeAddressDetail;
+        this.memberZip = changeAddressZip;
+    }
+
+    // 개인 프로필 편집 - 휴대폰 변경
+    public void memberUpdatePhone(String changePhone) {
+        this.memberPhone = changePhone;
+    }
 }

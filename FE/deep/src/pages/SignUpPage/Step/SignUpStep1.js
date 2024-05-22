@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
     SignUpContainer,
     SignUpWrapper,
@@ -6,8 +6,37 @@ import {
 } from "./SignUpStep1.styles";
 import deepLogo from "../../../assets/images/deep-logo-header.svg";
 import Button from "../../../components/Button/Button";
+import { useEffect, useState } from "react";
 
-function SignUpStep1() {
+function SignUpStep1(props) {
+    const [checkService, setCheckService] = useState(false);
+    const [checkPrivacy, setCheckPrivacy] = useState(false);
+    const [disabled, setDisabled] = useState(true);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (checkService && checkPrivacy) {
+            setDisabled(false);
+        } else {
+            setDisabled(true);
+        }
+    }, [checkPrivacy, checkService]);
+
+    const handleCheckService = () => {
+        setCheckService(!checkService);
+    };
+
+    const handleCheckPrivacy = () => {
+        setCheckPrivacy(!checkPrivacy);
+    };
+
+    const nextStep = (e) => {
+        e.preventDefault();
+        navigate("/signup/info");
+        props.setStep(1);
+    };
+
     return (
         <SignUpWrapper>
             <SignUpContainer>
@@ -20,8 +49,12 @@ function SignUpStep1() {
                     <ul className="terms_list">
                         <li className="terms_item">
                             <div className="check_wrap">
-                                <input type="checkbox" id="termsService" />
-                                <label for="termsService">
+                                <input
+                                    type="checkbox"
+                                    id="termsService"
+                                    onChange={handleCheckService}
+                                />
+                                <label htmlFor="termsService">
                                     <div className="text_wrap">
                                         <em className="option">[필수]</em>
                                         <span className="text">
@@ -988,8 +1021,12 @@ function SignUpStep1() {
                         </li>
                         <li className="terms_item">
                             <div className="check_wrap">
-                                <input type="checkbox" id="termsPrivacy" />
-                                <label for="termsPrivacy">
+                                <input
+                                    type="checkbox"
+                                    id="termsPrivacy"
+                                    onChange={handleCheckPrivacy}
+                                />
+                                <label htmlFor="termsPrivacy">
                                     <div className="text_wrap">
                                         <em className="option">[필수]</em>
                                         <span className="text">
@@ -1542,7 +1579,12 @@ function SignUpStep1() {
                         </li>
                     </ul>
                 </TermsContainer>
-                <Button largeWidth largeFont>
+                <Button
+                    largeWidth
+                    largeFont
+                    disabled={disabled}
+                    onClick={nextStep}
+                >
                     다음
                 </Button>
             </SignUpContainer>

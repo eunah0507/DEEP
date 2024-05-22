@@ -47,43 +47,28 @@ public class JsonWebTokenCheckFilter extends OncePerRequestFilter {
             }
         }
 
+        // request에 모든 Cookie를 읽는다. > refresh라고 적혀있는 쿠키가 있다면 access라는 String에 넣는다.
+        // 근데 이 과정을 거쳐서도 null 이라면 BAD_REQUEST를 보낸다.
         try {
-            String access = JwtTokenUtils.resolveAccessToken(request);      //없으면 에러 throw
-            String refresh = JwtTokenUtils.resolveRefreshToken(request);
+            String access = null;
+            for(Cookie cookie : request.getCookies()) {
+                if (cookie.getName().equals("Refresh")) {
+                    access = cookie.getValue();
+                }
+            }
+
+            if(access == null){
+                throw new ErrorResponse(HttpStatus.BAD_REQUEST, "잘못된 Refresh 토큰입니다. ");
+            }
 
             if (JwtTokenUtils.isValidToken(access)) { // ACCESS 토큰 유효기간 안지남.
                 Authentication authentication = jsonWebTokenProvider.getAuthentication(access); // 정상 토큰이면 SecurityContext 저장
+                // 제대로 된 토큰이라면 SecurityContextHolder에 담는다.
+                // 담은 토큰을 Controller에서 활용할 수 있게 전송하는 코드
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-            } else if (refresh == null) {// ACCESS 토큰 유효기간 지남.+ REFRESH 없으면 -> 토큰 만료 되었습니다.
-                throw new ErrorResponse(HttpStatus.GONE, "Access 토큰의 유효기간이 지났습니다.");
             } else { // ACCESS 토큰 유효기간 지남.+ REFRESH 있음
-                if (!JwtTokenUtils.isValidToken(refresh))
-                    throw new ErrorResponse(HttpStatus.GONE, "Refresh 토큰의 유효기간이 지났습니다.");
 
-                String userSequence = JwtTokenUtils.getClaimAttribute(refresh, "sequence");
-                Long userSequenceValue = Long.parseLong(userSequence);
-                if (null == userSequence) throw new ErrorResponse(HttpStatus.FORBIDDEN, "잘못된 Refresh 토큰 입니다. 1");
-
-                String dbToken = memberRepository.selectTokenByMemberNo(userSequenceValue)
-                        .orElseThrow(() -> new ErrorResponse(HttpStatus.CONFLICT, "저장된 유저가 아닙니다."));
-
-                if (dbToken.equals(refresh)) {
-                    String newAccessToken = JwtTokenUtils.changeAccessToken(userSequenceValue, "ROLE_USER");
-                    // User user = userRepository.findBySequence(userSequenceValue);
-
-
-                    Cookie acessCookie = new Cookie("Access", newAccessToken);
-                    acessCookie.setMaxAge((int) REFRESH_PERIOD);
-                    acessCookie.setPath("/");
-                    response.addCookie(acessCookie);
-
-
-                    Authentication authentication = jsonWebTokenProvider.getAuthentication(newAccessToken); // 정상 토큰이면 SecurityContext 저장
-
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                } else {
-                    throw new ErrorResponse(HttpStatus.BAD_REQUEST, "잘못된 Refresh 토큰입니다. 2");
-                }
+                    throw new ErrorResponse(HttpStatus.BAD_REQUEST, "잘못된 Refresh 토큰입니다. ");
 
             }
 

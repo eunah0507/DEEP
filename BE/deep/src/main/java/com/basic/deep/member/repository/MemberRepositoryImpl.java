@@ -1,7 +1,10 @@
 package com.basic.deep.member.repository;
 
+import com.basic.deep.member.dto.*;
 import com.basic.deep.member.entity.Member;
 import com.basic.deep.member.entity.SocialType;
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -9,6 +12,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.basic.deep.member.entity.QMember.member;
+import static com.basic.deep.board.entity.QBoard.board;
+import static com.basic.deep.board.entity.QBoardReply.boardReply;
+import static com.basic.deep.board.entity.QBoardLike.boardLike;
 
 public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
@@ -48,11 +54,11 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
     // 일반 로그인
     @Override
-    public Optional<Long> selectMemberIDandPW(String memberID, String memberPass) {
+    public Optional<Member> selectMemberIDandPW(String memberID) {
         return Optional.ofNullable(
-                queryFactory.select(member.memberNo)
+                queryFactory.select(member)
                         .from(member)
-                        .where(member.memberID.eq(memberID).and(member.memberPass.eq(memberPass)))
+                        .where(member.memberID.eq(memberID))
                         .fetchFirst()
         );
     }
@@ -66,4 +72,160 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 .fetch();
     }
 
+    // PW 찾기
+    @Override
+    public Optional<Member> selectMemberMail(String memberID, String memberName, String memberPhone) {
+        return Optional.ofNullable(
+                queryFactory.select(member)
+                        .from(member)
+                        .where(member.memberID.eq(memberID).and(member.memberName.eq(memberName).and(member.memberPhone.eq(memberPhone))))
+                        .fetchFirst()
+        );
+    }
+
+    // memberInfo 조회
+    @Override
+    public Optional<Member> selectMemberInfo(Long memberNo) {
+        return Optional.ofNullable(
+                queryFactory.select(member)
+                        .from(member)
+                        .where(member.memberNo.eq(memberNo))
+                        .fetchFirst()
+        );
+    }
+
+    // 회원 탈퇴
+    @Override
+    public void deleteMember(Long memberNo) {
+        queryFactory.delete(member)
+                .where(member.memberNo.eq(memberNo))
+                .execute();
+
+    }
+
+    // Refresh Token과 ID가 같은지 확인
+    @Override
+    public Optional<Long> memberRefreshTokenAndID(String memberID, String memberToken) {
+        return Optional.ofNullable(
+                queryFactory.select(member.memberNo)
+                        .from(member)
+                        .where(member.memberID.eq(memberID).and(member.memberToken.eq(memberToken)))
+                        .fetchFirst()
+        );
+    }
+
+    // 닉네임과 랜덤번호로 나머지 정보 다 뽑아오기
+    @Override
+    public Optional<Member> selectMemberNickAndRandom(String memberNickName, String memberRandom) {
+        return Optional.ofNullable(
+                queryFactory.select(member)
+                        .from(member)
+                        .where(member.memberNickname.eq(memberNickName).and(member.memberRandom.eq(memberRandom)))
+                        .fetchFirst()
+        );
+    }
+
+    // 유저 검색 - 닉네임 검색시 닉네임 포함 데이터 조회
+    @Override
+    public List<MemberSearchResponseDTO> selectMemberByNickNameAndRandom(String nickname, String random) {
+            return queryFactory.select(
+                            Projections.constructor(MemberSearchResponseDTO.class,
+                                    member.memberNickname, member.memberRandom, member.memberFile, member.memberIntroduce)
+                    )
+                    .from(member)
+                    .where(member.memberNickname.like("%" + nickname + "%").or(member.memberRandom.in(random)))
+                    .fetch();
+    }
+
+    // 유저 검색 - 닉네임과 랜덤 둘 다 조회 시 고유 데이터 조회
+    @Override
+    public List<MemberSearchResponseDTO> selectMemberOnlyOne(String memberNickName, String memberRandom) {
+        return queryFactory.select(
+                        Projections.constructor(MemberSearchResponseDTO.class,
+                                member.memberNickname, member.memberRandom, member.memberFile, member.memberIntroduce)
+                )
+                .from(member)
+                .where(member.memberNickname.eq(memberNickName).and(member.memberRandom.eq(memberRandom)))
+                .fetch();
+    }
+
+    // 다른 유저의 프로필 보기
+    @Override
+    public Optional<Member> selectOtherMemberNickNameAndRandom(String memberNickName, String memberRandom) {
+        return Optional.ofNullable(
+                queryFactory.select(member)
+                        .from(member)
+                        .where(member.memberNickname.eq(memberNickName).and(member.memberRandom.eq(memberRandom)))
+                        .fetchFirst()
+        );
+    }
+
+    // [커뮤니티 프로필] 마이 페이지 - 내가 쓴 글 확인
+    @Override
+    public List<MemberProfilePostResponseDTO> selectMemberPost(Long memberNo) {
+        return queryFactory.select(
+                        Projections.constructor(MemberProfilePostResponseDTO.class,
+                                board.boardNo, board.boardCategory, board.boardTitle,
+                                board.boardDate, board.boardReadCount)
+                )
+                .from(member)
+                .join(board)
+                .on(member.memberNo.eq(board.member_no.memberNo))
+                .where(member.memberNo.eq(memberNo))
+                .fetch();
+    }
+
+    // [커뮤니티 프로필] 마이 페이지 - 내가 쓴 댓글 확인
+    @Override
+    public List<MemberProfileReplyResponseDTO> selectMemberReply(String memberNickName, String memberRandom) {
+        return queryFactory.select(Projections.constructor(MemberProfileReplyResponseDTO.class,
+                        board.boardNo, board.boardCategory, board.boardTitle,
+                        boardReply.replyContent, board.boardDate))
+                .from(board)
+                .join(boardReply)
+                .on(board.eq(boardReply.boardNo))
+                .where(boardReply.replyNickName.eq(memberNickName).and(boardReply.replyRandom.eq(memberRandom)))
+                .fetch();
+    }
+
+    // [커뮤니티 프로필] 마이 페이지 - 내가 누른 좋아요 확인
+    @Override
+    public List<MemberProfieLikeResponseDTO> selectMemberLike(Long memberNo) {
+        return queryFactory.select(Projections.constructor(MemberProfieLikeResponseDTO.class,
+                        board.boardNo, board.boardCategory, board.boardTitle,
+                        board.member_no.memberNickname, board.member_no.memberRandom,
+                        board.boardDate, board.boardReadCount))
+                .from(boardLike)
+                .join(board)
+                .on(board.eq(boardLike.boardNo))
+                .where(boardLike.memberNo.memberNo.eq(memberNo))
+                .fetch();
+    }
+
+    // [다른 사람의 마이 페이지] - 해당 유저가 작성한 글 확인
+    // eq안은 보라색이면 안됨
+    @Override
+    public List<MemberOthersPostResponseDTO> selectOtherMemberPost(String memberNickName, String memberRandom) {
+        return queryFactory.select(Projections.constructor(MemberOthersPostResponseDTO.class,
+                        board.boardNo, board.boardCategory,
+                        board.boardTitle, board.boardDate, board.boardReadCount))
+                .from(member)
+                .join(board)
+                .on(member.memberNo.eq(board.member_no.memberNo))
+                .where(member.memberNickname.eq(memberNickName).and(member.memberRandom.eq(memberRandom)))
+                .fetch();
+    }
+
+    // [다른 사람의 마이 페이지] - 해당 유저가 작성한 댓글 확인
+    @Override
+    public List<MemberOthersReplyResponseDTO> selectOtherMemberReply(String memberNickName, String memberRandom) {
+        return queryFactory.select(Projections.constructor(MemberOthersReplyResponseDTO.class,
+                        board.boardNo, board.boardCategory,
+                        board.boardTitle, boardReply.replyContent, board.boardDate))
+                .from(board)
+                .join(boardReply)
+                .on(board.eq(boardReply.boardNo))
+                .where(boardReply.replyNickName.eq(memberNickName).and(boardReply.replyRandom.eq(memberRandom)))
+                .fetch();
+    }
 }

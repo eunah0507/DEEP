@@ -64,11 +64,10 @@ public class SecurityConfig {
         // configuration.setAllowedOrigins(Arrays.asList는 한 줄 추가 더 하면 X
         // 그냥 괄호안에 무제한으로 추가하기. 사실 백엔드 링크는 넣을 필요 X 혹시몰라 일단 넣음
         configuration.setAllowCredentials(true);
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000","https://deeep.site","http://deeep.site"
-                ,"https://www.deeep.site","http://www.deeep.site","https://deeep.site/fe","http://deeep.site/fe"
-        ,"https://www.deeep.site/fe","http://www.deeep.site/fe"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
-        configuration.setExposedHeaders(Arrays.asList("Authorization","Sequence","Nickname","Image"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://localhost:3000", "https://deeep.site", "http://deeep.site"
+                , "https://www.deeep.site", "http://www.deeep.site", "https://dev.deeep.site", "http://dev.deeep.site"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "Sequence", "Nickname", "Image"));
         configuration.setAllowedHeaders(Arrays.asList("X-Requested-With", "Origin", "Content-Type", "Accept",
                 "Authorization", "Access-Control-Allow-Credentials", "Access-Control-Allow-Headers", "Access-Control-Allow-Methods",
                 "Access-Control-Allow-Origin", "Access-Control-Expose-Headers", "Access-Control-Max-Age",
@@ -76,9 +75,8 @@ public class SecurityConfig {
                 "Content-Range", "Content-Disposition", "Content-Description"));
 //        configuration.setAllowedOriginPatterns(Collections.singletonList("http://localhost:3009"));
         // configuration.setAllowedOrigins(Arrays.asList랑 조금 다름
-        configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:3000","https://deeep.site","http://deeep.site"
-                ,"https://www.deeep.site","http://www.deeep.site","https://deeep.site/fe","http://deeep.site/fe"
-                ,"https://www.deeep.site/fe","http://www.deeep.site/fe"));
+        configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:3000", "https://localhost:3000","https://deeep.site","http://deeep.site"
+                ,"https://www.deeep.site","http://www.deeep.site","https://dev.deeep.site","http://dev.deeep.site"));
         configuration.setMaxAge(60L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
