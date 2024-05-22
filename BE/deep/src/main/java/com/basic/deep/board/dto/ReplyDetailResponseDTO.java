@@ -1,10 +1,12 @@
 package com.basic.deep.board.dto;
 
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Data
+@ToString
 public class ReplyDetailResponseDTO {
     private Long replyNo;
     private String memberNickName;

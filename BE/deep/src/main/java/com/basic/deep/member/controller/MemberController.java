@@ -80,14 +80,19 @@ public class MemberController {
     // DTO의 @Email 혹은 @NotBlank등을 적용시키기 위해 Vaild 사용
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody @Valid MemberSignUpRequestDTO memberSignUpRequestDTO, Cookie cookie) {
+        log.info("{}",memberSignUpRequestDTO);
 
         MemberSignUpResponseDTO memberSignUpResponseDTO = memberService.memberSignUp(memberSignUpRequestDTO);
+
+        log.info("{}",memberSignUpResponseDTO);
         return new ResponseEntity<MemberSignUpResponseDTO>(memberSignUpResponseDTO, HttpStatus.OK);
     }
 
     // 휴대폰 인증
     @PostMapping("/signup/phone")
     public ResponseEntity<?> phone(@RequestBody MemberSignUpPhoneRequestDTO memberSignUpPhoneRequestDTO) {
+        log.info("{}",memberSignUpPhoneRequestDTO);
+
         Message message = new Message();
         int randomPhone = generateAuthNo1();
 
@@ -99,20 +104,26 @@ public class MemberController {
         SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
         MemberSignUpPhoneResponseDTO memberSignUpPhoneResponseDTO = new MemberSignUpPhoneResponseDTO();
         memberSignUpPhoneResponseDTO.setAuthenticationNumber(String.valueOf(randomPhone));
+
+        log.info("{}",memberSignUpPhoneResponseDTO);
         return new ResponseEntity<MemberSignUpPhoneResponseDTO>(memberSignUpPhoneResponseDTO, HttpStatus.OK);
     }
 
     // ID 중복체크
     @GetMapping("/idcheck")
     public ResponseEntity<?> idcheck(@ModelAttribute MemberIdCheckRequestDTO memberIdCheckRequestDTO) {
+        log.info("{}",memberIdCheckRequestDTO);
         Boolean isIdCheck = memberService.memberIdCheck(memberIdCheckRequestDTO);
 
+        log.info("{}",isIdCheck);
         return new ResponseEntity<>(isIdCheck, HttpStatus.OK);
     }
 
     // 일반 로그인
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody MemberLoginRequestDTO memberLoginRequestDTO) {
+        log.info("{}",memberLoginRequestDTO);
+
         Map<String, String> responsebody = new HashMap<>();
         responsebody.put("message", "Success");
         Long memberNo = memberService.memberLogin(memberLoginRequestDTO);
@@ -148,6 +159,8 @@ public class MemberController {
                     .maxAge(REFRESH_PERIOD / 1000)
                     .build();
             headers.add("Set-Cookie", cookie.toString());
+
+            log.info("{}",responsebody);
             return new ResponseEntity<>(responsebody, headers, HttpStatus.OK);
         }
     }
@@ -155,11 +168,14 @@ public class MemberController {
     // ID 찾기
     @PostMapping("/idfind")
     public ResponseEntity<?> idfind(@RequestBody MemberIdFindRequestDTO memberIdFindRequestDTO) {
+        log.info("{}",memberIdFindRequestDTO);
         List<MemberIdFindResponseDTO> memberIdFindResponseDTO = memberService.idFind(memberIdFindRequestDTO);
 
         if (memberIdFindResponseDTO.isEmpty()) {
             return new ResponseEntity<>("해당 ID가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
         } else {
+
+            log.info("{}",memberIdFindResponseDTO);
             return new ResponseEntity<>(memberIdFindResponseDTO, HttpStatus.OK);
         }
     }
@@ -168,6 +184,8 @@ public class MemberController {
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     @PostMapping("/pwfind")
     public ResponseEntity<?> pwfind(@RequestBody MemberPwFindRequsetDTO memberPwFindRequsetDTO) {
+        log.info("{}",memberPwFindRequsetDTO);
+
         String temporaryPW = getTempPassword();
         String toEmail = memberService.memberPwFind(memberPwFindRequsetDTO, temporaryPW);
 
@@ -207,6 +225,8 @@ public class MemberController {
 
             MemberPwFindResponseDTO memberPwFindResponseDTO = new MemberPwFindResponseDTO();
             memberPwFindResponseDTO.setMemberMail(toEmail);
+
+            log.info("{}",memberPwFindResponseDTO);
             return new ResponseEntity<>(memberPwFindResponseDTO, HttpStatus.OK);
 
         }
@@ -238,6 +258,8 @@ public class MemberController {
         if (memberInfoResponseDTO == null) {
             return new ResponseEntity<>("잘못된 접근입니다. 다시 시도하세요", HttpStatus.BAD_REQUEST);
         } else {
+
+            log.info("{}",memberInfoResponseDTO);
             return new ResponseEntity<>(memberInfoResponseDTO, HttpStatus.OK);
         }
     }
@@ -245,15 +267,20 @@ public class MemberController {
     // 커뮤니티 프로필 수정
     @PutMapping("/modify")
     public ResponseEntity<?> modify(@ModelAttribute MemberModifyRequestDTO memberModifyRequestDTO) {
+        log.info("{}",memberModifyRequestDTO);
+
         Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         MemberModifyResponseDTO memberModifyResponseDTO = memberService.memberModify(memberModifyRequestDTO, memberNo);
 
+        log.info("{}",memberModifyResponseDTO);
         return new ResponseEntity<>(memberModifyResponseDTO, HttpStatus.OK);
     }
 
     // 개인정보 프로필 수정 - 비밀번호 변경
     @PutMapping("/modify-pass")
     public ResponseEntity<?> modifyPass(@RequestBody MemberModifyPassRequestDTO memberModifyPassRequestDTO) {
+
+        log.info("{}",memberModifyPassRequestDTO);
         Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
 
         String pass = memberModifyPassRequestDTO.getMemberPass();
@@ -266,6 +293,8 @@ public class MemberController {
         if (memberModifyPassResponseDTO == null) {
             return new ResponseEntity<>("사용할 수 없는 비밀번호입니다.", HttpStatus.BAD_REQUEST);
         } else {
+
+            log.info("{}",memberModifyPassResponseDTO);
             return new ResponseEntity<>(memberModifyPassResponseDTO, HttpStatus.OK);
         }
     }
@@ -273,30 +302,37 @@ public class MemberController {
     // 개인정보 프로필 수정 - 메일 변경
     @PutMapping("/modify-mail")
     public ResponseEntity<?> modifyMail(@RequestBody MemberModifyMailRequestDTO memberModifyMailRequestDTO) {
+        log.info("{}",memberModifyMailRequestDTO);
+
         Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
 
         MemberModifyMailResponseDTO memberModifyMailResponseDTO = memberService.memberModifyMail(memberModifyMailRequestDTO, memberNo);
 
+        log.info("{}",memberModifyMailResponseDTO);
         return new ResponseEntity<>(memberModifyMailResponseDTO, HttpStatus.OK);
     }
 
     // 개인정보 프로필 수정 - 주소 변경
     @PutMapping("/modify-address")
     public ResponseEntity<?> modifyAddress(@RequestBody MemberModifyAddressRequestDTO memberModifyAddressRequestDTO) {
+        log.info("{}",memberModifyAddressRequestDTO);
         Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
 
         MemberModifyAddressResponseDTO memberModifyAddressResponseDTO = memberService.memberModifyAddress(memberModifyAddressRequestDTO, memberNo);
 
+        log.info("{}",memberModifyAddressResponseDTO);
         return new ResponseEntity<>(memberModifyAddressResponseDTO, HttpStatus.OK);
     }
 
     // 개인정보 프로필 수정 - 휴대폰 번호 변경
     @PutMapping("/modify-phone")
     public ResponseEntity<?> modifyPhone(@RequestBody MemberModifyPhoneRequestDTO memberModifyPhoneRequestDTO) {
+        log.info("{}",memberModifyPhoneRequestDTO);
         Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
 
         MemberModifyPhoneResponseDTO memberModifyPhoneResponseDTO = memberService.memberModifyPhone(memberModifyPhoneRequestDTO, memberNo);
 
+        log.info("{}",memberModifyPhoneResponseDTO);
         return new ResponseEntity<>(memberModifyPhoneResponseDTO, HttpStatus.OK);
 
     }
@@ -307,6 +343,8 @@ public class MemberController {
         Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
 
         MemberDeleteResponseDTO memberDeleteResponseDTO = memberService.memberDelete(memberNo);
+
+        log.info("{}",memberDeleteResponseDTO);
         return new ResponseEntity<>(memberDeleteResponseDTO, HttpStatus.OK);
 
     }
@@ -314,6 +352,8 @@ public class MemberController {
     // Access Token 값 만료 되었을 경우 Refresh Token 전달 후 새로운 Access Token 생성
     @PostMapping("/accesstoken")
     public ResponseEntity<?> accessToken(@RequestBody SendTokenRequestDTO sendTokenRequestDTO) {
+        log.info("{}",sendTokenRequestDTO);
+
         Long newAccessToken = memberService.isRefreshTokenAndIdOk(sendTokenRequestDTO);
 
         if (newAccessToken == null) {
@@ -326,6 +366,7 @@ public class MemberController {
             SendTokenResponseDTO sendTokenResponseDTO = new SendTokenResponseDTO();
             sendTokenResponseDTO.setMessage("Success");
 
+            log.info("{}",sendTokenResponseDTO);
             return new ResponseEntity<>(sendTokenResponseDTO, headers, HttpStatus.OK);
         }
     }
@@ -334,6 +375,7 @@ public class MemberController {
     // 친구 추가(팔로잉)
     @PostMapping("/following")
     public ResponseEntity<?> following(@RequestBody FollowingRequestDTO followingRequestDTO) {
+        log.info("{}",followingRequestDTO);
         Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
 
         FollowingResponseDTO followingResponseDTO = myFollowerService.followingOtherUsers(followingRequestDTO, memberNo);
@@ -342,6 +384,8 @@ public class MemberController {
         if (followingResponseDDTTOO == null || followingResponseDTO == null) {
             return new ResponseEntity<>("잘못된 접근입니다. 친구 추가가 되지 않았습니다.", HttpStatus.BAD_REQUEST);
         } else {
+
+            log.info("{}",followingResponseDDTTOO);
             return new ResponseEntity<>(followingResponseDDTTOO, HttpStatus.OK);
         }
     }
@@ -349,6 +393,8 @@ public class MemberController {
     // 친구 삭제(언팔로우)
     @DeleteMapping("/unfollowing")
     public ResponseEntity<?> unfollowing(@RequestBody UnFollowingRequestDTO unFollowingRequestDTO) {
+        log.info("{}",unFollowingRequestDTO);
+
         Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
 
         UnFollowingResponseDTO unFollowingResponseDTO = myFollowerService.unfollowingOtherUsers(unFollowingRequestDTO, memberNo);
@@ -357,6 +403,8 @@ public class MemberController {
         if (unFollowingResponseDDTTOO == null || unFollowingResponseDTO == null) {
             return new ResponseEntity<>("잘못된 접근입니다. 친구 삭제가 되지 않았습니다.", HttpStatus.BAD_REQUEST);
         } else {
+
+            log.info("{}",unFollowingResponseDTO);
             return new ResponseEntity<>(unFollowingResponseDTO, HttpStatus.OK);
         }
     }
@@ -364,12 +412,15 @@ public class MemberController {
     // 프로필 - 팔로워 목록 보기 (타인 > 나)
     @PostMapping("/my-follower")
     public ResponseEntity<?> myFollowerList(@RequestBody MyFollowerListRequestDTO myFollowerListRequestDTO) {
+        log.info("{}",myFollowerListRequestDTO);
 
         List<MyFollowerListResponseDTO> myFollowerListResponseDTO = myFollowerService.myFollowerList(myFollowerListRequestDTO);
 
         if (myFollowerListResponseDTO == null) {
             return new ResponseEntity<>("조회하려는 유저가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
         } else {
+
+            log.info("{}",myFollowerListResponseDTO);
             return new ResponseEntity<>(myFollowerListResponseDTO, HttpStatus.OK);
         }
     }
@@ -377,12 +428,15 @@ public class MemberController {
     // 프로필 - 팔로잉 목록 보기 (나 > 타인)
     @PostMapping("/add-friends")
     public ResponseEntity<?> addFriendsList(@RequestBody AddFriendsListRequestDTO addFriendsListRequestDTO) {
+        log.info("{}",addFriendsListRequestDTO);
 
         List<AddFriendsListResponseDTO> addFriendsListResponseDTO = addFriendsService.addFriendsList(addFriendsListRequestDTO);
 
         if (addFriendsListRequestDTO == null) {
             return new ResponseEntity<>("조회하려는 유저가 존재하지 않습니다. 다시 확인해주세요", HttpStatus.BAD_REQUEST);
         } else {
+
+            log.info("{}",addFriendsListResponseDTO);
             return new ResponseEntity<>(addFriendsListResponseDTO, HttpStatus.OK);
         }
     }
@@ -390,18 +444,24 @@ public class MemberController {
     // 유저 검색
     @PostMapping("/search")
     public ResponseEntity<?> searchMember(@RequestBody MemberSearchRequestDTO memberSearchRequestDTO) {
+        log.info("{}",memberSearchRequestDTO);
+
         List<MemberSearchResponseDTO> memberSearchResponseDTOS = memberService.searchMember(memberSearchRequestDTO);
+
+        log.info("{}",memberSearchResponseDTOS);
         return new ResponseEntity<>(memberSearchResponseDTOS, HttpStatus.OK);
     }
 
     // 다른 유저의 프로필 보기
     @PostMapping("/others")
     public ResponseEntity<?> othersProfile(@RequestBody MemberOthersProfileRequestDTO memberOthersProfileRequestDTO) {
+        log.info("{}",memberOthersProfileRequestDTO);
         MemberOthersProfileResponseDTO memberOthersProfileResponseDTO = memberService.othersProfile(memberOthersProfileRequestDTO);
 
         if (memberOthersProfileResponseDTO == null) {
             return new ResponseEntity<>("해당 유저가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
         } else {
+            log.info("{}",memberOthersProfileResponseDTO);
             return new ResponseEntity<>(memberOthersProfileResponseDTO, HttpStatus.OK);
         }
     }
@@ -412,6 +472,7 @@ public class MemberController {
         Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         List<MemberProfilePostResponseDTO> memberProfilePostResponseDTO = memberService.myPost(memberNo);
 
+        log.info("{}",memberProfilePostResponseDTO);
         return new ResponseEntity<>(memberProfilePostResponseDTO, HttpStatus.OK);
     }
 
@@ -421,6 +482,7 @@ public class MemberController {
         Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         List<MemberProfileReplyResponseDTO> memberProfileReplyResponseDTO = memberService.myReply(memberNo);
 
+        log.info("{}",memberProfileReplyResponseDTO);
         return new ResponseEntity<>(memberProfileReplyResponseDTO, HttpStatus.OK);
     }
 
@@ -431,11 +493,14 @@ public class MemberController {
         Long memberNo = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         List<MemberProfieLikeResponseDTO> memberProfieLikeResponseDTO = memberService.myLike(memberNo);
 
+        log.info("{}",memberProfieLikeResponseDTO);
         return new ResponseEntity<>(memberProfieLikeResponseDTO, HttpStatus.OK);
     }
 
     @GetMapping("/cookie-check")
     public ResponseEntity<?> cookieCheck(@CookieValue("Refresh") String refresh) {
+
+        log.info("{}",refresh);
         return new ResponseEntity<>(refresh, HttpStatus.OK);
     }
 
@@ -455,22 +520,28 @@ public class MemberController {
                 .maxAge(0)
                 .build();
         headers.add("Set-Cookie", cookie.toString());
+
+        log.info("{}",memberLogOutResponseDTO);
         return new ResponseEntity<>(memberLogOutResponseDTO, headers, HttpStatus.OK);
     }
 
     // [다른 사람의 마이 페이지] - 해당 유저가 작성한 글 확인
     @PostMapping("/others-post")
     public ResponseEntity<?> othersPost(@RequestBody MemberOthersPostRequestDTO memberOthersPostRequestDTO){
+        log.info("{}",memberOthersPostRequestDTO);
         List<MemberOthersPostResponseDTO> memberOthersPostResponseDTO = memberService.othersPost(memberOthersPostRequestDTO.getMemberNickName(), memberOthersPostRequestDTO.getMemberRandom());
 
+        log.info("{}",memberOthersPostResponseDTO);
         return new ResponseEntity<>(memberOthersPostResponseDTO, HttpStatus.OK);
     }
 
     // [다른 사람의 마이 페이지] - 해당 유저가 작성한 글 확인
     @PostMapping("/others-reply")
     public ResponseEntity<?> othersReply(@RequestBody MemberOthersReplyRequestDTO memberOthersReplyRequestDTO){
+        log.info("{}",memberOthersReplyRequestDTO);
         List<MemberOthersReplyResponseDTO> memberOthersReplyResponseDTO = memberService.othersReply(memberOthersReplyRequestDTO.getMemberNickName(), memberOthersReplyRequestDTO.getMemberRandom());
 
+        log.info("{}",memberOthersReplyResponseDTO);
         return new ResponseEntity<>(memberOthersReplyResponseDTO, HttpStatus.OK);
     }
 }

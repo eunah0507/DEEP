@@ -1,12 +1,14 @@
 package com.basic.deep.board.dto;
 
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
+@ToString
 public class BoardDetailResponseDTO {
     private String title;
     private String content;

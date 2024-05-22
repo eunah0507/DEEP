@@ -45,8 +45,7 @@ public class AlertController {
 
         for(Alert alert : alerts) {
             sseEmitterService.publish(alert);
-            log.info(alert.getMemberID());
+//            log.info(alert.getMemberID());
         }
     }
-
 }
