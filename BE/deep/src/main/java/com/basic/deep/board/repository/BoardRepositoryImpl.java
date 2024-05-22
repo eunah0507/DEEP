@@ -110,7 +110,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom{
     public List<BoardSearchResponseDTO> selectBoardByTitleOrContent(String keyword) {
 
         return queryFactory.select(Projections.constructor(BoardSearchResponseDTO.class,
-                        board.boardNo, board.boardTitle,
+                        board.boardNo, board.boardCategory ,board.boardTitle,
                         board.boardContent, board.boardReadCount
                         ))
                 .from(board)
