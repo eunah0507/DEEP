@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { palette } from "../../../styles/palette";
 
 export const QnAWrapper = styled.div`
     display: flex;
@@ -21,5 +22,35 @@ export const QnAContainer = styled.div`
 
     .board_title {
         font-size: 2.4rem;
+    }
+
+    /* paginate */
+    .paginate {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 50px;
+    }
+
+    .paginate li svg {
+        width: 22px;
+        height: 22px;
+        cursor: pointer;
+    }
+
+    .paginate li svg:hover {
+        color: ${palette.blue[7]};
+    }
+
+    .paginate .page {
+        display: inline-block;
+        margin: 0 10px;
+        font-size: 2.2rem;
+        cursor: pointer;
+    }
+
+    .paginate .page:hover {
+        color: ${palette.blue[7]};
+        font-weight: 500;
     }
 `;

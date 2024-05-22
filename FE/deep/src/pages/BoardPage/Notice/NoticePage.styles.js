@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { palette } from "../../../styles/palette";
 
 export const NoticeWrapper = styled.div`
     display: flex;
@@ -111,5 +112,35 @@ export const NoticeContainer = styled.div`
         width: 20px;
         height: 20px;
         margin-right: 7px;
+    }
+
+    /* paginate */
+    .paginate {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 50px;
+    }
+
+    .paginate li svg {
+        width: 22px;
+        height: 22px;
+        cursor: pointer;
+    }
+
+    .paginate li svg:hover {
+        color: ${palette.blue[7]};
+    }
+
+    .paginate .page {
+        display: inline-block;
+        margin: 0 10px;
+        font-size: 2.2rem;
+        cursor: pointer;
+    }
+
+    .paginate .page:hover {
+        color: ${palette.blue[7]};
+        font-weight: 500;
     }
 `;

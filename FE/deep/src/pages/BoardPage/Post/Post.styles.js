@@ -57,7 +57,15 @@ export const PostListContainer = styled.li`
         overflow: hidden;
     }
 
+    .post_content_container {
+        overflow: hidden;
+        max-height: 300px;
+    }
+
     .post_content {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
         line-height: 1.8;
         margin: 20px 0 30px;
         font-size: 1.6rem;

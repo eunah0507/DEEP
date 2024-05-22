@@ -6,19 +6,25 @@ import { useEffect, useState } from "react";
 import axiosInstance from "../../../apis/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { GoChevronLeft, GoChevronRight } from "react-icons/go";
 
 function BestPage() {
     const [posts, setPosts] = useState([]);
+    const [pages, setPages] = useState(1);
+    const [maxPages, setMaxPages] = useState(1);
 
     const navigate = useNavigate();
 
     const member = useSelector((state) => state.member.value);
 
+    const paginate = Array.from({ length: maxPages }, (_, p) => p + 1);
+
     useEffect(() => {
         axiosInstance
-            .get("/deep/board/best?page=1")
+            .get(`/deep/board/best?page=${pages}`)
             .then((response) => {
                 setPosts(response.data);
+                navigate(`/best?page=${pages}`);
             })
             .catch((error) => {
                 console.log(error);
@@ -29,12 +35,12 @@ function BestPage() {
                 category: "best",
             })
             .then((response) => {
-                console.log(response);
+                setMaxPages(response.data.maxPage);
             })
             .catch((error) => {
                 console.log(error);
             });
-    }, []);
+    }, [pages]);
 
     const postCreatedTime = posts.map((post) => {
         const date = new Date(post.boardCreatedTime);
@@ -63,6 +69,26 @@ function BestPage() {
 
     const handleClickPost = (e, index) => {
         navigate(`/${posts[index].category}/${posts[index].boardNo}`);
+    };
+
+    const handleClickPrev = async () => {
+        if (pages > 1) {
+            setPages(pages - 1);
+        } else {
+            setPages(pages);
+        }
+    };
+
+    const handleClickPage = (e, index) => {
+        setPages(index + 1);
+    };
+
+    const handleClickNext = async () => {
+        if (pages < maxPages) {
+            setPages(pages + 1);
+        } else {
+            setPages(pages);
+        }
     };
 
     return (
@@ -109,12 +135,14 @@ function BestPage() {
                                     <h4 className="post_title">
                                         {post.boardTitle}
                                     </h4>
-                                    <p
-                                        className="post_content"
-                                        dangerouslySetInnerHTML={{
-                                            __html: post.boardContent,
-                                        }}
-                                    ></p>
+                                    <div className="post_content_container">
+                                        <p
+                                            className="post_content"
+                                            dangerouslySetInnerHTML={{
+                                                __html: post.boardContent,
+                                            }}
+                                        ></p>
+                                    </div>
                                     <div className="contents_container">
                                         <div className="content_time">
                                             <span>
@@ -142,6 +170,24 @@ function BestPage() {
                             </li>
                         );
                     })}
+                </ul>
+                <ul className="paginate">
+                    <li className="prev" onClick={handleClickPrev}>
+                        <GoChevronLeft />
+                    </li>
+                    {paginate.map((page, index) => {
+                        return (
+                            <li
+                                className="page"
+                                onClick={(e) => handleClickPage(e, index)}
+                            >
+                                {page}
+                            </li>
+                        );
+                    })}
+                    <li className="next" onClick={handleClickNext}>
+                        <GoChevronRight />
+                    </li>
                 </ul>
             </BestContainer>
         </BestWrapper>

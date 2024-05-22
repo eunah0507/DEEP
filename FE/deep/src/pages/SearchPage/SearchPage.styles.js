@@ -158,7 +158,7 @@ export const TextSearchContainer = styled.div`
         font-weight: 600;
     }
 
-    .post_content_container .post_content p {
+    .post_content_container .post_content {
         line-height: 30px;
         font-size: 1.6rem;
     }

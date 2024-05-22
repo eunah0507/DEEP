@@ -118,6 +118,10 @@ export const HomeContainer = styled.div`
         cursor: pointer;
     }
 
+    .board_container {
+        min-height: 735px;
+    }
+
     .boards .board ul li:last-child {
         margin-bottom: 0;
     }

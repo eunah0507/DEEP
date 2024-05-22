@@ -3,12 +3,17 @@ import { CommunityContainer, CommunityWrapper } from "./CommunityPage.styles";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../../apis/axiosInstance";
 import Post from "../Post/Post";
-import Paginate from "../../../components/Paginate/Paginate";
+import { GoChevronLeft, GoChevronRight } from "react-icons/go";
+import { useNavigate } from "react-router-dom";
 
 function CommunityPage() {
     const [posts, setPosts] = useState([]);
     const [pages, setPages] = useState(1);
     const [maxPages, setMaxPages] = useState(1);
+
+    const navigate = useNavigate();
+
+    const paginate = Array.from({ length: maxPages }, (_, p) => p + 1);
 
     useEffect(() => {
         axiosInstance
@@ -18,6 +23,7 @@ function CommunityPage() {
             })
             .then((response) => {
                 setPosts(response.data);
+                navigate(`/community?page=${pages}`);
             })
             .catch((error) => {
                 console.log(error);
@@ -33,7 +39,27 @@ function CommunityPage() {
             .catch((error) => {
                 console.log(error);
             });
-    }, []);
+    }, [pages]);
+
+    const handleClickPrev = async () => {
+        if (pages > 1) {
+            setPages(pages - 1);
+        } else {
+            setPages(pages);
+        }
+    };
+
+    const handleClickPage = (e, index) => {
+        setPages(index + 1);
+    };
+
+    const handleClickNext = async () => {
+        if (pages < maxPages) {
+            setPages(pages + 1);
+        } else {
+            setPages(pages);
+        }
+    };
 
     return (
         <CommunityWrapper>
@@ -49,7 +75,24 @@ function CommunityPage() {
                         return <Post post={post} />;
                     })}
                 </ul>
-                <Paginate pageCount={maxPages} />
+                <ul className="paginate">
+                    <li className="prev" onClick={handleClickPrev}>
+                        <GoChevronLeft />
+                    </li>
+                    {paginate.map((page, index) => {
+                        return (
+                            <li
+                                className="page"
+                                onClick={(e) => handleClickPage(e, index)}
+                            >
+                                {page}
+                            </li>
+                        );
+                    })}
+                    <li className="next" onClick={handleClickNext}>
+                        <GoChevronRight />
+                    </li>
+                </ul>
             </CommunityContainer>
         </CommunityWrapper>
     );

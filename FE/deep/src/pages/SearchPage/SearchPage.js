@@ -100,7 +100,6 @@ function SearchPage() {
                     memberRandom: "",
                 })
                 .then((response) => {
-                    console.log(response);
                     setUserSearch(response.data);
 
                     setIsUserSearch(true);
@@ -139,7 +138,7 @@ function SearchPage() {
         }
     };
 
-    const handleClickTagPost = (e, category, boardNo) => {
+    const handleClickPost = (e, category, boardNo) => {
         navigate(`/${category}/${boardNo}`);
     };
 
@@ -246,7 +245,16 @@ function SearchPage() {
                                                         {post.memberRandom}
                                                     </span>
                                                 </div>
-                                                <div className="post_content_container">
+                                                <div
+                                                    className="post_content_container"
+                                                    onClick={(e) =>
+                                                        handleClickPost(
+                                                            e,
+                                                            post.category,
+                                                            post.boardNo
+                                                        )
+                                                    }
+                                                >
                                                     <h5 className="post_title">
                                                         {post.title}
                                                     </h5>
@@ -331,7 +339,7 @@ function SearchPage() {
                                             <li
                                                 className="post_container"
                                                 onClick={(e) =>
-                                                    handleClickTagPost(
+                                                    handleClickPost(
                                                         e,
                                                         post.category,
                                                         post.boardNo
