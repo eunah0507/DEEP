@@ -5,8 +5,9 @@ import axiosInstance from "../../../apis/axiosInstance";
 import userProfile from "../../../assets/images/deep-profile-blue.png";
 import Likes from "../Likes/Likes";
 import { useSelector } from "react-redux";
-import UserPost from "../UserPosts/UserPost";
-import UserComments from "../UserComments/UserComments";
+import UserComments from "../MyComments/MyComments";
+import MyPost from "../MyPosts/MyPost";
+import MyFollower from "../MyFollow/MyFollower";
 
 function MyProfile() {
     const [nickName, setNickName] = useState("");
@@ -15,6 +16,7 @@ function MyProfile() {
     const [profileImg, setProfileImg] = useState("");
     const [follower, setFollower] = useState("");
     const [following, setFollowing] = useState("");
+    const [isOpenFollwer, setIsOpenFollower] = useState(false);
     const [tab, setTab] = useState(0);
 
     const member = useSelector((state) => state.member.value);
@@ -46,6 +48,10 @@ function MyProfile() {
             .catch((error) => console.log(error));
     }, []);
 
+    const handleClickFollwer = () => {
+        setIsOpenFollower(true);
+    };
+
     const handleClickLikes = () => {
         setTab(0);
     };
@@ -75,12 +81,14 @@ function MyProfile() {
                                     alt="user-profile-image"
                                 />
                             )}
-                            {/* <img src="https://developersitedeep.s3.ap-northeast-2.amazonaws.com/deepProfile/5baba5e2-9d0d-49b3-9c58-b3315e7ae3a4.jpg" alt="user-profile-image" /> */}
                             <span className="user_nickName">{nickName}</span>
                             <span className="user_number">{random}</span>
                         </div>
                         <div className="user_follow">
-                            <div className="user_followers">
+                            <div
+                                className="user_followers"
+                                onClick={handleClickFollwer}
+                            >
                                 <span>{follower}</span>
                                 <span>팔로워</span>
                             </div>
@@ -89,6 +97,15 @@ function MyProfile() {
                                 <span>팔로잉</span>
                             </div>
                         </div>
+                        {isOpenFollwer ? (
+                            <MyFollower
+                                isOpenFollwer={(open) =>
+                                    setIsOpenFollower(open)
+                                }
+                            />
+                        ) : (
+                            <></>
+                        )}
                     </div>
                     <div className="user_introduce">
                         <span>{introduce}</span>
@@ -126,7 +143,7 @@ function MyProfile() {
                     </ul>
                     <div className="user_contents_container">
                         {tab === 0 ? <Likes /> : <></>}
-                        {tab === 1 ? <UserPost /> : <></>}
+                        {tab === 1 ? <MyPost /> : <></>}
                         {tab === 2 ? <UserComments /> : <></>}
                     </div>
                 </div>

@@ -120,6 +120,7 @@ export const NoticeContainer = styled.div`
         justify-content: center;
         align-items: center;
         margin-top: 50px;
+        color: #666;
     }
 
     .paginate li svg {
@@ -135,7 +136,7 @@ export const NoticeContainer = styled.div`
     .paginate .page {
         display: inline-block;
         margin: 0 10px;
-        font-size: 2.2rem;
+        font-size: 2rem;
         cursor: pointer;
     }
 

@@ -1,22 +1,23 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../../../apis/axiosInstance";
-import { LikesContainer } from "./Likes.styles";
+import { MyPostContainer } from "./MyPost.styles";
 import { GrView } from "react-icons/gr";
 import likesIcon from "../../../assets/images/deep-icon-likes.svg";
 import commentsIcon from "../../../assets/images/deep-icon-comments.svg";
 import { useNavigate } from "react-router-dom";
+import postsIcon from "../../../assets/images/deep-icon-posts.svg";
 
-function Likes() {
+function MyPost() {
     const [loading, setLoading] = useState(true);
-    const [likes, setLikes] = useState([]);
+    const [posts, setPosts] = useState([]);
 
     const navigate = useNavigate();
 
     useEffect(() => {
         axiosInstance
-            .get("/deep/member/profile-like")
+            .get("/deep/member/profile-post")
             .then((response) => {
-                setLikes(response.data);
+                setPosts(response.data);
                 setLoading(false);
             })
             .catch((error) => console.log(error));
@@ -26,12 +27,12 @@ function Likes() {
         navigate(`/${category}/${boardNo}`);
     };
 
-    const postCreatedDate = likes.map((like) => {
-        return like.boardCreatedTime.split("T")[0].replaceAll("-", ".");
+    const postCreatedDate = posts.map((post) => {
+        return post.boardCreatedTime.split("T")[0].replaceAll("-", ".");
     });
 
-    const postCreatedTime = likes.map((like) => {
-        return like.boardCreatedTime.split("T")[1].split(".")[0].slice(0, 5);
+    const postCreatedTime = posts.map((post) => {
+        return post.boardCreatedTime.split("T")[1].split(".")[0].slice(0, 5);
     });
 
     return (
@@ -39,36 +40,33 @@ function Likes() {
             {loading ? (
                 <></>
             ) : (
-                <LikesContainer>
-                    {likes.length === 0 ? (
-                        <div className="nothing_likes_container">
-                            <div className="nothing_likes">
-                                <img src={likesIcon} alt="likes icon" />
+                <MyPostContainer>
+                    {posts.length === 0 ? (
+                        <div className="nothing_posts_container">
+                            <div className="nothing_posts">
+                                <img src={postsIcon} alt="posts icon" />
                             </div>
-                            <span>좋아요 누른 글이 없습니다.</span>
+                            <span>작성한 글이 없습니다.</span>
                         </div>
                     ) : (
-                        <ul className="post_likes">
-                            {likes.map((like, index) => {
+                        <ul className="user_posts">
+                            {posts.map((post, index) => {
                                 return (
                                     <li
-                                        className="post_like"
+                                        className="user_post"
                                         onClick={(e) =>
                                             handleClickPost(
                                                 e,
-                                                like.category,
-                                                like.boardNo
+                                                post.category,
+                                                post.boardNo
                                             )
                                         }
                                     >
                                         <div className="post_info">
                                             <p className="post_title">
-                                                {like.boardTitle}
+                                                {post.boardTitle}
                                             </p>
-                                            <div className="user_post_info">
-                                                <span className="user_nickname">
-                                                    {like.memberNickName}
-                                                </span>
+                                            <div className="user_post_time">
                                                 <span className="created_date">
                                                     {postCreatedDate[index]}
                                                 </span>
@@ -80,21 +78,21 @@ function Likes() {
                                         <div className="contents_item">
                                             <span className="views">
                                                 <GrView />
-                                                <span>{like.view}</span>
+                                                <span>{post.view}</span>
                                             </span>
                                             <span className="likes">
                                                 <img
                                                     src={likesIcon}
                                                     alt="likes-icon"
                                                 />
-                                                <span>{like.like}</span>
+                                                <span>{post.like}</span>
                                             </span>
                                             <span className="comments">
                                                 <img
                                                     src={commentsIcon}
                                                     alt="comments-icon"
                                                 />
-                                                <span>{like.reply}</span>
+                                                <span>{post.reply}</span>
                                             </span>
                                         </div>
                                     </li>
@@ -102,10 +100,10 @@ function Likes() {
                             })}
                         </ul>
                     )}
-                </LikesContainer>
+                </MyPostContainer>
             )}
         </>
     );
 }
 
-export default Likes;
+export default MyPost;

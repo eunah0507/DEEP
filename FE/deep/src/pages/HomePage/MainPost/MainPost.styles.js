@@ -47,6 +47,7 @@ export const MainPostContainer = styled.li`
 
     /* post title */
     .post_title {
+        margin-bottom: 20px;
         font-size: 1.6rem;
         font-weight: 500;
         white-space: nowrap;

@@ -1,40 +1,40 @@
 import styled from "styled-components";
 
-export const LikesContainer = styled.div`
+export const UserPostsContainer = styled.div`
     width: 820px;
 
     /* nothing comments */
-    .nothing_likes_container {
+    .nothing_posts_container {
         padding-top: 100px;
         text-align: center;
     }
 
-    .nothing_likes {
+    .nothing_posts {
         width: 200px;
         height: 200px;
         margin: 0 auto;
     }
 
-    .nothing_likes img {
+    .nothing_posts img {
         width: 100%;
         height: 100%;
         object-fit: contain;
         opacity: 0.4;
     }
 
-    .nothing_likes_container span {
+    .nothing_posts_container span {
         display: block;
         margin-top: 30px;
         color: #666;
         font-size: 2rem;
     }
 
-    /* likes */
-    .post_likes {
+    /* user posts */
+    .user_posts {
         padding: 0 30px;
     }
 
-    .post_like {
+    .user_post {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -44,12 +44,12 @@ export const LikesContainer = styled.div`
         cursor: pointer;
     }
 
-    .post_likes li:last-child {
+    .user_posts li:last-child {
         border-bottom: none;
     }
 
     /* post title */
-    .post_like .post_title {
+    .user_post .post_info .post_title {
         margin-bottom: 20px;
         font-size: 1.8rem;
         white-space: nowrap;
@@ -58,41 +58,35 @@ export const LikesContainer = styled.div`
         overflow: hidden;
     }
 
-    .post_like .user_post_info {
+    /* post created time */
+    .user_post .post_info .user_post_time {
         color: #999;
         font-size: 1.6rem;
     }
 
-    /* user nickname */
-    .post_like .user_post_info .user_nickname {
-        margin-right: 20px;
-        color: #666;
-    }
-
-    /* post created time */
-    .post_like .user_post_info .created_date {
+    .user_post .post_info .user_post_time .created_date {
         margin-right: 5px;
     }
 
     /* contents item */
-    .post_like .contents_item {
+    .user_post .contents_item {
         display: flex;
         color: #999;
     }
 
-    .post_like .contents_item span {
+    .user_post .contents_item span {
         display: flex;
         align-items: center;
         margin-right: 7px;
     }
 
-    .post_like .contents_item span span {
+    .user_post .contents_item span span {
         margin-left: 7px;
         font-size: 1.4rem;
     }
 
-    .post_like .contents_item .views svg,
-    .post_like .contents_item span img {
+    .user_post .contents_item .views svg,
+    .user_post .contents_item span img {
         width: 20px;
         height: 20px;
     }

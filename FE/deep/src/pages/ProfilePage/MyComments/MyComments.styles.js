@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const UserCommentsContainer = styled.div`
+export const MyCommentsContainer = styled.div`
     width: 820px;
 
     /* nothing comments */
@@ -19,7 +19,7 @@ export const UserCommentsContainer = styled.div`
         width: 100%;
         height: 100%;
         object-fit: contain;
-        opacity: 0.3;
+        opacity: 0.4;
     }
 
     .nothing_comments_container span {

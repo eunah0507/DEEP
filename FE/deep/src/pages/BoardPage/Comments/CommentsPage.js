@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
 import {
+    CommentInput,
     CommentsPageContainer,
     CommentsPageWrapper,
 } from "./CommentsPage.styles";
 import axiosInstance from "../../../apis/axiosInstance";
-import Input from "../../../components/Input/Input";
 import Button from "../../../components/Button/Button";
 import userInfo from "../../../assets/images/deep-profile-blue.png";
 import { useSelector } from "react-redux";
@@ -14,11 +14,16 @@ import { useNavigate } from "react-router-dom";
 function CommentsPage({ boardNo }) {
     const [postComments, setPostComments] = useState([]);
     const [commentValue, setCommentValue] = useState("");
+    const [commentModify, setCommentModify] = useState("");
+    const [modifyIndex, setModifyIndex] = useState(null);
     const [isCreateComment, setIsCreateComment] = useState(false);
     const [isCommentMenuOpen, setIsCommentMenuOpen] = useState(false);
+    const [isModify, setIsModify] = useState(false);
     const [isIndex, setIsIndex] = useState(null);
 
     const member = useSelector((state) => state.member.value);
+
+    const navigate = useNavigate();
 
     useMemo(() => {
         axiosInstance
@@ -31,14 +36,15 @@ function CommentsPage({ boardNo }) {
             });
     }, [isCreateComment]);
 
-    const handleInputComment = (e) => {
-        setCommentValue(e.target.value);
-    };
-
-    const navigate = useNavigate();
-
     const commentCreatedTime = postComments.map((comment) => {
-        const date = new Date(comment.replyCreatedTime);
+        let date;
+
+        if (comment.replyUpdateTim) {
+            date = new Date(comment.replyUpdateTim);
+        } else {
+            date = new Date(comment.replyCreatedTime);
+        }
+
         date.setHours(date.getHours() + 9);
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -51,6 +57,10 @@ function CommentsPage({ boardNo }) {
         return formattedDate;
     });
 
+    const handleInputComment = (e) => {
+        setCommentValue(e.target.value);
+    };
+
     const createComment = () => {
         const commentInfo = {
             boardNo: boardNo,
@@ -58,16 +68,20 @@ function CommentsPage({ boardNo }) {
             replyContent: commentValue,
         };
 
-        axiosInstance
-            .post("/deep/board/reply-write", commentInfo)
-            .then((response) => {
-                setCommentValue("");
-                setIsCreateComment(!isCreateComment);
-            })
-            .catch((error) => {
-                console.log(error);
-                alert("댓글 작성에 실패했습니다.");
-            });
+        if (0 < commentValue.length) {
+            axiosInstance
+                .post("/deep/board/reply-write", commentInfo)
+                .then((response) => {
+                    setCommentValue("");
+                    setIsCreateComment(!isCreateComment);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    alert("댓글 작성에 실패했습니다.");
+                });
+        } else {
+            alert("댓글을 작성해 주세요.");
+        }
     };
 
     const createCommentEnter = (e) => {
@@ -94,7 +108,33 @@ function CommentsPage({ boardNo }) {
         setIsIndex(index);
     };
 
-    const handleModifyComment = () => {};
+    const handleModifyInput = (e) => {
+        setCommentModify(e.target.value);
+    };
+
+    const handleModifyComment = (e, index, modifyComment) => {
+        setCommentModify(modifyComment);
+        setIsModify(true);
+        setModifyIndex(index);
+    };
+
+    const modifyComment = (e, replyNo) => {
+        const modifyInfo = {
+            boardNo: boardNo,
+            replyNo: replyNo,
+            replyContent: commentModify,
+        };
+
+        axiosInstance
+            .put("/deep/board/reply-modify", modifyInfo)
+            .then((response) => {
+                console.log(response);
+                setIsModify(false);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
 
     const handleDeleteComment = (e, replyNo) => {
         axiosInstance
@@ -113,13 +153,15 @@ function CommentsPage({ boardNo }) {
         <CommentsPageWrapper>
             <h4 className="total_comments">{postComments.length}개의 댓글</h4>
             <div className="comment_input">
-                <Input
-                    type="text"
+                <textarea
+                    name="message"
                     value={commentValue}
                     placeholder="댓글을 작성해 보세요."
+                    rows={1}
+                    maxLength="1000"
                     onChange={handleInputComment}
                     onKeyDown={createCommentEnter}
-                />
+                ></textarea>
                 <Button xSmallWidth inverted onClick={createComment}>
                     등록
                 </Button>
@@ -207,8 +249,12 @@ function CommentsPage({ boardNo }) {
                                                 >
                                                     <li
                                                         className="modify"
-                                                        onMouseDown={
-                                                            handleModifyComment
+                                                        onMouseDown={(e) =>
+                                                            handleModifyComment(
+                                                                e,
+                                                                index,
+                                                                comment.replyContent
+                                                            )
                                                         }
                                                     >
                                                         수정하기
@@ -230,12 +276,44 @@ function CommentsPage({ boardNo }) {
                                             <></>
                                         )}
                                     </div>
-                                    <div className="comment_content">
-                                        <p>{comment.replyContent}</p>
-                                    </div>
-                                    <div className="created_time">
-                                        <span>{commentCreatedTime[index]}</span>
-                                    </div>
+                                    {isModify && index === modifyIndex ? (
+                                        <div className="comment_modify_container">
+                                            <div className="comment_modify">
+                                                <textarea
+                                                    name="message"
+                                                    value={commentModify}
+                                                    rows={1}
+                                                    maxLength="1000"
+                                                    onChange={handleModifyInput}
+                                                ></textarea>
+                                            </div>
+                                            <Button
+                                                xSmallWidth
+                                                inverted
+                                                onClick={(e) =>
+                                                    modifyComment(
+                                                        e,
+                                                        comment.replyNo
+                                                    )
+                                                }
+                                            >
+                                                등록
+                                            </Button>
+                                        </div>
+                                    ) : (
+                                        <div className="comment_content">
+                                            <p>{comment.replyContent}</p>
+                                        </div>
+                                    )}
+                                    {isModify && index === modifyIndex ? (
+                                        <></>
+                                    ) : (
+                                        <div className="created_time">
+                                            <span>
+                                                {commentCreatedTime[index]}
+                                            </span>
+                                        </div>
+                                    )}
                                 </li>
                             );
                         })

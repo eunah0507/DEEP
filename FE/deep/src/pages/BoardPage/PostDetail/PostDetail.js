@@ -163,6 +163,11 @@ function PostDetail() {
                 console.log(error);
             });
     };
+
+    const handleClickTag = (e, tag) => {
+        navigate(`/tag/${tag.replace("#", "")}`);
+    };
+
     return (
         <>
             {loading ? (
@@ -245,7 +250,16 @@ function PostDetail() {
                             </div>
                             <ul className="tags">
                                 {tags.map((tag) => {
-                                    return <li className="tag">{tag}</li>;
+                                    return (
+                                        <li
+                                            className="tag"
+                                            onClick={(e) =>
+                                                handleClickTag(e, tag)
+                                            }
+                                        >
+                                            {tag}
+                                        </li>
+                                    );
                                 })}
                             </ul>
                             <div className="contents_item_container">

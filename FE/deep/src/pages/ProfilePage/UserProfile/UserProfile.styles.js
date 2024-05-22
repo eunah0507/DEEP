@@ -83,9 +83,49 @@ export const UserProfileContainer = styled.div`
         font-size: 2rem;
     }
 
-    .user_profile_info a {
+    .user_profile_info button {
         display: flex;
         margin: 0 auto;
+    }
+
+    .user_contents_item {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: 50px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .user_contents_item li {
+        width: 50%;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        font-size: 1.6rem;
+        cursor: pointer;
+    }
+
+    .user_contents_item li.selected {
+        border-bottom: 3px solid #1e88e5;
+    }
+
+    .user_contents_container {
+        height: 500px;
+        min-height: 500px;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .user_contents_container::-webkit-scrollbar {
+        width: 16px;
+    }
+
+    .user_contents_container::-webkit-scrollbar-thumb {
+        height: 40px;
+        border: 4px solid transparent;
+        border-radius: 10px;
+        background-color: #ddd;
+        background-clip: padding-box;
     }
 
     /* nothing profile */
