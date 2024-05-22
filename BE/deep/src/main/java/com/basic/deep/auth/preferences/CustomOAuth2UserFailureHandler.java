@@ -22,6 +22,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static com.basic.deep.auth.preferences.CustomOAuth2CookieAuthorizationRepository.OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME;
 import static com.basic.deep.auth.preferences.CustomOAuth2CookieAuthorizationRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
@@ -55,6 +56,7 @@ public class CustomOAuth2UserFailureHandler extends SimpleUrlAuthenticationFailu
                             .memberSocialID(
                                     customOAuth2User.getSocialId())
                             .memberAddress("")
+                            .memberID(UUID.randomUUID().toString())
                             .memberNickname(customOAuth2User.getSocialName())
                             .memberName(customOAuth2User.getSocialName())
                             .memberPass("")
@@ -72,6 +74,7 @@ public class CustomOAuth2UserFailureHandler extends SimpleUrlAuthenticationFailu
                                     customOAuth2User.getRegistrationId())
                             .memberSocialID(
                                     customOAuth2User.getSocialId())
+                            .memberID(UUID.randomUUID().toString())
                             .memberAddress("")
                             .memberNickname(customOAuth2User.getSocialName())
                             .memberName(customOAuth2User.getSocialName())
