@@ -14,6 +14,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -52,6 +53,7 @@ public class BoardLikeServiceImpl implements BoardLikeService {
                 // Board에 Like를 추가한다.
                 boardLikeRepository.save(
                         BoardLike.builder()
+                                .likeBestDate(LocalDateTime.now())
                                 .boardNo(board)
                                 .memberNo(member)
                                 .build()

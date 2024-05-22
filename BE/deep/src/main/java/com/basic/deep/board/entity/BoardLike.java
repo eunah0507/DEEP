@@ -4,6 +4,8 @@ import com.basic.deep.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -14,6 +16,9 @@ public class BoardLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long likeNo;
+
+    @Column(name = "like_best_date")
+    private LocalDateTime likeBestDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")

@@ -28,6 +28,13 @@ public interface BoardRepositoryCustom {
     // 인기글 게시판 목록 조회
     List<BoardBestResponseDTO> findAllBoardLike(Long page);
 
+    // 해당 게시판에 게시글이 몇 페이지까지 있는지
+    Long selectBoardPostMaxPage (Category category);
+
+    // 해당 게시글에 댓글이 몇 페이지까지 있는지
+    Long selectBoardReplyMaxPage(Long boardNo);
+
+
 
 
 

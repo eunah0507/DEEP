@@ -30,5 +30,11 @@ public interface BoardService {
     // 인기글 게시판 목록 조회
     List<BoardBestResponseDTO> boardBest(BoardBestRequestDTO boardBestRequestDTO);
 
+    // 해당 게시판에 게시글이 몇 페이지까지 있는지
+    BoardPostPageResponseDTO selectCategoryPostMaxPage(BoardPostPageRequestDTO boardPostPageRequestDTO);
+
+    // 해당 게시글에 댓글이 몇 페이지까지 있는지
+    BoardReplyResponseDTO selectBoardReplyMaxPage(BoardReplyPageRequestDTO boardReplyPageRequestDTO);
+
 
 }

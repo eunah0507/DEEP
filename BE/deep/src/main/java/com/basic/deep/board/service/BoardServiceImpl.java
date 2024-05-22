@@ -330,10 +330,37 @@ public class BoardServiceImpl implements BoardService {
         return boardBest;
     }
 
+
     // 인기글 게시판 이어서
     public BoardBestResponseDTO boardBestPlus(BoardBestResponseDTO boardBestResponseDTO) {
         boardBestResponseDTO.setReply(replyRepository.selectReplyCount(boardBestResponseDTO.getBoardNo()));
 
         return boardBestResponseDTO;
+    }
+
+    // 해당 게시판에 게시글이 몇 페이지까지 있는지
+    @Override
+    public BoardPostPageResponseDTO selectCategoryPostMaxPage(BoardPostPageRequestDTO boardPostPageRequestDTO) {
+        Long selectBoardPostMaxPage = boardRepository.selectBoardPostMaxPage(boardPostPageRequestDTO.getCategory());
+        selectBoardPostMaxPage /= 10;
+        selectBoardPostMaxPage++;
+
+        BoardPostPageResponseDTO boardPostPageResponseDTO = new BoardPostPageResponseDTO();
+        boardPostPageResponseDTO.setMaxPage(selectBoardPostMaxPage);
+
+        return boardPostPageResponseDTO;
+    }
+
+    // 해당 게시글에 댓글이 몇 페이지까지 있는지
+    @Override
+    public BoardReplyResponseDTO selectBoardReplyMaxPage(BoardReplyPageRequestDTO boardReplyPageRequestDTO) {
+        Long selectBoardReplyMaxPage = boardRepository.selectBoardReplyMaxPage(boardReplyPageRequestDTO.getBoardNo());
+        selectBoardReplyMaxPage /= 10;
+        selectBoardReplyMaxPage++;
+
+        BoardReplyResponseDTO boardReplyResponseDTO = new BoardReplyResponseDTO();
+        boardReplyResponseDTO.setMaxPage(selectBoardReplyMaxPage);
+
+        return boardReplyResponseDTO;
     }
 }

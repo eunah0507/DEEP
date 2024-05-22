@@ -210,4 +210,20 @@ public class BoardController {
         boardImgResponseDTO.setImg(postImg);
         return new ResponseEntity<>(boardImgResponseDTO, HttpStatus.OK);
     }
+
+    // 해당 게시글이 몇 페이지까지 있는지
+    @PostMapping("/post-page")
+    public ResponseEntity<?> postPage(@RequestBody BoardPostPageRequestDTO boardPostPageRequestDTO){
+        BoardPostPageResponseDTO boardPostPageResponseDTO = boardService.selectCategoryPostMaxPage(boardPostPageRequestDTO);
+
+        return new ResponseEntity<>(boardPostPageResponseDTO, HttpStatus.OK);
+    }
+
+    // 해당 게시글에 댓글이 몇 페이지까지 있는지
+    @PostMapping("/reply-page")
+    public ResponseEntity<?> replyPage(@RequestBody BoardReplyPageRequestDTO boardReplyPageRequestDTO){
+        BoardReplyResponseDTO boardReplyResponseDTO = boardService.selectBoardReplyMaxPage(boardReplyPageRequestDTO);
+
+        return new ResponseEntity<>(boardReplyResponseDTO, HttpStatus.OK);
+    }
 }

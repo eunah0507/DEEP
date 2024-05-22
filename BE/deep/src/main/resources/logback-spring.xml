@@ -1,45 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
-    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
-    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
-
-    <appender name="redis" class="com.cwbase.logback.RedisAppender">
-        <host>172.31.1.11</host> <!-- redis가 설치된 호스트IP -->
-        <port>6379</port>           <!-- redis사용 포트 -->
-        <key>logstash</key>
-        <type>appapi-local</type>   <!-- 그전시간에 logstash_writer의 권한 설정때 작성한 Indices 값 -->
-        <source>SLOT-1</source>
+<configuration scan="true" scanPeriod="30 seconds">
+    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>43.203.8.19:5000</destination>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+        </encoder>
     </appender>
-
-    <!-- 비동기적으로 log를 보내기 위하여 셋팅 -->
-    <appender name="redisAsync" class="ch.qos.logback.classic.AsyncAppender">
-        <appender-ref ref="redis" />
-    </appender>
-
-
-
-    <springProfile name="local">
-        <root level="INFO">
-            <appender-ref ref="STDOUT"/>
-            <appender-ref ref="CONSOLE" />
-            <appender-ref ref="redisAsync" />
-        </root>
-    </springProfile>
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %-5level %logger{36} - %msg%n</Pattern>
-        </layout>
-    </appender>
-
-    <springProfile name="product">
-        <root level="INFO">
-            <appender-ref ref="CONSOLE" />
-            <appender-ref ref="redisAsync" />
-        </root>
-    </springProfile>
 
     <root level="INFO">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="LOGSTASH"/>
     </root>
-
 </configuration>

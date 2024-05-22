@@ -98,11 +98,12 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom{
                 .on(board.eq(boardLike.boardNo))
                 .groupBy(board.boardNo)
                 .having(boardLike.likeNo.count().goe(5))
-                .orderBy(board.boardNo.desc())
+                .orderBy(boardLike.likeBestDate.max().desc())
                 .limit(10)
                 .offset(page*10)
                 .fetch();
     }
+
 
     // 게시글 검색
     @Override
@@ -116,5 +117,23 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom{
                 .where(board.boardTitle.like("%" + keyword + "%").or(board.boardContent.like("%" + keyword + "%")))
                 .orderBy(board.boardNo.desc())
                 .fetch();
+    }
+
+    // 해당 게시판에 게시글이 총 몇 페이지까지 있는지
+    @Override
+    public Long selectBoardPostMaxPage(Category category) {
+        return queryFactory.select(board.boardNo.count())
+                .from(board)
+                .where(board.boardCategory.eq(category))
+                .fetchFirst();
+    }
+
+    // 해당 게시글에 댓글이 몇 페이지까지 있는지
+    @Override
+    public Long selectBoardReplyMaxPage(Long boardNo) {
+        return queryFactory.select(boardReply.ReplyNo.count())
+                .from(boardReply)
+                .where(boardReply.boardNo.boardNo.eq(boardNo))
+                .fetchFirst();
     }
 }
