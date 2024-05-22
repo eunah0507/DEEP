@@ -4,6 +4,7 @@ import Header from "../components/Header/Header";
 
 function PrivateRoute() {
     const member = useSelector((state) => state.member.value);
+
     return member.isAuthorized ? (
         <>
             <div>
@@ -14,8 +15,7 @@ function PrivateRoute() {
             </div>
         </>
     ) : (
-        // <Navigate to="" />
-        <></>
+        <Navigate to="" />
     );
 }
 

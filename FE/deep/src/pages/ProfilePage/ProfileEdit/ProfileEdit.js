@@ -51,7 +51,7 @@ function ProfileEdit() {
     const handleCheckIntroduce = (e) => {
         setIntroduce(e.target.value);
 
-        const regex = /^[a-zA-Z가-힣0-9?!@#$%^&*(){}[\]-_=+;:'"]$/;
+        const regex = /^[a-zA-Z가-힣0-9?!@$%^&*(){}[\]-_=+;:'"]$/;
 
         if (regex.test(e.target.value)) {
             setIsIntroduce(true);

@@ -26,10 +26,11 @@ export const HomeContainer = styled.div`
     }
 
     .notice .notice_content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         width: 100%;
-        height: 70px;
-        line-height: 70px;
-        padding: 0 30px;
+        padding: 25px 30px;
         border: 1px solid #ddd;
         border-radius: 5px;
         overflow: hidden;
@@ -37,6 +38,12 @@ export const HomeContainer = styled.div`
 
     .notice .notice_content p {
         font-size: 1.8rem;
+        font-weight: 500;
+    }
+
+    .notice .notice_content span {
+        color: #999;
+        font-size: 1.6rem;
     }
 
     /* boards */

@@ -1,11 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { HomeContainer, HomeWrapper } from "./HomePage.styles";
 import axiosInstance from "../../apis/axiosInstance";
 import MainPost from "./MainPost/MainPost";
 import Loading from "../../components/Loading/Loading";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { login } from "../../store/memberStore";
+import { redirect, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function HomePage() {
     const [loading, setLoading] = useState(true);
@@ -15,11 +14,13 @@ function HomePage() {
     const [qna, setQna] = useState([]);
     const [community, setCommunity] = useState([]);
 
-    const dispatch = useDispatch();
+    const member = useSelector((state) => state.member.value);
 
     const navigate = useNavigate();
 
     useEffect(() => {
+        if (member.isAuthorized === false) redirect("/login");
+
         axiosInstance
             .get("/deep/board/main-index")
             .then((response) => {
@@ -65,6 +66,20 @@ function HomePage() {
             });
     }, []);
 
+    const createdTime = (time) => {
+        const date = new Date(time);
+        date.setHours(date.getHours() + 9);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        const hours = String(date.getHours()).padStart(2, "0");
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+
+        const formattedDate = `${year}.${month}.${day} ${hours}:${minutes}`;
+
+        return formattedDate;
+    };
+
     const handleClickNotice = () => {
         navigate("/notice");
     };
@@ -95,9 +110,10 @@ function HomePage() {
                         <div className="notice">
                             <h3 onClick={handleClickNotice}>공지사항</h3>
                             <div className="notice_content">
-                                {notice.length > 0 && (
-                                    <p>{notice[0].boardTitle}</p>
-                                )}
+                                <p>{notice[0].boardTitle}</p>
+                                <span>
+                                    {createdTime(notice[0].boardCreatedTime)}
+                                </span>
                             </div>
                         </div>
                         <div className="boards">

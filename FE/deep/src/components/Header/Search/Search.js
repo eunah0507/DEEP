@@ -5,28 +5,21 @@ import SearchInput, {
 } from "./Search.styles";
 import searchIcon from "../../../assets/images/deep-icon-search.svg";
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import axiosInstance from "../../../apis/axiosInstance";
+import { useNavigate } from "react-router-dom";
 
 function Search(props) {
     const [searchValue, setSearchValue] = useState("");
 
-    const member = useSelector((state) => state.member.value);
+    const navigate = useNavigate();
 
     const handleSearchInfo = (e) => {
         setSearchValue(e.target.value);
     };
 
-    const searchInfo = () => {
-        axiosInstance.post("/deep/member/search", {
-            memberNickName: member.memberNickName,
-            memberRandom: member.memberRandom,
-        });
-    };
-
     const handleSearchEnter = (e) => {
         if (e.key === "Enter") {
-            searchInfo();
+            navigate(`/search?query=${searchValue}`);
+            props.setIsSearchOpen(false);
         }
     };
 

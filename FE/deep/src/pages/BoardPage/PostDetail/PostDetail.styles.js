@@ -142,6 +142,7 @@ export const PostDetailContainer = styled.div`
         border-radius: 20px;
         color: ${palette.blue[7]};
         font-size: 1.4rem;
+        font-weight: 600;
     }
 
     /* contents item */

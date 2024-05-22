@@ -121,7 +121,11 @@ function PostDetail() {
     const formattedDate = `${year}.${month}.${day} ${hours}:${minutes}`;
 
     const handleClickProfile = () => {
-        navigate(`/profile/${userNickName}/${userRandom}`);
+        if (isMyPost) {
+            navigate(`/profile/${member.memberRandom.replace("#", "")}`);
+        } else {
+            navigate(`/profile/${userNickName}/${userRandom}`);
+        }
     };
 
     const handleClickMenu = () => {
@@ -145,9 +149,6 @@ function PostDetail() {
     };
 
     const handleClickLike = () => {
-        setIsLike(!isLike);
-        console.log(isLike);
-
         const likeInfo = {
             boardNo: boardNo,
             like: !isLike,
@@ -156,7 +157,7 @@ function PostDetail() {
         axiosInstance
             .post("/deep/board/like", likeInfo)
             .then((response) => {
-                console.log(response);
+                setIsLike(isLike);
             })
             .catch((error) => {
                 console.log(error);

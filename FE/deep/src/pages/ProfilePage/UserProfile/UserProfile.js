@@ -37,6 +37,7 @@ function UserProfile() {
             .catch((error) => {
                 console.log(error);
                 setIsUser(false);
+                setLoading(false);
             });
     }, []);
 
@@ -85,7 +86,7 @@ function UserProfile() {
                                         alt="profile nothing"
                                     />
                                 </div>
-                                <span>존재하지 않거나 탈퇴한 회원입니다.</span>
+                                <span>존재하지 않거나 탈퇴한 유저입니다.</span>
                             </div>
                         )}
                     </UserProfileContainer>

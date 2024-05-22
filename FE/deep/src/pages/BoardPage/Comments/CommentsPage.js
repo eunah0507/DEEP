@@ -77,7 +77,14 @@ function CommentsPage({ boardNo }) {
     const handleClickProfile = (e, nickName, random) => {
         const userRandom = random.replace("#", "");
 
-        navigate(`/profile/${nickName}/${userRandom}`);
+        if (
+            member.memberNickName === nickName &&
+            member.memberRandom === random
+        ) {
+            navigate(`/profile/${userRandom}`);
+        } else {
+            navigate(`/profile/${nickName}/${userRandom}`);
+        }
     };
 
     const handleClickMenu = (e, index) => {

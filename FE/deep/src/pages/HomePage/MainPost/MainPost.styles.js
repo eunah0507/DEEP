@@ -7,10 +7,17 @@ export const MainPostContainer = styled.li`
     border-radius: 5px;
     cursor: pointer;
 
+    .post_container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    /* user profile */
     .user_profile {
         display: flex;
         align-items: center;
-        margin-bottom: 20px;
         cursor: pointer;
     }
 
@@ -27,6 +34,18 @@ export const MainPostContainer = styled.li`
         font-size: 1.4rem;
     }
 
+    .user_profile .user_random {
+        margin-left: 7px;
+        color: #999;
+        font-size: 1.4rem;
+    }
+
+    .content_time {
+        color: #999;
+        font-size: 1.4rem;
+    }
+
+    /* post title */
     .post_title {
         font-size: 1.6rem;
         font-weight: 500;

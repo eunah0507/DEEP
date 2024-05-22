@@ -4,8 +4,11 @@ import userProfile from "../../../assets/images/deep-profile-blue.png";
 import { GrView } from "react-icons/gr";
 import { PostListContainer } from "./Post.styles";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function Post({ post }) {
+    const member = useSelector((state) => state.member.value);
+
     const navigate = useNavigate();
 
     const location = useLocation();
@@ -19,12 +22,16 @@ function Post({ post }) {
     const formattedDate = `${year}.${month}.${day}`;
 
     const handleClickProfile = () => {
-        navigate(
-            `/profile/${post.memberNickName}/${post.memberRandom.replace(
-                "#",
-                ""
-            )}`
-        );
+        const userRandom = post.memberRandom.replace("#", "");
+
+        if (
+            member.memberNickName === post.memberNickName &&
+            member.memberRandom === post.memberRandom
+        ) {
+            navigate(`/profile/${userRandom}`);
+        } else {
+            navigate(`/profile/${post.memberNickName}/${userRandom}`);
+        }
     };
 
     const handleClickPost = () => {
@@ -55,7 +62,7 @@ function Post({ post }) {
                     <span className="user_name">{post.memberNickName}</span>
                     <span className="user_random">{post.memberRandom}</span>
                 </div>
-                <div className="content_time">
+                <div className="content_time" onClick={handleClickPost}>
                     <span>{formattedDate}</span>
                 </div>
             </div>
@@ -80,7 +87,7 @@ function Post({ post }) {
                             );
                         })}
                     </ul>
-                    <div className="contents_item">
+                    <div className="contents_item" onClick={handleClickPost}>
                         <span className="views">
                             <GrView />
                             <span>{post.view}</span>

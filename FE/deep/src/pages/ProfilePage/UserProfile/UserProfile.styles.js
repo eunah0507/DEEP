@@ -98,6 +98,7 @@ export const UserProfileContainer = styled.div`
         width: 300px;
         height: 300px;
         opacity: 0.5;
+        object-fit: contain;
     }
 
     .nothing_profile_container span {

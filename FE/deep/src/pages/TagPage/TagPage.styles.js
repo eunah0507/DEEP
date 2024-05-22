@@ -13,29 +13,6 @@ export const TagPageContainer = styled.div`
     height: calc(100% - 60px);
     margin: 60px 0 200px;
 
-    .nothing_tag_container {
-        margin-top: 250px;
-    }
-
-    .nothing_tag_container .nothing_tag {
-        display: flex;
-        justify-content: center;
-    }
-
-    .nothing_tag_container .nothing_tag .search_nothing {
-        width: 300px;
-        height: 300px;
-        opacity: 0.5;
-    }
-
-    .nothing_tag_container span {
-        display: flex;
-        justify-content: center;
-        margin-top: 30px;
-        color: #666;
-        font-size: 2.4rem;
-    }
-
     .tag_title {
         width: 100%;
         height: 50px;
@@ -68,14 +45,19 @@ export const TagPageContainer = styled.div`
         margin-bottom: 0;
     }
 
-    .posts_container .post .user_profile {
+    .user_profile_container {
         display: flex;
         justify-content: space-between;
+        cursor: pointer;
+    }
+
+    .posts_container .post .user_profile {
         font-size: 1.6rem;
     }
 
-    .posts_container .post .user_profile .user_name {
-        cursor: pointer;
+    .posts_container .post .user_profile .user_random {
+        margin-left: 7px;
+        color: #999;
     }
 
     .posts_container .post .content_time {
@@ -98,11 +80,8 @@ export const TagPageContainer = styled.div`
         justify-content: space-between;
     }
 
-    .contents_container .tags {
-    }
-
     .contents_container .tags .tag {
-        display: inline;
+        display: inline-block;
         margin-right: 7px;
         padding: 7px 13px;
         border: 1px solid ${palette.blue[6]};
@@ -110,9 +89,6 @@ export const TagPageContainer = styled.div`
         color: ${palette.blue[6]};
         font-size: 1.4rem;
         font-weight: 600;
-    }
-
-    .posts_container .post .post_content .contents_item {
     }
 
     .posts_container .post .post_content .contents_item span {

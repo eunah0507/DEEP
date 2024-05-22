@@ -4,6 +4,7 @@ import axiosInstance from "../../apis/axiosInstance";
 import { useLocation, useNavigate } from "react-router-dom";
 import likesIcon from "../../assets/images/deep-icon-likes.svg";
 import commentsIcon from "../../assets/images/deep-icon-comments.svg";
+import { useSelector } from "react-redux";
 
 function TagPage() {
     const [loading, setLoading] = useState(true);
@@ -12,6 +13,8 @@ function TagPage() {
     const navigate = useNavigate();
 
     const location = useLocation();
+
+    const member = useSelector((state) => state.member.value);
 
     const searchTag = decodeURIComponent(location.pathname.split("/")[2]);
 
@@ -47,7 +50,16 @@ function TagPage() {
     };
 
     const handleClickProfile = (e, nickName, random) => {
-        navigate(`/profile/${nickName}/${random.replace("#", "")}`);
+        const userRandom = random.replace("#", "");
+
+        if (
+            member.memberNickName === nickName &&
+            member.memberRandom === random
+        ) {
+            navigate(`/profile/${userRandom}`);
+        } else {
+            navigate(`/profile/${nickName}/${userRandom}`);
+        }
     };
 
     const handleClickPost = (e, category, boardNo) => {
@@ -68,9 +80,9 @@ function TagPage() {
                             {tags.map((tag) => {
                                 return (
                                     <li className="post">
-                                        <div className="user_profile">
-                                            <span
-                                                className="user_name"
+                                        <div className="user_profile_container">
+                                            <div
+                                                className="user_profile"
                                                 onClick={(e) =>
                                                     handleClickProfile(
                                                         e,
@@ -79,8 +91,13 @@ function TagPage() {
                                                     )
                                                 }
                                             >
-                                                {tag.memberNickName}
-                                            </span>
+                                                <span className="user_name">
+                                                    {tag.memberNickName}
+                                                </span>
+                                                <span className="user_random">
+                                                    {tag.memberRandom}
+                                                </span>
+                                            </div>
                                             <div className="content_time">
                                                 <span>
                                                     {createdTime(

@@ -28,6 +28,7 @@ import MyProfile from "../pages/ProfilePage/UserProfile/MyProfile";
 import UserProfile from "../pages/ProfilePage/UserProfile/UserProfile";
 import ScrollToTop from "../components/ScrollToTop/ScrollToTop";
 import TagPage from "../pages/TagPage/TagPage";
+import SearchPage from "../pages/SearchPage/SearchPage";
 
 function AppRoutes() {
     return (
@@ -68,6 +69,7 @@ function AppRoutes() {
                             element={<PostDetail />}
                         />
                         <Route path="/tag/:id" element={<TagPage />} />
+                        <Route path="/search" element={<SearchPage />} />
                     </Route>
                     <Route path="*" element={<NotFoundPage />} />
                 </Routes>

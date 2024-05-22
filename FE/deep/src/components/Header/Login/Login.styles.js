@@ -48,7 +48,7 @@ export const NavContainer = styled.div`
     }
 
     .gnb .menu a:hover {
-        color: ${palette.blue[8]};
+        color: ${palette.blue[7]};
         font-weight: 600;
     }
 `;
