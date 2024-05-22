@@ -80,5 +80,4 @@ public class CustomOAuth2UserSuccessHandler extends SimpleUrlAuthenticationSucce
         //리다이렉트 시킨다.
         getRedirectStrategy().sendRedirect(request, response, baseUrl);
     }
-
 }

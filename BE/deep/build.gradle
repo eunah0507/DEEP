@@ -61,8 +61,8 @@ dependencies {
 	implementation group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '2.3.2'
 
 //// https://mvnrepository.com/artifact/net.logstash.logback/logstash-logback-encoder
-	implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
-	implementation 'org.springframework.boot:spring-boot-starter-aop'
+//	implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
+//	implementation 'org.springframework.boot:spring-boot-starter-aop'
 
 
 }
