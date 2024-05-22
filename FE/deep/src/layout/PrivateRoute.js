@@ -15,7 +15,7 @@ function PrivateRoute() {
             </div>
         </>
     ) : (
-        <Navigate to="" />
+        <Navigate to="/login" />
     );
 }
 

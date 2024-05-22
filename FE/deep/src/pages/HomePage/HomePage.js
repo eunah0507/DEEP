@@ -3,8 +3,9 @@ import { HomeContainer, HomeWrapper } from "./HomePage.styles";
 import axiosInstance from "../../apis/axiosInstance";
 import MainPost from "./MainPost/MainPost";
 import Loading from "../../components/Loading/Loading";
-import { redirect, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import deepQrCode from "../../assets/images/deep-qrcode.png";
+import deepIcon from "../../assets/images/deep-profile-blue.png";
 
 function HomePage() {
     const [loading, setLoading] = useState(true);
@@ -13,14 +14,11 @@ function HomePage() {
     const [skill, setSkill] = useState([]);
     const [qna, setQna] = useState([]);
     const [community, setCommunity] = useState([]);
-
-    const member = useSelector((state) => state.member.value);
+    const [isOpen, setIsOpen] = useState(false);
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (member.isAuthorized === false) redirect("/login");
-
         axiosInstance
             .get("/deep/board/main-index")
             .then((response) => {
@@ -98,6 +96,10 @@ function HomePage() {
 
     const handleClickCommunity = () => {
         navigate("/community");
+    };
+
+    const handleClickQrCode = () => {
+        setIsOpen(!isOpen);
     };
 
     return (
@@ -185,7 +187,20 @@ function HomePage() {
                             </div>
                         </div>
                     </HomeContainer>
-                    <div className="qr_code"></div>
+                    <div
+                        className={
+                            "qr_code_container " + (isOpen ? "" : "hidden")
+                        }
+                    >
+                        <img src={deepQrCode} alt="deep qrcode" />
+                        <span className="qr_code_introduce">
+                            카카오 채널을 추가하고 <span>DEEP</span>의 다양한
+                            소식을 받아보세요!
+                        </span>
+                    </div>
+                    <div className="qr_code_button" onClick={handleClickQrCode}>
+                        <img src={deepIcon} alt="deep qrcode button" />
+                    </div>
                 </HomeWrapper>
             )}
         </>
