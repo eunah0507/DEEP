@@ -80,7 +80,7 @@ function MyFollower(props) {
                                                 {follower.memberRandom}
                                             </span>
                                         </div>
-                                        <span className="user_introduce">
+                                        <span className="user_introduce_container">
                                             {follower.memberIntroduce}
                                         </span>
                                     </div>
