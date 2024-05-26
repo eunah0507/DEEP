@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
-import { SettingContainer, SettingWrapper } from "./SettingPage.styles";
+import {
+    SettingContainer,
+    SettingWrapper,
+    UserSettingContainer,
+} from "./SettingPage.styles";
 import { SlArrowRight } from "react-icons/sl";
 import axiosInstance from "../../apis/axiosInstance";
+import Input from "../../components/Input/Input";
+import Button from "../../components/Button/Button";
 
 function SettingPage() {
     const [name, setName] = useState("");
@@ -9,6 +15,17 @@ function SettingPage() {
     const [date, setDate] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
+
+    const [newPw, setNewPw] = useState("");
+    const [newPwCheck, setNewPwCheck] = useState("");
+
+    const [isOpenEmail, setIsOpenEmail] = useState(false);
+    const [isOpenPw, setIsOpenPw] = useState(false);
+    const [isOpenAddress, setIsOpenAddress] = useState(false);
+    const [isOpenPhone, setIsOpenPhone] = useState(false);
+
+    const [isNewPw, setIsNewPw] = useState(false);
+    const [isNewPwCheck, setIsNewPwCheck] = useState(false);
 
     useEffect(() => {
         axiosInstance
@@ -37,6 +54,59 @@ function SettingPage() {
             .catch((error) => console.log(error));
     }, []);
 
+    const handleOpenEmail = () => {};
+
+    const handleOpenPw = () => {
+        setIsOpenPw(true);
+    };
+
+    const handleClosePw = () => {
+        setIsOpenPw(false);
+    };
+
+    const handleCheckNewPw = (e) => {
+        setNewPw(e.target.value);
+
+        const regex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?]).{8,16}$/;
+
+        if (regex.test(e.target.value)) {
+            setIsNewPw(true);
+        } else {
+            setIsNewPw(false);
+        }
+    };
+
+    const handleCheckNewPwCheck = (e) => {
+        setNewPwCheck(e.target.value);
+
+        if (newPw === e.target.value) {
+            setIsNewPwCheck(true);
+        } else {
+            setIsNewPwCheck(false);
+        }
+    };
+
+    const changeNewPw = () => {
+        if (isNewPw && isNewPwCheck) {
+            axiosInstance
+                .put("/deep/member/modify-pass", { memberPass: newPw })
+                .then((response) => {
+                    alert("비밀번호 변경이 완료되었습니다.");
+                    setIsOpenPw(false);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    alert("비밀번호 변경에 실패했습니다.\n다시 시도해 주세요.");
+                });
+        } else {
+            alert("비밀번호를 다시 확인해 주세요.");
+        }
+    };
+
+    const handleOpenAddress = () => {};
+
+    const handleOpenPhone = () => {};
+
     return (
         <SettingWrapper>
             <SettingContainer>
@@ -58,7 +128,7 @@ function SettingPage() {
                         </li>
                     </ul>
                 </div>
-                <div className="user_info_item">
+                <div className="user_info_item user_setting">
                     <h3 className="setting_title">계정</h3>
                     <ul>
                         <li className="user_info">
@@ -68,7 +138,7 @@ function SettingPage() {
                                 <SlArrowRight />
                             </span>
                         </li>
-                        <li className="user_info">
+                        <li className="user_info" onClick={handleOpenPw}>
                             <span>비밀번호 변경</span>
                             <span>
                                 변경하기
@@ -91,6 +161,71 @@ function SettingPage() {
                         </li>
                     </ul>
                 </div>
+                <UserSettingContainer className={isOpenPw ? "" : "hidden"}>
+                    <div className="user_pw_container">
+                        <h4 className="user_info_title">비밀번호 변경</h4>
+                        <div
+                            className={
+                                "user_pw_setting " +
+                                (!isNewPw && newPw.length > 0 ? "error" : "")
+                            }
+                        >
+                            <label htmlFor="user_pw" className="user_pw_title">
+                                새 비밀번호
+                            </label>
+                            <Input
+                                type="password"
+                                id="user_pw"
+                                value={newPw}
+                                maxLength="16"
+                                placeholder="새 비밀번호"
+                                onChange={handleCheckNewPw}
+                            />
+                            <div className="noValid">
+                                {!isNewPw && newPw.length > 0 && (
+                                    <span>
+                                        * 8~16자의 영문 대/소문자, 숫자,
+                                        특수문자(!@#$%^&*?)만 입력해 주세요.
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+                        <div
+                            className={
+                                "user_pw_setting " +
+                                (!isNewPwCheck && newPwCheck.length > 0
+                                    ? "error"
+                                    : "")
+                            }
+                        >
+                            <label
+                                htmlFor="user_pw_check"
+                                className="user_pw_title"
+                            >
+                                새 비밀번호 확인
+                            </label>
+                            <Input
+                                type="password"
+                                id="user_pw_check"
+                                value={newPwCheck}
+                                maxLength="16"
+                                placeholder="새 비밀번호 확인"
+                                onChange={handleCheckNewPwCheck}
+                            />
+                            <div className="noValid">
+                                {!isNewPwCheck && newPwCheck.length > 0 && (
+                                    <span>* 비밀번호가 일치하지 않습니다.</span>
+                                )}
+                            </div>
+                        </div>
+                        <div className="buttons">
+                            <Button inverted onClick={handleClosePw}>
+                                취소
+                            </Button>
+                            <Button onClick={changeNewPw}>변경하기</Button>
+                        </div>
+                    </div>
+                </UserSettingContainer>
             </SettingContainer>
         </SettingWrapper>
     );

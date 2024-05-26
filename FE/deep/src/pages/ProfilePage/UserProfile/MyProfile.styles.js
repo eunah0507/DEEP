@@ -5,7 +5,7 @@ export const MyProfileWrapper = styled.div`
     justify-content: center;
     height: 100%;
     margin: 0 auto 200px;
-    border: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
 `;
 
 export const MyProfileContainer = styled.div`

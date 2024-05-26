@@ -111,7 +111,7 @@ function SignUpStep2(props) {
     const handleCheckPw = (e) => {
         setPw(e.target.value);
 
-        const regex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_.,]).{8,16}$/;
+        const regex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?]).{8,16}$/;
 
         if (regex.test(e.target.value)) {
             setIsPw(true);
@@ -355,7 +355,7 @@ function SignUpStep2(props) {
                             {!isPw && pw.length > 0 && (
                                 <span>
                                     * 8~16자의 영문 대/소문자, 숫자,
-                                    특수문자(!@#$%^&*?_.,)만 입력해 주세요.
+                                    특수문자(!@#$%^&*?)만 입력해 주세요.
                                 </span>
                             )}
                         </div>

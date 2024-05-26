@@ -181,7 +181,7 @@ function PostDetail() {
                                     className="user_profile"
                                     onClick={handleClickProfile}
                                 >
-                                    {userProfile === null ? (
+                                    {userProfileImg === null ? (
                                         <img
                                             className="user_profile_img"
                                             src={userProfile}

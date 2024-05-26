@@ -1,17 +1,17 @@
 import styled from "styled-components";
 
 export const MyFollowerWrapper = styled.div`
-    position: absolute;
-    top: 0;
+    position: fixed;
+    top: 60px;
     left: 0;
     width: 100%;
+    /* height: calc(100% - 60px); */
     height: 100%;
     background: rgba(0, 0, 0, 0.3);
-    overflow: hidden;
 `;
 
 export const MyFollowerContainer = styled.div`
-    position: relative;
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -68,6 +68,9 @@ export const MyFollowerContainer = styled.div`
     }
 
     /* follower list */
+    .followers_container {
+    }
+
     .follower {
         padding: 20px 0;
         border-bottom: 1px solid #eee;
@@ -96,11 +99,10 @@ export const MyFollowerContainer = styled.div`
         color: #999;
     }
 
-    .user_introduce {
+    .user_introduce_container {
         display: block;
         max-width: 350px;
         line-height: 1.5;
-        margin: 0;
         margin-left: 20px;
         font-size: 1.4rem;
         white-space: nowrap;
