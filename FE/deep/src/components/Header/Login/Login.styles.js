@@ -77,6 +77,7 @@ export const ContentsContainer = styled.div`
         width: 250px;
         height: 300px;
         max-height: 300px;
+        padding: 10px 20px;
         border: 1px solid #ddd;
         border-radius: 5px;
         background: #fff;
@@ -103,6 +104,18 @@ export const ContentsContainer = styled.div`
     }
 
     .user_alarm {
+        line-height: 1.5;
+        padding: 10px 0;
+        border-bottom: 1px solid #ddd;
+        font-size: 1.4rem;
+    }
+
+    .user_alarm_container li:last-child {
+        border-bottom: none;
+    }
+
+    .user_alarm span {
+        font-weight: 600;
     }
 `;
 

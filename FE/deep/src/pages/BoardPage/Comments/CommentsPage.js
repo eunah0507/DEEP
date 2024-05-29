@@ -16,7 +16,6 @@ function CommentsPage({ boardNo }) {
     const [commentValue, setCommentValue] = useState("");
     const [commentModify, setCommentModify] = useState("");
     const [modifyIndex, setModifyIndex] = useState(null);
-    const [isCreateComment, setIsCreateComment] = useState(false);
     const [isCommentMenuOpen, setIsCommentMenuOpen] = useState(false);
     const [isModify, setIsModify] = useState(false);
     const [isIndex, setIsIndex] = useState(null);
@@ -34,7 +33,7 @@ function CommentsPage({ boardNo }) {
             .catch((error) => {
                 console.log(error);
             });
-    }, [isCreateComment]);
+    }, [postComments]);
 
     const commentCreatedTime = postComments.map((comment) => {
         let date;
@@ -73,7 +72,6 @@ function CommentsPage({ boardNo }) {
                 .post("/deep/board/reply-write", commentInfo)
                 .then((response) => {
                     setCommentValue("");
-                    setIsCreateComment(!isCreateComment);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -128,7 +126,6 @@ function CommentsPage({ boardNo }) {
         axiosInstance
             .put("/deep/board/reply-modify", modifyInfo)
             .then((response) => {
-                console.log(response);
                 setIsModify(false);
             })
             .catch((error) => {
@@ -141,7 +138,6 @@ function CommentsPage({ boardNo }) {
             .delete(`/deep/board/reply-delete?replyNo=${replyNo}`)
             .then((response) => {
                 alert("댓글이 삭제 되었습니다.");
-                setIsCreateComment(!isCreateComment);
             })
             .catch((error) => {
                 console.log(error);

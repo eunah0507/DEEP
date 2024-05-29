@@ -121,7 +121,36 @@ function Login() {
                             (isAlarmOpen ? "" : "hidden")
                         }
                     >
-                        <li className="user_alarm"></li>
+                        <li className="user_alarm">
+                            <span>ELK 적용해보신 분 계신가요?</span> 글에 새로운
+                            댓글이 추가되었습니다.
+                        </li>
+                        <li className="user_alarm">
+                            <span>ELK 적용해보신 분 계신가요?</span> 글에
+                            좋아요가 추가되었습니다.
+                        </li>
+                        <li className="user_alarm">
+                            <span>컴퓨터 구조를 왜 알아야 하는가?</span> 글에
+                            새로운 댓글이 추가되었습니다.
+                        </li>
+                        <li className="user_alarm">
+                            <span>마루는강쥐</span> 님이 회원님을 팔로우합니다.
+                        </li>
+                        <li className="user_alarm">
+                            <span>흰둥이</span> 님이 회원님을 팔로우합니다.
+                        </li>
+                        <li className="user_alarm">
+                            <span>컴퓨터 구조를 왜 알아야 하는가?</span> 글에
+                            새로운 댓글이 추가되었습니다.
+                        </li>
+                        <li className="user_alarm">
+                            <span>ELK 적용해보신 분 계신가요?</span> 글에 새로운
+                            댓글이 추가되었습니다.
+                        </li>
+                        <li className="user_alarm">
+                            <span>ELK 적용해보신 분 계신가요?</span> 글에 새로운
+                            댓글이 추가되었습니다.
+                        </li>
                     </ul>
                 </ContentsContainer>
                 <div
