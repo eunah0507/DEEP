@@ -240,9 +240,22 @@ export const CommentsPageContainer = styled.div`
         background-clip: padding-box;
     }
 
+    .comments .comment .comment_item {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+    }
+
+    /* reply */
+    .comments .comment .reply {
+        color: ${palette.blue[6]};
+        font-size: 1.6rem;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
     /* created time */
     .comments .comment .created_time {
-        margin-top: 30px;
         color: #666;
         font-size: 1.6rem;
     }

@@ -304,8 +304,11 @@ function CommentsPage({ boardNo }) {
                                     {isModify && index === modifyIndex ? (
                                         <></>
                                     ) : (
-                                        <div className="created_time">
-                                            <span>
+                                        <div className="comment_item">
+                                            <span className="reply">
+                                                댓글 달기
+                                            </span>
+                                            <span className="created_time">
                                                 {commentCreatedTime[index]}
                                             </span>
                                         </div>
